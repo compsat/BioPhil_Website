@@ -1,0 +1,9 @@
+# byte-compiled
+__pycache__/
+*.pyc 
+
+# editor
+.vscode/
+
+# misc
+.DS_Store
