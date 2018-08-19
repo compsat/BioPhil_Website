@@ -12,6 +12,9 @@ class AccessCode(models.Model):
 	user_type = models.CharField(max_length=10, choices=USER_TYPE, default='Student')
 	university = models.CharField(max_length=50)
 
+	def __str__(self):
+		return self.access_code
+
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -53,7 +56,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
-    access_code = models.OneToOneField(AccessCode, on_delete=models.DO_NOTHING)
+    access_object = models.OneToOneField(AccessCode, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
