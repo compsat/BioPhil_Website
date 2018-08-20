@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
+import string, secrets
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -56,9 +57,16 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
-    access_object = models.OneToOneField(AccessCode, on_delete=models.DO_NOTHING, null=True, blank=True)
+    access_object = models.OneToOneField(AccessCode, on_delete=models.SET_NULL, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+def random_code_generator(length):
+	access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+	while(AccessCode.objects.filter(access_code=access_code).count() > 0):
+		access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+	return access_code
+
