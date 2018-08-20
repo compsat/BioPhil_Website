@@ -8,3 +8,4 @@ class Updates(models.Model):# to get the last 5 in the query order it by ID numb
     def __str__(self):
         return self.updateText
 
+# docker-compose run web python bio_phil/manage.py makemigrations
