@@ -24,8 +24,6 @@ def register(request):
 					user.save()
 					login(request, user)
 					return redirect('index')
-		else:
-			print('not valid')
 	else:
 		form = RegisterForm()
 	return render(request, 'webapp/signup.html', {'form' : form})
