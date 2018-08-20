@@ -32,3 +32,15 @@ class RegisterForm(UserCreationForm):
 			return False
  
 		return True
+
+class AdminAccessCodeAddForm(forms.ModelForm):
+	quantity = forms.IntegerField()
+
+	class Meta:
+		model = AccessCode
+		fields = ['quantity', 'user_type', 'university']
+
+class AdminAccessCodeChangeForm(forms.ModelForm):
+	class Meta:
+		model = AccessCode
+		fields = ['access_code', 'user_type', 'university']
