@@ -34,8 +34,7 @@ class AccessCodeAdmin(admin.ModelAdmin):
     list_display = ('access_code', 'user_type', 'university', 'user')
     list_filter = ('user_type', 'university')
     inlines = []
-
-    # form = forms.AdminAccessCodeAddForm
+    readonly_fields = ('owner',)
 
     def user(self, x):
         return x.user
