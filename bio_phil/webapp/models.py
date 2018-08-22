@@ -12,6 +12,7 @@ class AccessCode(models.Model):
 	access_code = models.CharField(max_length=10)
 	user_type = models.CharField(max_length=10, choices=USER_TYPE, default='Student')
 	university = models.CharField(max_length=50)
+	owner = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL, related_name='access_codes')
 
 	def __str__(self):
 		return self.access_code
@@ -66,7 +67,9 @@ class User(AbstractUser):
 
 def random_code_generator(length):
 	access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+
 	while(AccessCode.objects.filter(access_code=access_code).count() > 0):
 		access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+		
 	return access_code
 
