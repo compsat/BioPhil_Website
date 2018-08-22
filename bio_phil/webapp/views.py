@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import RegisterForm
-from .models import User, AccessCode
+from .forms import RegisterForm, GenerateCodeForm
+from .models import User, AccessCode, random_code_generator
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 def index(request):
 	return render(request, 'webapp/index.html')
@@ -27,3 +28,30 @@ def register(request):
 	else:
 		form = RegisterForm()
 	return render(request, 'webapp/signup.html', {'form' : form})
+
+@login_required
+def generate_access_codes(request):
+	if request.method == 'POST':
+		teacher = request.user
+		form = GenerateCodeForm(request.POST)
+		if form.is_valid():
+			access_object = form.save(commit=False)
+			quantity = form.cleaned_data['quantity']
+			access_object.access_code = random_code_generator(5)
+			access_object.user_type = 'Student'
+			access_object.university = teacher.access_object.university
+			access_object.owner = teacher
+			access_object.save()
+			for x in range(1, quantity):
+				access_code = random_code_generator(5)
+				obj = AccessCode.objects.create(access_code=access_code, user_type='Student', university=teacher.access_object.university, owner=teacher)
+			return redirect('manage_access_codes')
+	else:
+		form = GenerateCodeForm()
+	return render(request, 'webapp/generate_access_codes.html', {'form' : form, 'teacher' : request.user})
+
+@login_required
+def manage_access_codes(request):
+	teacher = request.user
+	access_codes = AccessCode.objects.filter(owner=teacher, user=None)
+	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'access_codes' : access_codes})
