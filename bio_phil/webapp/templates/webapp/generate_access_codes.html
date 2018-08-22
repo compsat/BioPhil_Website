@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	{% ifequal teacher.access_object.user_type "Teacher" %}
+		<h2>Generate access codes for your student!</h2>
+		<h4>Hi, {{ teacher.get_full_name }} from {{ teacher.access_object.university }}!</h4>
+		<form method="post">
+	    	{% csrf_token %}
+	    	{{ form.as_p }}
+	    	<button type="submit">Generate</button>
+		</form>
+	{% else %}
+		<h2>Only teachers are allowed to access this page. Go back to the home page <a href="{% url 'index' %}">here</a>.</h2>
+	{% endifequal %}
+{% endblock %}
