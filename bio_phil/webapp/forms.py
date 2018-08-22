@@ -33,6 +33,14 @@ class RegisterForm(UserCreationForm):
  
 		return True
 
+class GenerateCodeForm(forms.ModelForm):
+	quantity = forms.IntegerField()
+
+	class Meta:
+		model = AccessCode
+		fields = ['quantity']
+
+
 class AdminAccessCodeAddForm(forms.ModelForm):
 	quantity = forms.IntegerField()
 
