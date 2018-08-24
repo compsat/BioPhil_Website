@@ -2,14 +2,28 @@
 
 {% block body %}
 	{% ifequal teacher.access_object.user_type "Teacher" %}
-		<h2>Here are the access codes that you generated and are still unused.</h2>
-		<h4>Hi, {{ teacher.get_full_name }} from {{ teacher.access_object.university }}!</h4>
-		{% if access_codes.all %}
-			<ul>
-				{% for access_code in access_codes %}
-					<li>{{ access_code }}</li>
-				{% endfor %}
-			</ul>
+		<h2>Hi, {{ teacher.get_full_name }} from {{ teacher.access_object.university }}!</h2>
+		{% if used_access_codes.all or unused_access_codes.all %}
+			<h3>Used Access Codes</h3>
+			{% if used_access_codes.all %}
+				<ul>
+					{% for access_code in used_access_codes %}
+						<li>{{ access_code }} - used by {{ access_code.user.get_full_name }}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<h4>None of your access codes have been used yet!</h4>
+			{% endif %}
+			<h3>Unused Access Codes</h3>
+			{% if unused_access_codes.all %}
+				<ul>
+					{% for access_code in unused_access_codes %}
+						<li>{{ access_code }}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<h4>None of your access codes are unused!</h4>
+			{% endif %}
 		{% else %}
 			<h4>Oh no, you haven't generated access codes yet. Generate access codes for your students <a href="{% url 'generate_access_codes' %}">here</a></h4>
 		{% endif %}
