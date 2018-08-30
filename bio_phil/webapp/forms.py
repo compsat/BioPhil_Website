@@ -38,7 +38,7 @@ class GenerateCodeForm(forms.ModelForm):
 
 	class Meta:
 		model = AccessCode
-		fields = ['quantity']
+		fields = ['quantity', 'user_type']
 
 
 class AdminAccessCodeAddForm(forms.ModelForm):
