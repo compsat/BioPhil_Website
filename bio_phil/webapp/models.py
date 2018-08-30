@@ -12,7 +12,7 @@ class AccessCode(models.Model):
 	access_code = models.CharField(max_length=10)
 	user_type = models.CharField(max_length=10, choices=USER_TYPE, default='Student')
 	university = models.CharField(max_length=50)
-	owner = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL, related_name='access_codes')
+	creator = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL, related_name='access_codes')
 
 	def __str__(self):
 		return self.access_code
@@ -59,12 +59,14 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
     access_object = models.OneToOneField(AccessCode, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
 
+"""Generates a string of five randomly generated characters"""
 def random_code_generator(length):
 	access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
