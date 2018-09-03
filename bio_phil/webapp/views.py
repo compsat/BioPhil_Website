@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import RegisterForm, GenerateCodeForm
-from .models import User, AccessCode, random_code_generator
+from .models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
@@ -57,3 +57,10 @@ def manage_access_codes(request):
 	unused_access_codes = access_codes.filter(user=None)
 	used_access_codes = access_codes.exclude(user=None)
 	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'unused_access_codes' : unused_access_codes, 'used_access_codes' : used_access_codes})
+
+# View for the update model. 
+
+# def updates(request):
+#     update_text = Updates.object.all()[0:4]
+#     context = {'update_text':update_text}
+#     return render(<insert html file name here pls ty =D>, context)

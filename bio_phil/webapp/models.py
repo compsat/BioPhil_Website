@@ -64,6 +64,16 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+    
+class Updates(models.Model):# to get the last 5 in the query, order it by ID number in descending order, then get [0:4]
+    update_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField(verbose_name='Date Published')
+
+    def __str__(self):
+        return self.update_text
+
+    class Meta:
+    	ordering = ('pub_date',)
 
 def random_code_generator(length):
 	access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
@@ -72,4 +82,3 @@ def random_code_generator(length):
 		access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 		
 	return access_code
-
