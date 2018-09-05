@@ -6,6 +6,7 @@ from . import forms
 
 # Register your models here.
 @admin.register(User)
+@admin.register(image_carousel)
 class UserAdmin(DjangoUserAdmin):
     """Define admin model for custom User model with no email field."""
 

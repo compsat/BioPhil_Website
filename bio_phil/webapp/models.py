@@ -8,6 +8,10 @@ USER_TYPE = (
 	('Student', 'Student'),
 )
 
+class image_carousel(models.Model):
+    img = models.ImageField(upload_to = 'media')
+    pub_date = models.DateTimeField('Date Uploaded')
+
 class AccessCode(models.Model):
 	access_code = models.CharField(max_length=10)
 	user_type = models.CharField(max_length=10, choices=USER_TYPE, default='Student')

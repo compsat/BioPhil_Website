@@ -57,3 +57,9 @@ def manage_access_codes(request):
 	unused_access_codes = access_codes.filter(user=None)
 	used_access_codes = access_codes.exclude(user=None)
 	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'unused_access_codes' : unused_access_codes, 'used_access_codes' : used_access_codes})
+
+#View for image_carousel model
+def images(request):
+	image_list = image_carousel.objects.order_by('-pub_date')
+	context = {'image_list':image_list}
+	return  render(request, <input html here>, )
