@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	<h2>Submit</h2>
+	{% ifequal user.access_object.user_type "Teacher" %}
+		<p><strong>{{ "Only students can submit." }}</strong></p>
+	{% else %}
+		<form method="post">
+	    	{% csrf_token %}
+	    	{{ form.as_p }}
+	    	<button type="submit" value="Update">Update</button>
+		</form>
+	{% endifequal %}
+{% endblock %}
