@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import RegisterForm, GenerateCodeForm
 from .models import *
+from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView
 
 def index(request):
 	# update_text = Updates.object.all()[0:4]
@@ -32,6 +35,42 @@ def register(request):
 	else:
 		form = RegisterForm()
 	return render(request, 'webapp/signup.html', {'form' : form})
+
+"""View for students to view their submissions to all modules OR for teachers
+to view all the submissions of the students"""
+class SubmissionList(ListView):
+	model = Submission
+	paginate_by = 50
+
+	def get_context_data(self, **kwargs):
+		context = super(SubmissionList, self).get_context_data(**kwargs)
+		context['user'] = self.request.user
+		context['submissions_list'] = self.get_queryset()
+		return context
+
+	def get_queryset(self):
+		queryset = Submission.objects.all()
+		if self.request.user.access_object.user_type == 'Student':
+			queryset = queryset.filter(user=self.request.user)
+
+		return queryset
+
+"""View for students to submit their answers to modules"""
+class SubmitAnswer(CreateView):
+	model = Submission
+	fields = ['answer']
+	success_url = reverse_lazy('submissions_list')
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		return super().form_valid(form)
+
+"""View for students to edit their answers to modules"""
+class EditAnswer(UpdateView):
+	model = Submission
+	fields = ['answer']
+	success_url = reverse_lazy('submissions_list')
+	template_name_suffix = '_update_form'
 
 """View for teachers only for them to generate a specified number of access codes
 either for their students or fellow teachers"""
