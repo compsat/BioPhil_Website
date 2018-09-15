@@ -5,6 +5,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 def index(request):
+	# update_text = Updates.object.all()[0:4]
+#     context = {'update_text':update_text}
+#     return render(<insert html file name here pls ty =D>, context)
 	return render(request, 'webapp/index.html')
 
 def register(request):
@@ -70,5 +73,3 @@ def manage_access_codes(request):
 		'unused_teacher_access_codes' : unused_teacher_access_codes, 
 		'used_teacher_access_codes' : used_teacher_access_codes
 		})
-
-
