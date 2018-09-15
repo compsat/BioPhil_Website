@@ -77,11 +77,14 @@ class Updates(models.Model):# to get the last 5 in the query, order it by ID num
     	ordering = ('pub_date',)
 
 class Submission(models.Model):
-	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='submissions')
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='submissions')
 	# module = models.ForeignKey(Module, on_delete=models.DO_NOTHING)
-	answer = models.TextField()
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
+    answer = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ('created_at',)
 
 """Generates a string of five randomly generated characters"""
 def random_code_generator(length):
