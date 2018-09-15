@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	{% ifequal user.access_object.user_type "Teacher" %}
+		<h2>Submissions</h2>
+		<table>
+			<tr>
+				<!-- <th>Module</th> -->
+				<th>User</th>
+				<th>University</th>
+				<th>Answer</th> 
+				<th>Date of Submission</th> 
+				<th>Last Edit</th> 
+			</tr>
+		  	{% for submission in submissions_list %}
+				<tr> 
+					<!-- <td>{{ submission.module }}</td> -->
+					<td>{{ submission.user.get_full_name }}</td>
+					<td>{{ submission.user.access_object.university }}</td>
+					<td>{{ submission.answer }}</td>
+					<td>{{ submission.created_at }}</td>
+					<td>{{ submission.updated_at }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h2>Your Submissions</h2>
+		<table>
+			<tr>
+				<!-- <th>Module</th> -->
+				<th>Answer</th> 
+				<th>Date of Submission</th> 
+				<th>Last Edit</th> 
+			</tr>
+		  	{% for submission in submissions_list %}
+				<tr> 
+					<!-- <td>{{ submission.module }}</td> -->
+					<td><a href="{% url 'edit' pk=submission.id%}">{{ submission.answer }}</a></td>
+					<td>{{ submission.created_at }}</td>
+					<td>{{ submission.updated_at }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% endifequal %}
+{% endblock %}
