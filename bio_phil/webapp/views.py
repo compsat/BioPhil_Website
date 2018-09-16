@@ -100,6 +100,18 @@ def generate_access_codes(request):
 @login_required
 def manage_access_codes(request):
 	teacher = request.user
+	access_codes = AccessCode.objects.filter(creator=teacher)
+	unused_access_codes = access_codes.filter(user=None, user_type='Student')
+	used_access_codes = access_codes.filter(user_type='Student').exclude(user=None)
+	unused_teacher_access_codes = access_codes.filter(user=None, user_type='Teacher')
+	used_teacher_access_codes = access_codes.filter(user_type='Teacher').exclude(user=None)
+	return render(request, 'webapp/manage_access_codes.html', {
+		'teacher' : teacher, 
+		'unused_access_codes' : unused_access_codes, 
+		'used_access_codes' : used_access_codes, 
+		'unused_teacher_access_codes' : unused_teacher_access_codes, 
+		'used_teacher_access_codes' : used_teacher_access_codes
+		})
 	access_codes = AccessCode.objects.filter(owner=teacher)
 	unused_access_codes = access_codes.filter(user=None)
 	used_access_codes = access_codes.exclude(user=None)
