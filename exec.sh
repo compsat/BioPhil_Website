@@ -1,9 +1,11 @@
-# Apply database migrations
-echo "Create the database migrations"
+#!/bin/bash
+
+# Make database migrations
+echo "Create the Database Migrations"
 python3 bio_phil/manage.py makemigrations
 
 # Apply database migrations
-echo "Apply database migrations"
+echo "Apply databse"
 python3 bio_phil/manage.py migrate
 
 echo "Create superuser"
@@ -14,6 +16,5 @@ if not User.objects.filter(email='bio_phil@gmail.com'):
     User.objects.create_superuser('bio_phil@gmail.com', 'bioisfun')
 END
 
-# Start Server
-echo "Starting Server"
+echo "Starting server"
 python3 bio_phil/manage.py runserver 0.0.0.0:8000
