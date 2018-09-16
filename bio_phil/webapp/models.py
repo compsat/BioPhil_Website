@@ -82,3 +82,9 @@ def random_code_generator(length):
 		access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 		
 	return access_code
+class image_carousel(models.Model):
+    img = models.ImageField(upload_to = 'images')
+    img_name = models.CharField(max_length = 30)
+    pub_date = models.DateTimeField('Date Uploaded')
+    def __str__(self):
+        return self.img_name

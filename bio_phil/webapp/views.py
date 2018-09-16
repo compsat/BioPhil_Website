@@ -64,3 +64,9 @@ def manage_access_codes(request):
 #     update_text = Updates.object.all()[0:4]
 #     context = {'update_text':update_text}
 #     return render(<insert html file name here pls ty =D>, context)
+
+#View for image_carousel model
+def images(request):
+	image_list = image_carousel.objects.order_by('-id')[:4]
+	context = {'image_list':image_list}
+	return render(request, 'img_carousel_test.html',context)
