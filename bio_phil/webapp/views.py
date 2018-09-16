@@ -112,3 +112,20 @@ def manage_access_codes(request):
 		'unused_teacher_access_codes' : unused_teacher_access_codes, 
 		'used_teacher_access_codes' : used_teacher_access_codes
 		})
+	access_codes = AccessCode.objects.filter(owner=teacher)
+	unused_access_codes = access_codes.filter(user=None)
+	used_access_codes = access_codes.exclude(user=None)
+	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'unused_access_codes' : unused_access_codes, 'used_access_codes' : used_access_codes})
+
+# View for the update model. 
+
+# def updates(request):
+#     update_text = Updates.object.all()[0:4]
+#     context = {'update_text':update_text}
+#     return render(<insert html file name here pls ty =D>, context)
+
+#View for image_carousel model
+def images(request):
+	image_list = image_carousel.objects.order_by('-id')[:4]
+	context = {'image_list':image_list}
+	return render(request, 'img_carousel_test.html',context)

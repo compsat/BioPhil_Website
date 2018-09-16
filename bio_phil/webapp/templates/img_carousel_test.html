@@ -1,0 +1,13 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <body>
+        
+        {% for i in image_list %}
+        <img src = "{% static i.img.url %}" width = "300px">
+        <br>
+        {% endfor %}
+        
+    </body>
+</html>
