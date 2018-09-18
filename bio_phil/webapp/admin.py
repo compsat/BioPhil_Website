@@ -62,3 +62,4 @@ class AccessCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(AccessCode, AccessCodeAdmin)
 admin.site.register(image_carousel)
+admin.site.register(Module)
