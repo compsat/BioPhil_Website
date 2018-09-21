@@ -129,3 +129,7 @@ def images(request):
 	image_list = image_carousel.objects.order_by('-id')[:4]
 	context = {'image_list':image_list}
 	return render(request, 'img_carousel_test.html',context)
+def module(request):
+	module_list = Module.objects.all()
+	context = {'module_list': module_list}
+	return render(request, 'module_tester.html', context)

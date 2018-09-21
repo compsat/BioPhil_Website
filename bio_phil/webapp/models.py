@@ -100,3 +100,12 @@ class image_carousel(models.Model):
     pub_date = models.DateTimeField('Date Uploaded')
     def __str__(self):
         return self.img_name
+class Module(models.Model):
+    title = models.CharField(max_length = 30)
+    content = models.TextField()
+    updated_on = models.DateTimeField(auto_now_add = True)
+    created_on = models.DateTimeField("Date Published")
+    def __str__(self):
+        return self.title
+    class Meta:
+        ordering = ('id',)
