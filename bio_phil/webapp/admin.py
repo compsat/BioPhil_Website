@@ -61,4 +61,5 @@ class AccessCodeAdmin(admin.ModelAdmin):
                 obj = AccessCode.objects.create(user_type=user_type, university=university)
 
 admin.site.register(AccessCode, AccessCodeAdmin)
+admin.site.register(Submission)
 admin.site.register(image_carousel)
