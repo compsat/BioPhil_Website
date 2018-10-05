@@ -3,12 +3,17 @@
 {% block body %}
 	<h2>Submit</h2>
 	{% ifequal user.access_object.user_type "Teacher" %}
-		<p><strong>{{ "Only students can submit." }}</strong></p>
+		<p><strong>{{ "Only students can edit submissions." }}</strong></p>
 	{% else %}
+		<h4>{{ module }}</h4>
 		<form method="post">
 	    	{% csrf_token %}
 	    	{{ form.as_p }}
 	    	<button type="submit" value="Update">Update</button>
+		</form>
+		<form method="get" action="{% url 'delete_submission' object.pk %}">
+	    	{% csrf_token %}
+	    	<button type="submit" value="Delete">Delete</button>
 		</form>
 	{% endifequal %}
 {% endblock %}

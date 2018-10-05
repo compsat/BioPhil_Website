@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	<h2>Submit</h2>
+	{% ifequal user.access_object.user_type "Teacher" %}
+		<p><strong>{{ "Only students can delete submissions." }}</strong></p>
+	{% else %}
+		<form method="post">{% csrf_token %}
+		    <p>Are you sure you want to delete this submission?</p>
+		    <h4>{{ object.module }}</h4>
+		    <p>{{ object.answer }}</p>
+		    <input type="submit" value="Confirm">
+		</form>
+	{% endifequal %}
+{% endblock %}
