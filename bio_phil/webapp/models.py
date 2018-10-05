@@ -78,7 +78,7 @@ class Updates(models.Model):# to get the last 5 in the query, order it by ID num
 
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='submissions')
-	# module = models.ForeignKey(Module, on_delete=models.DO_NOTHING)
+    module = models.ForeignKey('Module', on_delete=models.DO_NOTHING)
     answer = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

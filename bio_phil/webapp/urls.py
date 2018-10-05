@@ -18,5 +18,3 @@ urlpatterns = [
     path('submissions/<int:pk>/', login_required(views.EditAnswer.as_view()), name='edit'),
     path('modules/', login_required(views.module), name='module_tester')
 ]
-
-
