@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import RegisterForm, GenerateCodeForm
+from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm
 from .models import *
 from django.urls import reverse_lazy
-from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -12,6 +14,36 @@ def index(request):
 #     context = {'update_text':update_text}
 #     return render(<insert html file name here pls ty =D>, context)
 	return render(request, 'webapp/index.html')
+
+"""
+View for a user's profile where they can change their password.
+"""
+@login_required
+def profile(request):
+	user = request.user
+	messages = None
+	if request.method == 'POST':
+		if 'old_password' in request.POST:
+			change_password = ChangePasswordForm(user, request.POST)
+			# change_email = ChangeEmailForm()
+			if change_password.is_valid():
+				user = change_password.save()
+				update_session_auth_hash(request, user)
+				messages = 'Your password was successfully updated!'
+				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages})
+				# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
+		# elif 'change_password' in request.POST:
+		# 	change_password = ChangePasswordForm(use, request.POST)
+		# 	if form.is_valid():
+		# 		user = form.save()
+	 #            update_session_auth_hash(request, user)  # Important!
+	 #            messages.success(request, 'Your password was successfully updated!')
+	 #            return redirect('profile')
+	else:
+		change_password = ChangePasswordForm(user)
+		# change_email = ChangeEmailForm()
+	return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages})
+	# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
 
 def register(request):
 	if request.method == 'POST':
@@ -120,13 +152,13 @@ def manage_access_codes(request):
 # View for the update model. 
 
 # def updates(request):
-#     update_text = Updates.object.all()[0:4]
+#     update_text = Updates.object.all()[0:5]
 #     context = {'update_text':update_text}
 #     return render(<insert html file name here pls ty =D>, context)
 
 #View for image_carousel model
 def images(request):
-	image_list = image_carousel.objects.order_by('-id')[:4]
+	image_list = image_carousel.objects.order_by('-id')[:5]
 	context = {'image_list':image_list}
 	return render(request, 'webapp/img_carousel_test.html',context)
 

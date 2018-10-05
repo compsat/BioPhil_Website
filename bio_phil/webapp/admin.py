@@ -60,6 +60,19 @@ class AccessCodeAdmin(admin.ModelAdmin):
             if x != (quantity-1):
                 obj = AccessCode.objects.create(user_type=user_type, university=university)
 
+class SubmissionAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'university', 'created_at', 'updated_at')
+    list_filter = ('user__last_name', 'user__access_object__university', 'created_at')
+    readonly_fields = ('created_at', 'updated_at')
+
+    def full_name(self, x):
+        return x.user.get_full_name()
+    full_name.short_description = 'Full Name'
+
+    def university(self, x):
+        return x.user.access_object.university
+
 admin.site.register(AccessCode, AccessCodeAdmin)
+admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(image_carousel)
 admin.site.register(Module)

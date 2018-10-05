@@ -83,6 +83,9 @@ class Submission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return "Module # - " + self.user.get_full_name()
+    
     class Meta:
         ordering = ('created_at',)
 
@@ -104,13 +107,13 @@ class image_carousel(models.Model):
         return self.img_name
 
 class Module(models.Model):
-    title = models.CharField(max_length = 30)
+    title = models.CharField(max_length=100)
     content = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         ordering = ('id',)
+
+    def __str__(self):
+        return self.title
