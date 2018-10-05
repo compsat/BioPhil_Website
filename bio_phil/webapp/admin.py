@@ -73,5 +73,6 @@ class SubmissionAdmin(admin.ModelAdmin):
         return x.user.access_object.university
 
 admin.site.register(AccessCode, AccessCodeAdmin)
+admin.site.register(Module)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(image_carousel)
