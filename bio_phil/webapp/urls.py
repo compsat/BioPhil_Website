@@ -16,5 +16,6 @@ urlpatterns = [
     path('submit/', login_required(views.SubmitAnswer.as_view(template_name='webapp/submit.html')), name='submit'),
     path('submissions/', login_required(views.SubmissionList.as_view(template_name='webapp/submissions_list.html')), name='submissions_list'),
     path('submissions/<int:pk>/', login_required(views.EditAnswer.as_view()), name='edit'),
+    path('submissions/delete/<int:pk>/', login_required(views.DeleteAnswer.as_view()), name='delete_submission'),
     path('modules/', login_required(views.module), name='module_tester')
 ]

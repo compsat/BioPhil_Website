@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 def index(request):
 	# update_text = Updates.object.all()[0:4]
@@ -103,6 +103,31 @@ class EditAnswer(UpdateView):
 	fields = ['answer']
 	success_url = reverse_lazy('submissions_list')
 	template_name_suffix = '_update_form'
+
+	def get_context_data(self, **kwargs):
+		context = super(EditAnswer, self).get_context_data(**kwargs)
+		context['user'] = self.request.user
+		context['module'] = self.object.module
+		return context
+
+	def get_queryset(self):
+		queryset = Submission.objects.all()
+		if self.request.user.access_object.user_type == 'Student':
+			queryset = queryset.filter(user=self.request.user)
+
+		return queryset
+
+"""View for students to delete their answers to modules"""
+class DeleteAnswer(DeleteView):
+	model = Submission
+	success_url = reverse_lazy('submissions_list')
+
+	def get_queryset(self):
+		queryset = Submission.objects.all()
+		if self.request.user.access_object.user_type == 'Student':
+			queryset = queryset.filter(user=self.request.user)
+
+		return queryset
 
 """View for teachers only for them to generate a specified number of access codes
 either for their students or fellow teachers"""
