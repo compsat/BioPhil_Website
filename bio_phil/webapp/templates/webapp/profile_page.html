@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	{% if messages %}
+		<p><strong>{{ messages }}</strong></p>
+	{% endif %}
+
+	<div class="profile">
+		<h2>{{ user.get_full_name }}</h2>
+		<h4>{{ user.access_object.user_type }}</h4>
+		<p>School: {{ user.access_object.university }}
+		{% ifequal user.access_object.user_type "Student" %}
+			<p>Teacher: {{ user.access_object.creator.get_full_name }}</p>
+		{% endifequal %}
+		<p>Join date: {{ user.created_at }}</p>
+	</div>
+	<h2>Change Password</h2>
+	<form method="post">
+    	{% csrf_token %}
+    	{{ change_password.as_p }}
+    	<button type="submit">Reset Password</button>
+	</form>
+	<h2>Update Email Address</h2>
+	<form method="post">
+    	{% csrf_token %}
+    	{{ change_email.as_p }}
+    	<button type="submit">Reset Email</button>
+	</form>
+{% endblock %}

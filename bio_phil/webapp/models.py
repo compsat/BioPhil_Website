@@ -83,6 +83,9 @@ class Submission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return "Module # - " + self.user.get_full_name()
+    
     class Meta:
         ordering = ('created_at',)
 
