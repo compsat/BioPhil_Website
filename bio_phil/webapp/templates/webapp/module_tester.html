@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	{% for t in module_list %}
+        <h1>{{ t.title }}</h1>
+        <br>
+        <p>{{ t.content }}</p>
+        <hr>
+    {% endfor %}
+{% endblock %}

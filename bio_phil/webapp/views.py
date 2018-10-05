@@ -160,4 +160,9 @@ def manage_access_codes(request):
 def images(request):
 	image_list = image_carousel.objects.order_by('-id')[:5]
 	context = {'image_list':image_list}
-	return render(request, 'img_carousel_test.html',context)
+	return render(request, 'webapp/img_carousel_test.html',context)
+
+def module(request):
+	module_list = Module.objects.all()
+	context = {'module_list': module_list}
+	return render(request, 'webapp/module_tester.html', context)

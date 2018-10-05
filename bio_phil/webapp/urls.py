@@ -15,7 +15,8 @@ urlpatterns = [
     path('img_test',views.images,name ='image_tester'),
     path('submit/', login_required(views.SubmitAnswer.as_view(template_name='webapp/submit.html')), name='submit'),
     path('submissions/', login_required(views.SubmissionList.as_view(template_name='webapp/submissions_list.html')), name='submissions_list'),
-    path('submissions/<int:pk>/', login_required(views.EditAnswer.as_view()), name='edit')
+    path('submissions/<int:pk>/', login_required(views.EditAnswer.as_view()), name='edit'),
+    path('modules/', login_required(views.module), name='module_tester')
 ]
 
 
