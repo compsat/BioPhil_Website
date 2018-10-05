@@ -63,6 +63,7 @@ class AccessCodeAdmin(admin.ModelAdmin):
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'university', 'created_at', 'updated_at')
     list_filter = ('user__last_name', 'user__access_object__university', 'created_at')
+    readonly_fields = ('created_at', 'updated_at')
 
     def full_name(self, x):
         return x.user.get_full_name()
