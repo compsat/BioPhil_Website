@@ -90,7 +90,7 @@ class SubmissionList(ListView):
 """View for students to submit their answers to modules"""
 class SubmitAnswer(CreateView):
 	model = Submission
-	fields = ['answer']
+	fields = ['module', 'answer']
 	success_url = reverse_lazy('submissions_list')
 
 	def form_valid(self, form):

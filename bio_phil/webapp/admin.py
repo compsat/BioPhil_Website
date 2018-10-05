@@ -22,9 +22,18 @@ class UserAdmin(DjangoUserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'is_staff')
-    search_fields = ('email', 'first_name', 'last_name')
+    list_display = ('email', 'first_name', 'last_name', 'user_type', 'university', 'is_staff')
+    list_filter = ('access_object__user_type', 'access_object__university')
+    search_fields = ('email', 'first_name', 'last_name',)
     ordering = ('email',)
+
+    def university(self, x):
+        if x.access_object:
+            return x.access_object.university
+
+    def user_type(self, x):
+        if x.access_object:
+            return x.access_object.user_type
 
 class UserInline(admin.StackedInline):
     model = User
@@ -61,7 +70,7 @@ class AccessCodeAdmin(admin.ModelAdmin):
                 obj = AccessCode.objects.create(user_type=user_type, university=university)
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('module', 'full_name', 'university', 'created_at', 'updated_at')
+    list_display = ('full_name', 'module', 'university', 'created_at', 'updated_at')
     list_filter = ('module', 'user__last_name', 'user__access_object__university', 'created_at')
     readonly_fields = ('created_at', 'updated_at')
 
@@ -72,7 +81,12 @@ class SubmissionAdmin(admin.ModelAdmin):
     def university(self, x):
         return x.user.access_object.university
 
+class ModuleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at')
+    list_filter = ('created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
 admin.site.register(AccessCode, AccessCodeAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(image_carousel)
-admin.site.register(Module)
+admin.site.register(Module, ModuleAdmin)
