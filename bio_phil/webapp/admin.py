@@ -61,8 +61,8 @@ class AccessCodeAdmin(admin.ModelAdmin):
                 obj = AccessCode.objects.create(user_type=user_type, university=university)
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'university', 'created_at', 'updated_at')
-    list_filter = ('user__last_name', 'user__access_object__university', 'created_at')
+    list_display = ('module', 'full_name', 'university', 'created_at', 'updated_at')
+    list_filter = ('module', 'user__last_name', 'user__access_object__university', 'created_at')
     readonly_fields = ('created_at', 'updated_at')
 
     def full_name(self, x):
