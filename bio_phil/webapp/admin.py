@@ -81,12 +81,26 @@ class SubmissionAdmin(admin.ModelAdmin):
     def university(self, x):
         return x.user.access_object.university
 
+class DownloadInline(admin.StackedInline):
+    model = Download
+    fields = ('title', 'file')
+
 class ModuleAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at')
     list_filter = ('created_at',)
     readonly_fields = ('created_at', 'updated_at')
+    inlines = [
+        DownloadInline,
+    ]
+
+
+class DownloadAdmin(admin.ModelAdmin):
+    list_display = ('title', 'module', 'file', 'created_at')
+    list_filter = ('module', 'created_at')
+    readonly_fields = ('created_at',)
 
 admin.site.register(AccessCode, AccessCodeAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(image_carousel)
 admin.site.register(Module, ModuleAdmin)
+admin.site.register(Download, DownloadAdmin)
