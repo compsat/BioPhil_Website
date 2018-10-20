@@ -106,17 +106,6 @@ class image_carousel(models.Model):
     def __str__(self):
         return self.img_name
 
-class Module(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('id',)
-
-    def __str__(self):
-        return self.title
 class module_img(models.Model):
     image = models.ImageField(upload_to = 'module/images')
     img_name = models.CharField(max_length = 30)
@@ -125,3 +114,17 @@ class module_img(models.Model):
         return self.img_name
     class Meta:
         ordering = ('id',)
+
+class Module(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    module_summary = models.CharField(max_length = 300, default = title)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    module_image = models.ForeignKey(module_img, on_delete = models.DO_NOTHING)
+    
+    class Meta:
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.title
