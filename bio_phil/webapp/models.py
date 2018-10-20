@@ -117,3 +117,11 @@ class Module(models.Model):
 
     def __str__(self):
         return self.title
+class module_img(models.Model):
+    image = models.ImageField(upload_to = 'module/images')
+    img_name = models.CharField(max_length = 30)
+    pub_date = models.DateTimeField(auto_now_add = True)
+    def __str__(self):
+        return self.img_name
+    class Meta:
+        ordering = ('id',)
