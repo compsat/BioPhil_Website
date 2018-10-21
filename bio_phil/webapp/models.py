@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 import string, secrets
+from datetime import timedelta
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -60,11 +61,26 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=150)
     access_object = models.OneToOneField(AccessCode, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    activated_at = models.DateTimeField()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    @property
+    def expiration_date(self):
+        return self.created_at + timedelta(days=30)
+
+class NewEmail(models.Model):
+    email_code = models.CharField(max_length=20, unique=True)
+    new_email = models.EmailField()
+    old_email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.get_full_name() + ": " + self.new_email
     
 class Updates(models.Model):# to get the last 5 in the query, order it by ID number in descending order, then get [0:4]
     update_text = models.CharField(max_length=200)
@@ -90,13 +106,17 @@ class Submission(models.Model):
         ordering = ('created_at',)
 
 """Generates a string of five randomly generated characters"""
-def random_code_generator(length):
-	access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+def random_code_generator(length, model):
+    code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
-	while(AccessCode.objects.filter(access_code=access_code).count() > 0):
-		access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+    if model == 'access_code':
+        while(AccessCode.objects.filter(access_code=code).count() > 0):
+            code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+    elif model == 'new_email':
+        while(NewEmail.objects.filter(email_code=code).count() > 0):
+            code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 		
-	return access_code
+    return code
 
 class image_carousel(models.Model):
     img = models.ImageField(upload_to='images')
