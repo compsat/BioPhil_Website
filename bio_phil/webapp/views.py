@@ -16,6 +16,8 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import views as auth_views
+from .helper_methods import send_verification_email
+from django.conf import settings
 
 def index(request):
 	# update_text = Updates.object.all()[0:4]
@@ -53,11 +55,10 @@ def profile(request):
 				new_email_object.email_code = email_code
 				new_email_object.save()
 
-				current_site = get_current_site(request)
 				mail_subject = 'Update your email address.'
 				message = render_to_string('webapp/acc_update_email.html', {
 					'user' : user,
-					'domain' : current_site.domain,
+					'default_domain' : settings.DEFAULT_DOMAIN,
 					'uid' : urlsafe_base64_encode(force_bytes(user.pk)).decode(),
 					'token' : account_activation_token.make_token(user),
 					'old_email' : old_email,
@@ -73,27 +74,15 @@ def profile(request):
 		change_email = ChangeEmailForm()
 	return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email,  'user' : user, 'messages' : messages})
 
-def send_verification_email(user, email, request):
-	current_site = get_current_site(request)
-	mail_subject = 'Activate your account.'
-	message = render_to_string('webapp/acc_active_email.html', {
-		'user' : user,
-		'domain' : current_site.domain,
-		'uid' : urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-		'token' : account_activation_token.make_token(user),
-	})
-	email_body = EmailMessage(mail_subject, message, to=[email])
-	email_body.send()
-
 def resend_verification(request):
 	if request.method == 'POST':
 		form = ResendForm(request.POST)
 		if form.is_valid():
 			email = form.cleaned_data['email']
 			user = User.objects.get(email=email)
-			send_verification_email(user, email, request)
-			return HttpResponse('Please confirm your email address to complete the registration. If you do not \
-				verify before 30 days after your registration, your account will be deleted.')
+			send_verification_email(user, email, False)
+			return HttpResponse('Please verify your email address to complete the registration. If you do not \
+				verify by {}, your account will be deleted.'.format(user.expiration_date))
 	else:
 		form = ResendForm()
 	return render(request, 'webapp/send_verification.html', {'form' : form})
@@ -131,10 +120,9 @@ def register(request):
 			user.access_object = access_object
 			user.save()
 			
-			# SET DEADLINE FOR VERIFICATION
-			send_verification_email(user, email, request)
-			return HttpResponse('Please confirm your email address to complete the registration. If you do not \
-				verify before 30 days after your registration, your account will be deleted.')
+			send_verification_email(user, email, False)
+			return HttpResponse('Please verify your email address to complete the registration. If you do not \
+				verify by {}, your account will be deleted.'.format(user.expiration_date))
 	else:
 		form = RegisterForm()
 	return render(request, 'webapp/signup.html', {'form' : form})
@@ -151,7 +139,7 @@ def activate(request, uidb64, token):
 		logout(request)
 		user.is_active = True
 		user.save()
-		return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+		return HttpResponse('Thank you for your email confirmation. You can now login your account.')
 	else:
 		return HttpResponse('Activation link is invalid!')
 
