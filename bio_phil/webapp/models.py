@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 import string, secrets
 from datetime import timedelta
+from django.utils import timezone
+from webapp.tasks import *
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -51,7 +53,6 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-
 class User(AbstractUser):
     """User model."""
 
@@ -61,7 +62,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=150)
     access_object = models.OneToOneField(AccessCode, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    activated_at = models.DateTimeField()
+    activated_at = models.DateTimeField(null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -70,7 +71,23 @@ class User(AbstractUser):
 
     @property
     def expiration_date(self):
-        return self.created_at + timedelta(days=30)
+        return self.created_at + timedelta(minutes=5)
+
+    def save(self, *args, **kwargs):
+        do_tasks = False
+        if self.pk is None: 
+            do_tasks = True
+
+        super(User, self).save(*args, **kwargs)
+
+        print("TEST")
+
+        if do_tasks:
+            alert_inactive_user(self.pk)
+            delete_inactive_user(self.pk)
+            # alert_inactive_user.apply_async(args=[self.pk], eta=self.created_at+timedelta(minutes=2))
+            # delete_inactive_user.apply_async(args=[self.pk], eta=self.expiration_date)
+            print('TASKS SENT')
 
 class NewEmail(models.Model):
     email_code = models.CharField(max_length=20, unique=True)
@@ -137,3 +154,10 @@ class Module(models.Model):
 
     def __str__(self):
         return self.title
+
+class DeletionLog(models.Model):
+    email = models.EmailField()
+    full_name = models.CharField(max_length=200)
+    access_code = models.CharField(max_length=10)
+    user_created_at = models.DateTimeField()
+    deleted_at = models.DateTimeField(auto_now_add=True)
