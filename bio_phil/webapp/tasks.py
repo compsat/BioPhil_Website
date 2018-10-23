@@ -6,8 +6,7 @@ from datetime import timedelta
 from background_task import background
 import webapp
 
-@background(schedule=timedelta(minutes=2))
-# @background(schedule=timedelta(days=14))
+@background(schedule=timedelta(days=14))
 # @shared_task
 def alert_inactive_user(user_id):
 	user = webapp.models.User.objects.get(pk=user_id)
@@ -16,8 +15,7 @@ def alert_inactive_user(user_id):
 		print("EMAIL SENT")
 		send_verification_email(user, user.email, True)
 
-@background(schedule=timedelta(minutes=5))
-# @background(schedule=timedelta(days=30))
+@background(schedule=timedelta(days=30))
 # @shared_task
 def delete_inactive_user(user_id):
 	# lookup user by id and send them a message

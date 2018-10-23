@@ -71,7 +71,7 @@ class User(AbstractUser):
 
     @property
     def expiration_date(self):
-        return self.created_at + timedelta(minutes=5)
+        return self.created_at + timedelta(days=30)
 
     def save(self, *args, **kwargs):
         do_tasks = False
@@ -85,8 +85,6 @@ class User(AbstractUser):
         if do_tasks:
             alert_inactive_user(self.pk)
             delete_inactive_user(self.pk)
-            # alert_inactive_user.apply_async(args=[self.pk], eta=self.created_at+timedelta(minutes=2))
-            # delete_inactive_user.apply_async(args=[self.pk], eta=self.expiration_date)
             print('TASKS SENT')
 
 class NewEmail(models.Model):
