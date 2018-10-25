@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-import string, secrets
 from datetime import timedelta
 from django.utils import timezone
 from webapp.tasks import *
@@ -80,12 +79,9 @@ class User(AbstractUser):
 
         super(User, self).save(*args, **kwargs)
 
-        print("TEST")
-
         if do_tasks:
             alert_inactive_user(self.pk)
             delete_inactive_user(self.pk)
-            print('TASKS SENT')
 
 class NewEmail(models.Model):
     email_code = models.CharField(max_length=20, unique=True)
@@ -119,19 +115,6 @@ class Submission(models.Model):
     
     class Meta:
         ordering = ('created_at',)
-
-"""Generates a string of five randomly generated characters"""
-def random_code_generator(length, model):
-    code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
-
-    if model == 'access_code':
-        while(AccessCode.objects.filter(access_code=code).count() > 0):
-            code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
-    elif model == 'new_email':
-        while(NewEmail.objects.filter(email_code=code).count() > 0):
-            code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
-		
-    return code
 
 class image_carousel(models.Model):
     img = models.ImageField(upload_to='images')

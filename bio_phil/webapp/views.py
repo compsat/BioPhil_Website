@@ -16,7 +16,7 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import views as auth_views
-from .helper_methods import send_verification_email
+from .helper_methods import send_verification_email, random_code_generator
 from django.conf import settings
 
 def index(request):
