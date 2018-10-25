@@ -5,6 +5,20 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.conf import settings
+import string, secrets, webapp
+
+"""Generates a string of five randomly generated characters"""
+def random_code_generator(length, model):
+    code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+
+    if model == 'access_code':
+        while webapp.models.AccessCode.objects.filter(access_code=code).count() > 0:
+            code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+    elif model == 'new_email':
+        while webapp.models.NewEmail.objects.filter(email_code=code).count() > 0:
+            code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+		
+    return code
 
 def send_verification_email(user, email, is_alert):
 	mail_subject = 'Activate your account.'
