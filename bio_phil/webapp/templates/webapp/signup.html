@@ -5,8 +5,8 @@
 	{% if error_message %}
 		<p><strong>{{ error_message }}</strong></p>
 	{% endif %}
-	<form method="post">
-    	{% csrf_token %}
+	<form action = '/register/confirm_reg/' method="post">
+		{% csrf_token %}
     	{{ form.as_p }}
     	<button type="submit">Sign up</button>
 	</form>

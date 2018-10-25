@@ -10,9 +10,26 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 def index(request):
-	# update_text = Updates.object.all()[0:4]
-#     context = {'update_text':update_text}
-#     return render(<insert html file name here pls ty =D>, context)
+	# form = RegisterForm(request.POST)
+	# print(request.POST.get('first_name'))
+	# print("I WORK BOI")
+	# # if form.is_valid():
+	# print('FORM IS VALID BOI')
+	# form.is_valid()
+	# user = form.save(commit= False)
+	# email = form.cleaned_data['email']
+	# password = form.cleaned_data['password1']
+	# access_code = form.cleaned_data['access_field']
+	# user.set_password(password)
+	# user.save()
+	# user = authenticate(email=email, password=password)
+	# if user is not None:
+	# 	if user.is_active:
+	# 		"""Attaches an access_object to the user based on the inputted access code"""
+	# 		access_object = AccessCode.objects.get(access_code=access_code)
+	# 		user.access_object = access_object
+	# 		user.save()
+	# 		login(request, user)
 	return render(request, 'webapp/index.html')
 
 """
@@ -45,9 +62,24 @@ def profile(request):
 	return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages})
 	# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
 
-def register(request):
+def confirm(request):
 	if request.method == 'POST':
-		form = RegisterForm(request.POST)
+		first_name = request.POST.get('first_name')
+		last_name = request.POST.get('last_name')
+		email_add = request.POST.get('email')
+		password = request.POST.get('password1')
+		access_code_number = request.POST.get('access_field')
+		access_code1 = AccessCode.objects.get(access_code = access_code_number)
+		school = access_code1.university
+		usertype = access_code1.user_type
+		init = {'first_name':first_name, 'last_name':last_name, 'email': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'password1':password,'password2':password}
+		form = RegisterForm(initial = init)
+		form.fields['password1'].widget.render_value = True
+		form.fields['password2'].widget.render_value = True		
+		context = {'first_name':first_name, 'last_name':last_name, 'email_add': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'form':form}
+		return render(request, 'webapp/signup_confirm.html',context)
+	else:
+		form = RegisterForm(request.GET)
 		if form.is_valid():
 			user = form.save(commit=False)
 			email = form.cleaned_data['email']
@@ -64,8 +96,25 @@ def register(request):
 					user.save()
 					login(request, user)
 					return redirect('index')
-	else:
-		form = RegisterForm()
+
+	# first_name = request.POST.get('first_name')
+	# last_name = request.POST.get('last_name')
+	# email_add = request.POST.get('email')
+	# password = request.POST.get('password1')
+	# access_code_number = request.POST.get('access_field')
+	# access_code1 = AccessCode.objects.get(access_code = access_code_number)
+	# school = access_code1.university
+	# usertype = access_code1.user_type
+	# init = {'first_name':first_name, 'last_name':last_name, 'email': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'password1':password,'password2':password}
+	# form = RegisterForm(initial = init)
+	# form.fields['password1'].widget.render_value = True
+	# form.fields['password2'].widget.render_value = True
+	
+	# context = {'first_name':first_name, 'last_name':last_name, 'email_add': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'form':form}
+	# return render(request, 'webapp/signup_confirm.html',context)
+
+def register(request):
+	form = RegisterForm()
 	return render(request, 'webapp/signup.html', {'form' : form})
 
 """View for students to view their submissions to all modules OR for teachers
@@ -189,5 +238,5 @@ def images(request):
 
 def module(request):
 	module_list = Module.objects.all()
-	context = {'module_list': module_list}
+	context = {'module_list': module_list,}
 	return render(request, 'webapp/module_tester.html', context)

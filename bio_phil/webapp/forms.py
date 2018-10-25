@@ -32,6 +32,10 @@ class RegisterForm(UserCreationForm):
 			return False
  
 		return True
+	def __init__(self,*args,**kwargs):
+		super(RegisterForm, self).__init__(*args, **kwargs)
+		instance = getattr(self,'instance', None)
+		
 
 class GenerateCodeForm(forms.ModelForm):
 	quantity = forms.IntegerField()

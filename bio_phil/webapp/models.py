@@ -65,6 +65,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+    # def get_absolute_url(self):
+    #     return "confirm_reg/"
     
 class Updates(models.Model):# to get the last 5 in the query, order it by ID number in descending order, then get [0:4]
     update_text = models.CharField(max_length=200)
