@@ -51,15 +51,6 @@ class LoginForm(AuthenticationForm):
 
 		return True
 
-	# print("JFKAL;JFAKLD;SF;LKA;KASD")
-	# def confirm_login_allowed(self, user):
-		# pass
-	# 	if not user.is_active:
-	# 		raise forms.ValidationError(
- #                _("You have not verified your email"),
- #                code='inactive',
- #            )
-
 class RegisterForm(UserCreationForm):
 	access_field = forms.CharField(max_length=20)
 
