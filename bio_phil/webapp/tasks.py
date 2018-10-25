@@ -10,9 +10,7 @@ import webapp
 # @shared_task
 def alert_inactive_user(user_id):
 	user = webapp.models.User.objects.get(pk=user_id)
-	print("TASK DONE")
 	if not user.is_active:
-		print("EMAIL SENT")
 		send_verification_email(user, user.email, True)
 
 @background(schedule=timedelta(days=30))

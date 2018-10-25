@@ -102,7 +102,6 @@ def update_email(request, uidb64, token, email_code):
 		user.save()
 		return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
 	else:
-		print(token)
 		return HttpResponse('Activation link is invalid!')
 
 def register(request):
