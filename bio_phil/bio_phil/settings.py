@@ -132,8 +132,6 @@ BACKGROUND_TASK_RUN_ASYNC = True
 
 STATIC_URL = '/static/'
 
-#  -------- MAKE ENV FILE -----------
-
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
