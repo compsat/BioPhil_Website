@@ -42,7 +42,7 @@ def send_verification_email(user, email, is_alert):
 
 def send_deletion_email(user):
 	mail_subject = 'Your account has been deleted.'
-	message = render_to_string('webapp/acc_active_alert_email.html', {
+	message = render_to_string('webapp/acc_deleted_email.html', {
 		'user' : user
 	})
 	email_body = EmailMessage(mail_subject, message, to=[user.email])
