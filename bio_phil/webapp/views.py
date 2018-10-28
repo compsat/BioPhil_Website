@@ -43,7 +43,7 @@ def profile(request):
 				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages})
 				# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
 		elif 'new_email' in request.POST:
-			change_email = ChangeEmailForm(request.POST)
+			change_email = ChangeEmailForm(request.POST, request=request)
 			if change_email.is_valid():
 				old_email = user.email
 				new_email_object = change_email.save(commit=False)
@@ -71,7 +71,8 @@ def profile(request):
 				return HttpResponse('An email was sent to your old email and your desired new email. Please check either of them to confirm your update.')
 	else:
 		change_password = ChangePasswordForm(user)
-		change_email = ChangeEmailForm()
+		change_email = ChangeEmailForm(request=request)
+		# change_email.fields['old_email'].initial = user.email
 	return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email,  'user' : user, 'messages' : messages})
 
 def resend_verification(request):

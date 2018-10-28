@@ -95,10 +95,16 @@ class ChangePasswordForm(PasswordChangeForm):
 class ChangeEmailForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput)
 	confirm_email = forms.EmailField()
+	old_email = forms.EmailField(disabled=True)
 
 	class Meta:
 		model = NewEmail
 		fields = ['password', 'old_email', 'new_email', 'confirm_email']
+
+	def __init__(self, *args, **kwargs):
+		self.request = kwargs.pop("request")
+		super(ChangeEmailForm, self).__init__(*args, **kwargs)
+		self.fields['old_email'].initial = self.request.user.email
 
 	def is_valid(self):
         # run the parent validation first
