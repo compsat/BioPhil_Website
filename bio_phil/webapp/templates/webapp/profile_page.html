@@ -1,29 +1,227 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+BioPhil
+{% endblock %}
 
 {% block body %}
-	{% if messages %}
-		<p><strong>{{ messages }}</strong></p>
-	{% endif %}
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
 
-	<div class="profile">
-		<h2>{{ user.get_full_name }}</h2>
-		<h4>{{ user.access_object.user_type }}</h4>
-		<p>School: {{ user.access_object.university }}
-		{% ifequal user.access_object.user_type "Student" %}
-			<p>Teacher: {{ user.access_object.creator.get_full_name }}</p>
-		{% endifequal %}
-		<p>Join date: {{ user.created_at }}</p>
-	</div>
-	<h2>Change Password</h2>
-	<form method="post">
-    	{% csrf_token %}
-    	{{ change_password.as_p }}
-    	<button type="submit">Reset Password</button>
-	</form>
-	<h2>Update Email Address</h2>
-	<form method="post">
-    	{% csrf_token %}
-    	{{ change_email.as_p }}
-    	<button type="submit">Reset Email</button>
-	</form>
+  <!-- Add your site or application content here -->
+  <!-- Insert Navbar Here! -->
+
+  {% if messages %}
+    <p><strong>{{ messages }}</strong></p>
+  {% endif %}
+
+  <div class="container-fluid py-4 px-5 row justify-content-around">
+    <div class="col-md-5">
+      <h1 class="font-weight-bold my-0 mb-2 text-dark">ACCOUNT SETTINGS</h1>
+      <div class="bg-light rounded p-4">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
+            <a class="nav-item nav-link" id="nav-update-email-tab" data-toggle="tab" href="#nav-update-email" role="tab" aria-controls="nav-update-email" aria-selected="false">Change Password</a>
+            <a class="nav-item nav-link" id="nav-change-password-tab" data-toggle="tab" href="#nav-change-password" role="tab" aria-controls="nav-change-password" aria-selected="false">Update Email</a>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <h4 class="font-weight-bold text-dark mt-3">{{ user.get_full_name }}</h4>
+            <h5 class="text-secondary">{{ user.access_object.user_type }}</h5>
+            <form>
+              <fieldset disabled>
+                <div class="form-group">
+                  <label for="schoolField">School</label>
+                  <input type="text" id="schoolField" class="form-control" placeholder="{{ user.access_object.university }}">
+                </div>
+                {% ifequal user.access_object.user_type "Student" %}
+                  <div class="form-group">
+                    <label for="instructorField">Instructor</label>
+                    {% if user.access_object.creator %}
+                      <input type="text" id="instructorField" class="form-control" placeholder="{{ user.access_object.creator.get_full_name }}">
+                    {% else %}
+                      <input type="text" id="instructorField" class="form-control" placeholder="N/A">
+                    {% endif %}
+                  </div>
+                {% endifequal %}
+                <div class="form-group">
+                  <label for="joinDateField">Join Date</label>
+                  <input type="text" id="joinDateField" class="form-control" placeholder="{{ user.created_at.date }}">
+                </div>
+                <div class="form-group">
+                  <label for="emailAddressField">Email Address</label>
+                  <input type="text" id="emailAddressField" class="form-control" placeholder="{{ user.email }}">
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="nav-update-email" role="tabpanel" aria-labelledby="nav-update-email-tab">
+            <div class="p-3 container-fluid">
+              <form>
+                <div class="form-group">
+                  <label for="currentPassword">Current password</label>
+                  <input type="password" class="form-control" id="currentPassword" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <label for="newPassword">New password</label>
+                  <input type="password" class="form-control" id="newPassword" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <label for="newPassword2">Confirm new password</label>
+                  <input type="password" class="form-control" id="newPassword2" placeholder="Password">
+                </div>
+                <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#passwordConfirmationModal">Submit</button>
+                <button type="reset" class="btn btn-secondary float-right">Reset</button>
+              </form>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-change-password" role="tabpanel" aria-labelledby="nav-change-password-tab">
+            <div class="p-3 container-fluid">
+              <form>
+                <div class="form-group">
+                  <label for="currentEmail">Current email</label>
+                  <input type="email" class="form-control" id="currentEmail" placeholder="get.data@controller.com" readonly>
+                </div>
+                <div class="form-group">
+                  <label for="newEmail">New email</label>
+                  <input type="email" class="form-control" id="newEmail" placeholder="Email address">
+                </div>
+                <div class="form-group">
+                  <label for="newEmail2">Confirm new email</label>
+                  <input type="email" class="form-control" id="newEmail2" placeholder="Email address">
+                </div>
+                <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#emailConfirmationModal">Submit</button>
+                <button type="reset" class="btn btn-secondary float-right">Reset</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 px-0">
+      <h1 class="font-weight-bold my-0 mb-2 text-dark">ACCOUNT SETTINGS</h1>
+      <div class="bg-light rounded p-4">
+        <table class="table table-responsive-sm">
+          <thead class="thead-light" style="background-color:#353F4B">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Module Name</th>
+              <th scope="col">Submitted on</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td><button type="button" class="btn btn-link p-0" data-toggle="modal" data-target="#responseModal"> Mark</td>
+              <td>Otto</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Modals below -->
+  <!-- Password confirmation modal -->
+  <div class="modal fade" id="passwordConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="emailConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailConfirmationModalLabel">Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to change your password? <strong>This action cannot be undone.</strong>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Submit changes</button>
+          <button type="button" class="btn btn-primary">Go back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email confirmation modal -->
+  <div class="modal fade" id="emailConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="passwordConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="passwordConfirmationModalLabel">Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to update your email address? <strong>This action cannot be undone.</strong>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Submit changes</button>
+          <button type="button" class="btn btn-primary">Go back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example modal for response -->
+  <div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="responseModalLabel">Module title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form>
+        <div class="modal-body">
+          <textarea class="form-control" id="responseTextArea" rows="6" disabled></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
+          <button type="button" class="btn btn-warning" id="responseEditButton">Edit</button>
+          <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  <script>
+  $('#responseEditButton').click(function(event) {
+    $('#responseTextArea').prop("disabled", false );
+    $('#responseEditButton').prop("hidden", true);
+    $('#moduleResponseSave').prop("hidden", false);
+    $('moduleResponseBack').prop("value", "Cancel");
+  });
+
+  $('#responseCloseButton').click(function(event) {
+    $('#responseTextArea').attr("disabled", true);
+    //get original value from JSON file and make it value of textarea
+    $('#responseEditButton').attr("hidden", false);
+    $('#moduleResponseSave').attr("hidden", true);
+    $('moduleResponseBack').attr("value", "Go back");
+  });
+
+
+
+  </script>
 {% endblock %}

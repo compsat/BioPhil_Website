@@ -1,5 +1,174 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+BioPhil
+{% endblock %}
 
 {% block body %}
-  <h1>Welcome!</h1>
+  <!-- Add your site or application content here -->
+  <div class="jumbotron" style="background-image: url({% static 'webapp/img/bg/photo1.jpeg' %}); background-size: 1000%;">
+    <div class="container">
+      <h1 class="font-weight-bold display-1 text-white">I'M A HEADLINE</h1>
+      <p class="lead text-white">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per.</p>
+      <p class="lead text-white">
+      Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam. Vix cu case ponderum patrioque. Dicat exerci postea ea mea, putent dolores menandri eos id.</p><br>
+      <div class="justify-content-center mx-auto">
+        <a class="btn btn-outline-light btn-lg mx-auto" href="#" role="button">Learn more</a>
+      </div>
+    </div> 
+  </div>
+
+  <div class="container-fluid">
+    <!-- ABOUT -->
+    <div class="container">
+      <h1 class="font-weight-bold">ABOUT</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+        <br><br><br>
+      </div>
+    </div>
+
+    <!-- PARTNERS -->
+    <div class="container">
+      <h1 class="font-weight-bold">PARTNERS</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+
+        
+        <img src="{% static 'webapp/img/partners/logo_xavier.png' %}" class="img-fluid mr-md-4 rounded-circle mx-auto shadow mb-5" alt="xavier" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="fsuu" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_daad.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="daad" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_mfnb.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="mfnb" width="20%">
+        
+        <img src="{% static 'webapp/img/partners/logo_nmpm.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="nmpm" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_ateneo.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="ateneo" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_rupp.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="daad" width="20%">
+      </div>
+    </div>
+
+    <!-- MEET THE TEAM -->
+    <div class="container">
+      <h1 class="font-weight-bold">MEET THE TEAM</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+        <div class="row">
+          <!-- Researcher Card -->
+          <div class="col-sm">
+            <div class="card">
+              <img class="card-img-top" src="" alt="Researcher Image">
+              <div class="card-body">
+                <h5 class="card-title">Name of Researcher</h5>
+                <p class="card-text">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
+              </div>
+            </div>
+          </div>
+          <!-- -->
+          <!-- Researcher Card -->
+          <div class="col-sm">
+            <div class="card">
+              <img class="card-img-top" src="" alt="Researcher Image">
+              <div class="card-body">
+                <h5 class="card-title">Name of Researcher</h5>
+                <p class="card-text">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
+              </div>
+            </div>
+          </div>
+          <!-- -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="container">
+      <h1 class="font-weight-bold">MODULES</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+        <!-- Card Row -->
+        <div class="row">
+          <!-- Card Module -->
+          <div class="col-sm">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Module Name</h5>
+                <h6 class="card-subtitle text-muted">October 31, 2018</h6> <br>
+                <p class="card-text">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam.</p>
+                <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal1">View Details
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Card Module -->
+          <div class="col-sm">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Module Name</h5>
+                <h6 class="card-subtitle text-muted">October 31, 2018</h6> <br>
+                <p class="card-text">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam.</p>
+                <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal1">View Details
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Card Module -->
+          <div class="col-sm">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Module Name</h5>
+                <h6 class="card-subtitle text-muted">October 31, 2018</h6> <br>
+                <p class="card-text">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam.</p>
+                <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal1">View Details
+                </button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+
+    <!-- Modal 1 -->
+    <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="container"><br>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="font-weight-bold">Modal Name</h3>
+              <h6 class="text-muted">October 31, 2018</h6><br>
+              <p>Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam. Vix cu case ponderum patrioque. Dicat exerci postea ea mea, putent dolores menandri eos id. Dicam causae eos ex, ius odio ornatus fastidii cu. </p>
+              <p>Ea cum consul ornatus maluisset. Accusata mediocrem intellegat per at. Alii nonumes sapientem ne duo, sed alii persius te. Lucilius platonem mel no. Sed ad ubique bonorum comprehensam, mundi convenire id quo, civibus sententiae pri te. Ut eum tempor apeirian concludaturque. Aeque nostrud consectetuer per ad. Pro tritani reprimique ut, et quo prima omittam praesent, ridens feugiat convenire te qui. Ad amet rebum primis quo, audire reprehendunt ius cu. Ea est omnium audiam salutatus, pericula deseruisse eam te, omnis essent omittantur id mei. Summo maiestatis te eos, ea iusto alienum eum, ius in solet dissentiet. Ad nec mutat commune moderatius. Sea alia novum an, zril comprehensam no nec, liber semper vidisse duo at.</p>
+              <h3 class="font-weight-bold">Downloads</h3>
+                <table class="table table-striped table-sm">
+                  <tbody>
+                    <tr>
+                      <td>FILENAME_EXAMPLE_TEMPLATE.PDF</td>
+                      <td>Oct 10, 2018</td>
+                      <td>81M</td>
+                      <td>PDF</td>
+                    </tr>
+                    <tr>
+                      <td>FILENAME_EXAMPLE_TEMPLATE_2162.PDF</td>
+                      <td>Oct 10, 2018</td>
+                      <td>219KB</td>
+                      <td>PDF</td>
+                    </tr>
+                    <tr>
+                      <td>FILENAME_EXAMPLE_TEMPLATE_YES.DOC</td>
+                      <td>Oct 10, 2018</td>
+                      <td>952KB</td>
+                      <td>DOC</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p class="text-sm-right">Made by the Computer Society of the Ateneo ¤</p>
+  </div>
 {% endblock %}

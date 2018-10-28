@@ -1,13 +1,68 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Sign-up
+{% endblock %}
 
 {% block body %}
-	<h2>Sign up</h2>
-	{% if error_message %}
-		<p><strong>{{ error_message }}</strong></p>
-	{% endif %}
-	<form method="post">
-    	{% csrf_token %}
-    	{{ form.as_p }}
-    	<button type="submit">Sign up</button>
-	</form>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+  <br>
+  <div class="container-fluid" id="signup-container">
+      <div class="col">
+        <div class="text-center">
+          <img src="{% static 'webapp/img/logo/biophil.png' %}" class="img-fluid" id="logo" width="50%">
+          <h1>Create an Account</h1>
+        </div>
+      </div>
+      <!-- Form -->
+      <div class="col">
+        <div class="container bg-light rounded">
+          <br>
+          <form>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">First Name</label>
+              <input type="name" class="form-control" id="exampleInputName" aria-describedby="emailHelp">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">Last Name</label>
+              <input type="name" class="form-control" id="exampleInputName" aria-describedby="emailHelp">
+            </div>            
+
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputPassword1">Confirm Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputPassword1">Access Code</label>
+              <input type="code" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div class="text-center">
+              
+            </div>
+            <button type="submit" class="btn btn-dark btn-block">Sign Up</button>
+          </form>
+          <br>
+        </div>
+      </div>      
+  </div>
+  <br>
+
 {% endblock %}
