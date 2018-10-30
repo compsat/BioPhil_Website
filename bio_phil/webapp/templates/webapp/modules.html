@@ -40,78 +40,28 @@ Modules
 
               <div id="downloadCollapse{{ module.pk }}" class="panel-collapse collapse" aria-labelledby="downloadHeading1" data-parent="#downloadAccordion1">
                 <div class="card-body row justify-content-around">
-                  <a class="col-sm mx-2" href="#">
-                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
-                      <div class="col-sm-3 px-0">
-                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
-                      </div>
-                      <div class="col-sm-9">
-                        <div class="row">
-                          <strong class="text-truncate">filename_example_template.pdf</strong>
+                  {% for download in module.downloads.all %}
+                    <a class="col-sm mx-2" href="{{ download.file.url }}">
+                      <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
+                        <div class="col-sm-3 px-0">
+                          {% with 'webapp/img/icons/'|add:download.extension|add:'.png' as image_static %}
+                            <img src="{% static image_static %}" height="70" width="70" alt="">
+                          {% endwith %}
                         </div>
-                        <div class="row">
-                          <span class="text-muted">10/15/2019</span>
-                        </div>
-                        <div class="row">
-                          <span class="text-muted">PDF, 4.12MB</span>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                  <a class="col-sm mx-2" href="#">
-                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
-                      <div class="col-sm-3 px-0">
-                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
-                      </div>
-                      <div class="col-sm-9">
-                        <div class="row">
-                          <strong class="text-truncate">filename_example_template.pdf</strong>
-                        </div>
-                        <div class="row">
-                          <span class="text-muted">10/15/2019</span>
-                        </div>
-                        <div class="row">
-                          <span class="text-muted">PDF, 4.12MB</span>
+                        <div class="col-sm-9">
+                          <div class="row">
+                            <strong class="text-truncate">{{ download.file.name }}</strong>
+                          </div>
+                          <div class="row">
+                            <span class="text-muted">{{ download.created_at }}</span>
+                          </div>
+                          <div class="row">
+                            <span class="text-muted">{{ download.extension }}, {{ download.file_size | filesizeformat }}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </a>
-                  <a class="col-sm mx-2" href="#">
-                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
-                      <div class="col-sm-3 px-0">
-                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
-                      </div>
-                      <div class="col-sm-9">
-                        <div class="row">
-                          <strong class="text-truncate">filename_example_template.pdf</strong>
-                        </div>
-                        <div class="row">
-                          <span class="text-muted">10/15/2019</span>
-                        </div>
-                        <div class="row">
-                          <span class="text-muted">PDF, 4.12MB</span>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                  <a class="col-sm mx-2" href="#">
-                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
-                      <div class="col-sm-3 px-0">
-                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
-                      </div>
-                      <div class="col-sm-9">
-                        <div class="row">
-                          <strong class="text-truncate">filename_example_template.pdf</strong>
-                        </div>
-                        <div class="row">
-                          <span class="text-muted">10/15/2019</span>
-                        </div>
-                        <div class="row">
-                          <span class="text-muted">PDF, 4.12MB</span>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
+                    </a>
+                  {% endfor %}
                 </div>
               </div>
             </div>

@@ -157,7 +157,7 @@ class Download(models.Model):
 
     def extension(self):
         name, extension = os.path.splitext(self.file.name)
-        return extension
+        return extension[1:]
 
     def file_size(self):
         """Returns the filesize of the filename given in value"""
