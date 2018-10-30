@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm, LoginForm, ChangeEmailForm, ResendForm
 from .models import *
@@ -20,10 +19,15 @@ from .helper_methods import send_verification_email, random_code_generator
 from django.conf import settings
 
 def index(request):
-	# update_text = Updates.object.all()[0:4]
-#     context = {'update_text':update_text}
-#     return render(<insert html file name here pls ty =D>, context)
-	return render(request, 'webapp/index.html')
+	message = None
+	if 'message' in request.session:
+		message = request.session['message']
+		del request.session['message']
+	modules_list = Module.objects.all().order_by('id')[:3]
+	return render(request, 'webapp/index.html', {'message' : message, 'modules_list' : modules_list})
+
+def gallery(request):
+	return render(request, 'webapp/gallery.html')
 
 """
 View for a user's profile where they can change their password.
@@ -31,18 +35,20 @@ View for a user's profile where they can change their password.
 @login_required
 def profile(request):
 	user = request.user
+	submissions_list = Submission.objects.filter(user=user)
 	messages = None
 	if request.method == 'POST':
-		if 'password1' in request.POST:
+		if 'new_password1' in request.POST:
 			change_password = ChangePasswordForm(user, request.POST)
-			# change_email = ChangeEmailForm()
+			change_email = ChangeEmailForm(request=request)
 			if change_password.is_valid():
 				user = change_password.save()
 				update_session_auth_hash(request, user)
 				messages = 'Your password was successfully updated!'
-				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages})
-				# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
+				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages, 'submissions_list' : submissions_list})
+			messages = "There was an error while updating your password."
 		elif 'new_email' in request.POST:
+			change_password = ChangePasswordForm(user)
 			change_email = ChangeEmailForm(request.POST, request=request)
 			if change_email.is_valid():
 				old_email = user.email
@@ -67,13 +73,30 @@ def profile(request):
 				})
 				email_body = EmailMessage(mail_subject, message, to=[old_email, new_email])
 				email_body.send()
+				messages = 'An email was sent to your old email and your desired new email. Please check either of them to confirm your update.'
+				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages, 'submissions_list' : submissions_list})
+			messages = "There was an error while updating your email."
+		elif 'submission-answer' in request.POST:
+			change_password = ChangePasswordForm(user)
+			change_email = ChangeEmailForm(request=request)
 
-				return HttpResponse('An email was sent to your old email and your desired new email. Please check either of them to confirm your update.')
+			submission_pk = request.POST['submission-id']
+			new_answer = request.POST['submission-answer']
+			submission = Submission.objects.get(pk=submission_pk)
+			submission.answer = new_answer
+			submission.save()
+			messages = "Your submission has been edited!"
+
 	else:
 		change_password = ChangePasswordForm(user)
 		change_email = ChangeEmailForm(request=request)
-		# change_email.fields['old_email'].initial = user.email
-	return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email,  'user' : user, 'messages' : messages})
+	return render(request, 'webapp/profile_page.html', {
+		'change_password' : change_password, 
+		'change_email' : change_email,  
+		'user' : user, 
+		'messages' : messages,
+		'submissions_list' : submissions_list
+		})
 
 def resend_verification(request):
 	if request.method == 'POST':
@@ -82,8 +105,9 @@ def resend_verification(request):
 			email = form.cleaned_data['email']
 			user = User.objects.get(email=email)
 			send_verification_email(user, email, False)
-			return HttpResponse('Please verify your email address to complete the registration. If you do not \
-				verify by {}, your account will be deleted.'.format(user.expiration_date))
+			request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
+				verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+			return redirect('index')
 	else:
 		form = ResendForm()
 	return render(request, 'webapp/send_verification.html', {'form' : form})
@@ -101,30 +125,71 @@ def update_email(request, uidb64, token, email_code):
 		email_object = NewEmail.objects.get(email_code=email_code)
 		user.email = email_object.new_email
 		user.save()
-		return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+		request.session['message'] = 'You have successfully changed your email. You may not login using your new email.'
 	else:
-		return HttpResponse('Activation link is invalid!')
+		request.session['message'] = 'Email update link is invalid!'
+	return redirect('index')
+
+def confirm(request):
+	if 'email' in request.session:
+		email = request.session['email']
+		first_name = request.session['first_name']
+		last_name = request.session['last_name']
+		password1 = request.session['password1']
+		access_field = request.session['access_field']
+		access_object = AccessCode.objects.get(access_code=access_field)
+
+		if request.method == 'POST':
+			if 'confirm_reg' in request.POST:
+				user = User.objects.create(email=email, first_name=first_name, last_name=last_name, password=password1, access_object=access_object)
+				user.is_active = False
+				user.save()
+				del request.session['email']
+				del request.session['first_name']
+				del request.session['last_name']
+				del request.session['password1']
+				del request.session['access_field']
+				send_verification_email(user, email, False)
+				request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
+					verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+				return redirect('index')
+			elif 'go_back' in request.POST:
+				request.session['initial_data'] = {
+					'email' : email,
+					'first_name' : first_name,
+					'last_name' : last_name,
+					'access_field' : access_field,
+				}
+				del request.session['email']
+				del request.session['first_name']
+				del request.session['last_name']
+				del request.session['password1']
+				del request.session['access_field']
+				return redirect('register')
+
+		context = {'first_name' : first_name, 'last_name':last_name, 'email': email, 'university' : access_object.university, 'user_type' : access_object.user_type}
+		return render(request, 'webapp/confirmation.html', context)
+
+	else:
+		return redirect('register')
 
 def register(request):
 	if request.method == 'POST':
 		form = RegisterForm(request.POST)
 		if form.is_valid():
-			user = form.save(commit=False)
-			email = form.cleaned_data['email']
-			password = form.cleaned_data['password1']
-			access_code = form.cleaned_data['access_field']
-			user.set_password(password)
-			user.is_active = False
-			"""Attaches an access_object to the user based on the inputted access code"""
-			access_object = AccessCode.objects.get(access_code=access_code)
-			user.access_object = access_object
-			user.save()
-			
-			send_verification_email(user, email, False)
-			return HttpResponse('Please verify your email address to complete the registration. If you do not \
-				verify by {}, your account will be deleted.'.format(user.expiration_date))
+			request.session['email'] = request.POST['email']
+			request.session['first_name'] = request.POST['first_name']
+			request.session['last_name'] = request.POST['last_name']
+			request.session['password1'] = request.POST['password1']
+			request.session['access_field'] = request.POST['access_field']
+			return redirect('conf_reg')
 	else:
 		form = RegisterForm()
+
+		if 'initial_data' in request.session:
+			form = RegisterForm(initial=request.session['initial_data'])
+			del request.session['initial_data']
+
 	return render(request, 'webapp/signup.html', {'form' : form})
 
 def activate(request, uidb64, token):
@@ -139,9 +204,10 @@ def activate(request, uidb64, token):
 		logout(request)
 		user.is_active = True
 		user.save()
-		return HttpResponse('Thank you for your email confirmation. You can now login your account.')
+		request.session['message'] = 'Thank you for your email confirmation. You can now login your account.'
 	else:
-		return HttpResponse('Activation link is invalid!')
+		request.session['message'] = 'Activation link is invalid!'
+	return redirect('index')
 
 """View for students to view their submissions to all modules OR for teachers
 to view all the submissions of the students"""
@@ -249,13 +315,6 @@ def manage_access_codes(request):
 	used_access_codes = access_codes.exclude(user=None)
 	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'unused_access_codes' : unused_access_codes, 'used_access_codes' : used_access_codes})
 
-# View for the update model. 
-
-# def updates(request):
-#     update_text = Updates.object.all()[0:5]
-#     context = {'update_text':update_text}
-#     return render(<insert html file name here pls ty =D>, context)
-
 #View for image_carousel model
 def images(request):
 	image_list = image_carousel.objects.order_by('-id')[:5]
@@ -263,6 +322,19 @@ def images(request):
 	return render(request, 'webapp/img_carousel_test.html',context)
 
 def module(request):
-	module_list = Module.objects.all()
-	context = {'module_list': module_list}
-	return render(request, 'webapp/module_tester.html', context)
+	modules_list = Module.objects.all()
+	context = {'modules_list': modules_list}
+	return render(request, 'webapp/modules.html', context)
+
+def send_file(request, file_name):
+    import os, tempfile, zipfile, mimetypes
+    from wsgiref.util import FileWrapper
+    from django.conf import settings
+    from django.http import HttpResponse
+    filename = os.path.join(settings.MEDIA_ROOT, file_name)
+    wrapper = FileWrapper(open(filename, 'rb'))
+    content_type = mimetypes.guess_type(filename)[0]
+    response = HttpResponse(wrapper, content_type=content_type)
+    response['Content-Length'] = os.path.getsize(filename)    
+    response['Content-Disposition'] = "attachment; filename=%s"%file_name
+    return response

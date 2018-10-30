@@ -6,10 +6,14 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from bio_phil import settings
 from django.contrib.auth.decorators import login_required
 
+
 urlpatterns = [
     path('', views.index, name='index'),
+    path('register/confirm_reg/',views.confirm, name='conf_reg'),
+    path('media/<str:file_name>/', views.send_file, name='send_file'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('register/', views.register, name='register'),
+    path('gallery/', views.gallery, name='gallery'),
     path('generate/', views.generate_access_codes, name='generate_access_codes'),
     path('manage/', views.manage_access_codes, name='manage_access_codes'),
     path('my_profile/', views.profile, name='profile'),
@@ -18,7 +22,7 @@ urlpatterns = [
     path('submissions/', login_required(views.SubmissionList.as_view(template_name='webapp/submissions_list.html')), name='submissions_list'),
     path('submissions/<int:pk>/', login_required(views.EditAnswer.as_view()), name='edit'),
     path('submissions/delete/<int:pk>/', login_required(views.DeleteAnswer.as_view()), name='delete_submission'),
-    path('modules/', login_required(views.module), name='module_tester'),
+    path('modules/', login_required(views.module), name='modules'),
     path('update_email/<uidb64>/<token>/<email_code>', views.update_email, name='update_email'),
     path('resend_verification/', views.resend_verification, name='resend_verification'),
 ]

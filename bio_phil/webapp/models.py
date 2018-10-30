@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import timedelta
 from django.utils import timezone
 from webapp.tasks import *
+import os
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -67,7 +68,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
-
+    
     @property
     def expiration_date(self):
         return self.created_at + timedelta(days=30)
@@ -116,7 +117,7 @@ class Submission(models.Model):
     class Meta:
         ordering = ('created_at',)
 
-class image_carousel(models.Model):
+class ImageCarousel(models.Model):
     img = models.ImageField(upload_to='images')
     img_name = models.CharField(max_length=30)
     pub_date = models.DateTimeField(auto_now_add=True)
@@ -127,14 +128,38 @@ class image_carousel(models.Model):
 class Module(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
+    module_summary = models.CharField(max_length=300)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.title
 
-    class Meta:
-        ordering = ('id',)
+class ModuleImage(models.Model):
+    image = models.ImageField(upload_to = 'module/images')
+    img_name = models.CharField(max_length = 30)
+    pub_date = models.DateTimeField(auto_now_add = True)
+    module = models.ForeignKey(Module, on_delete=models.DO_NOTHING, related_name='images', blank=True, null=True)
+
+    def __str__(self):
+        return self.img_name
+
+class Download(models.Model):
+    title = models.CharField(max_length=120, unique=True)
+    module = models.ForeignKey('Module', on_delete=models.CASCADE, related_name='downloads', blank=True, null=True)
+    file = models.FileField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+    def extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension
+
+    def file_size(self):
+        """Returns the filesize of the filename given in value"""
+        return self.file.size
 
 class DeletionLog(models.Model):
     email = models.EmailField()

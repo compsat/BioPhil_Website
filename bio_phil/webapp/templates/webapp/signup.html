@@ -23,36 +23,54 @@ Sign-up
       <div class="col">
         <div class="container bg-light rounded">
           <br>
-          <form>
-
+          <form method="post" id="register-form">
+          {% csrf_token %}
             <div class="form-group">
               <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              {% if form.email.errors %}
+                {{ form.email.errors }}
+              {% endif %}
+              {{ form.email }}
             </div>
 
             <div class="form-group">
               <label for="exampleInputEmail1">First Name</label>
-              <input type="name" class="form-control" id="exampleInputName" aria-describedby="emailHelp">
+              {% if form.first_name.errors %}
+                {{ form.first_name.errors }}
+              {% endif %}
+              {{ form.first_name }}
             </div>
 
             <div class="form-group">
               <label for="exampleInputEmail1">Last Name</label>
-              <input type="name" class="form-control" id="exampleInputName" aria-describedby="emailHelp">
+              {% if form.last_name.errors %}
+                {{ form.last_name.errors }}
+              {% endif %}
+              {{ form.last_name }}
             </div>            
 
             <div class="form-group">
               <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
+              {% if form.password1.errors %}
+                {{ form.password1.errors }}
+              {% endif %}
+              {{ form.password1 }}
             </div>
 
             <div class="form-group">
               <label for="exampleInputPassword1">Confirm Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
+              {% if form.password2.errors %}
+                {{ form.password2.errors }}
+              {% endif %}
+              {{ form.password2 }}
             </div>
 
             <div class="form-group">
               <label for="exampleInputPassword1">Access Code</label>
-              <input type="code" class="form-control" id="exampleInputPassword1">
+              {% if form.access_field.errors %}
+                {{ form.access_field.errors }}
+              {% endif %}
+              {{ form.access_field }}
             </div>
             <div class="text-center">
               
@@ -64,5 +82,4 @@ Sign-up
       </div>      
   </div>
   <br>
-
 {% endblock %}
