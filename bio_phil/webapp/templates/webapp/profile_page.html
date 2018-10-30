@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block title %}
@@ -17,15 +18,15 @@ BioPhil
     <p>{{ messages }}</p>
   {% endif %}
 
-  <div class="container-fluid py-4 px-5 row justify-content-around">
-    <div class="col-md-5">
+  <div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center">
+    <div class="col-md-6 px-md-4 px-3">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">ACCOUNT SETTINGS</h1>
       <div class="bg-light rounded p-4">
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
-            <a class="nav-item nav-link" id="nav-update-email-tab" data-toggle="tab" href="#nav-update-email" role="tab" aria-controls="nav-update-email" aria-selected="false">Change Password</a>
-            <a class="nav-item nav-link" id="nav-change-password-tab" data-toggle="tab" href="#nav-change-password" role="tab" aria-controls="nav-change-password" aria-selected="false">Update Email</a>
+            <a class="nav-item nav-link" id="nav-update-email-tab" data-toggle="tab" href="#nav-update-email" role="tab" aria-controls="nav-update-email" aria-selected="false">Update Email</a>
+            <a class="nav-item nav-link" id="nav-change-password-tab" data-toggle="tab" href="#nav-change-password" role="tab" aria-controls="nav-change-password" aria-selected="false">Change Password</a>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -60,7 +61,61 @@ BioPhil
             </form>
           </div>
           <div class="tab-pane fade" id="nav-update-email" role="tabpanel" aria-labelledby="nav-update-email-tab">
-            <div class="p-3 container-fluid">
+            <div class="pt-3 px-0 container-fluid">
+              <form method="post" id="change-email-form">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="currentEmail">Current email</label>
+                  {% if change_email.old_email.errors %}
+                    {{ change_email.old_email.errors }}
+                  {% endif %}
+                  {{ change_email.old_email }}
+                </div>
+                <div class="form-group">
+                  <label for="newEmail">New email</label>
+                  {% if change_email.new_email.errors %}
+                    {{ change_email.new_email.errors }}
+                  {% endif %}
+                  {{ change_email.new_email }}
+                  <!-- <input name="{{ change_email.new_email.name }}" type="email" class="form-control" id="newEmail" placeholder="Email address"> -->
+                </div>
+                <div class="form-group">
+                  <label for="newEmail2">Confirm new email</label>
+                  {% if change_email.confirm_email.errors %}
+                    {{ change_email.confirm_email.errors }}
+                  {% endif %}
+                  {{ change_email.confirm_email }}
+                  <!-- <input name="{{ change_email.confirm_email.name }}" type="email" class="form-control" id="newEmail2" placeholder="Email address"> -->
+                </div>
+                <div class="container-fluid text-right px-0">
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                  <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#emailConfirmationModal">Submit</button>
+                </div>
+                <!-- Email confirmation modal -->
+                <div class="modal fade" id="emailConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="emailConfirmationModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="emailConfirmationModalLabel">Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to update your email address? <strong>This action cannot be undone.</strong>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Go back</button>
+                        <button type="submit" class="btn btn-primary">Submit changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </form>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-change-password" role="tabpanel" aria-labelledby="nav-change-password-tab">
+            <div class="pt-3 px-0 container-fluid">
               <form method="post" id="change-password-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -87,14 +142,17 @@ BioPhil
                   {{ change_password.new_password2 }}
                   <!-- <input name="{{ change_password.password2.name }}" type="password" class="form-control" id="newPassword2" placeholder="Password"> -->
                 </div>
-                <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#passwordConfirmationModal">Submit</button>
-                <button type="reset" class="btn btn-secondary float-right">Reset</button>
+                <div class="container-fluid text-right px-0">
+                 <button type="reset" class="btn btn-secondary">Reset</button>
+                 <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#passwordConfirmationModal">Submit</button>
+                </div>
+                
                 <!-- Password confirmation modal -->
-                <div class="modal fade" id="passwordConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="emailConfirmationModalLabel" aria-hidden="true">
+                <div class="modal fade" id="passwordConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="passwordConfirmationModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="emailConfirmationModalLabel">Confirmation</h5>
+                        <h5 class="modal-title" id="passwordConfirmationModalLabel">Confirmation</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -110,58 +168,7 @@ BioPhil
                   </div>
                 </div>
               </form>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="nav-change-password" role="tabpanel" aria-labelledby="nav-change-password-tab">
-            <div class="p-3 container-fluid">
-              <form method="post" id="change-email-form">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="currentEmail">Current email</label>
-                  {% if change_email.old_email.errors %}
-                    {{ change_email.old_email.errors }}
-                  {% endif %}
-                  {{ change_email.old_email }}
-                </div>
-                <div class="form-group">
-                  <label for="newEmail">New email</label>
-                  {% if change_email.new_email.errors %}
-                    {{ change_email.new_email.errors }}
-                  {% endif %}
-                  {{ change_email.new_email }}
-                  <!-- <input name="{{ change_email.new_email.name }}" type="email" class="form-control" id="newEmail" placeholder="Email address"> -->
-                </div>
-                <div class="form-group">
-                  <label for="newEmail2">Confirm new email</label>
-                  {% if change_email.confirm_email.errors %}
-                    {{ change_email.confirm_email.errors }}
-                  {% endif %}
-                  {{ change_email.confirm_email }}
-                  <!-- <input name="{{ change_email.confirm_email.name }}" type="email" class="form-control" id="newEmail2" placeholder="Email address"> -->
-                </div>
-                <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#emailConfirmationModal">Submit</button>
-                <button type="reset" class="btn btn-secondary float-right">Reset</button>
-                <!-- Email confirmation modal -->
-                <div class="modal fade" id="emailConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="passwordConfirmationModalLabel" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="passwordConfirmationModalLabel">Confirmation</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        Are you sure you want to update your email address? <strong>This action cannot be undone.</strong>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Go back</button>
-                        <button type="submit" class="btn btn-primary">Submit changes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
+              
             </div>
           </div>
         </div>
@@ -169,14 +176,14 @@ BioPhil
     </div>
 
     {% ifequal user.access_object.user_type "Student" %}
-    <div class="col-md-6 px-0">
+    <div class="col-md-6 px-md-4 px-3 my-md-0 my-4">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">SUBMISSIONS</h1>
       <div class="bg-light rounded p-4">
-        <table class="table table-responsive-sm">
+        <table class="table table-responsive-xs my-0">
           <thead class="thead-light" style="background-color:#353F4B">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Module</th>
+              <th scope="col" style="width:40%">Module Name</th>
               <th scope="col">Submitted on</th>
               <th scope="col">Last Edit</th>
             </tr>
@@ -189,6 +196,7 @@ BioPhil
                 <td>{{ submission.created_at }}</td>
                 <td>{{ submission.updated_at }}</td>
               </tr>
+                                                                                                                                      
               <div class="modal fade" id="responseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="responseModal" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -221,7 +229,6 @@ BioPhil
     </div>
     {% endifequal %}
   </div>
-</div>
 
   <script>
   $('#responseEditButton').click(function(event) {
