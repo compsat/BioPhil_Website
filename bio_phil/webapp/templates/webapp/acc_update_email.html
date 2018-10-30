@@ -1,0 +1,13 @@
+{% autoescape off %}
+Hi {{ user.get_full_name }},
+
+You want to change your email address from
+{{ old_email }}
+to
+{{ new_email }}
+
+Please click on the link to confirm your update,
+
+
+http://{{ default_domain }}{% url 'update_email' uidb64=uid token=token email_code=email_code %}
+{% endautoescape %}

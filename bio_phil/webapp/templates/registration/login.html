@@ -2,7 +2,11 @@
 
 {% block body %}
   {% if form.errors %}
-    <p>Your email and password didn't match. Please try again.</p>
+    {% if form.username.errors %}
+      <p>You haven't verified your email. Resend your verification email <a href="">here</a>.</p>
+    {% else %}
+      <p>Your email and password didn't match. Please try again.</p>
+    {% endif %}
   {% endif %}
 
   {% if next %}

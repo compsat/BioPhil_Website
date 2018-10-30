@@ -1,5 +1,6 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm
+from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm, LoginForm, ChangeEmailForm, ResendForm
 from .models import *
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -8,6 +9,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.core.mail import EmailMessage
+from django.contrib.auth import views as auth_views
+from .helper_methods import send_verification_email, random_code_generator
+from django.conf import settings
 
 def index(request):
 	# update_text = Updates.object.all()[0:4]
@@ -23,7 +33,7 @@ def profile(request):
 	user = request.user
 	messages = None
 	if request.method == 'POST':
-		if 'old_password' in request.POST:
+		if 'password1' in request.POST:
 			change_password = ChangePasswordForm(user, request.POST)
 			# change_email = ChangeEmailForm()
 			if change_password.is_valid():
@@ -32,18 +42,68 @@ def profile(request):
 				messages = 'Your password was successfully updated!'
 				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages})
 				# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
-		# elif 'change_password' in request.POST:
-		# 	change_password = ChangePasswordForm(use, request.POST)
-		# 	if form.is_valid():
-		# 		user = form.save()
-	 #            update_session_auth_hash(request, user)  # Important!
-	 #            messages.success(request, 'Your password was successfully updated!')
-	 #            return redirect('profile')
+		elif 'new_email' in request.POST:
+			change_email = ChangeEmailForm(request.POST, request=request)
+			if change_email.is_valid():
+				old_email = user.email
+				new_email_object = change_email.save(commit=False)
+				new_email = change_email.cleaned_data['new_email']
+				new_email_object.new_email = new_email
+				new_email_object.old_email = old_email
+				new_email_object.user = user
+				email_code = random_code_generator(10, 'new_email')
+				new_email_object.email_code = email_code
+				new_email_object.save()
+
+				mail_subject = 'Update your email address.'
+				message = render_to_string('webapp/acc_update_email.html', {
+					'user' : user,
+					'default_domain' : settings.DEFAULT_DOMAIN,
+					'uid' : urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+					'token' : account_activation_token.make_token(user),
+					'old_email' : old_email,
+					'new_email' : new_email,
+					'email_code' : email_code
+				})
+				email_body = EmailMessage(mail_subject, message, to=[old_email, new_email])
+				email_body.send()
+
+				return HttpResponse('An email was sent to your old email and your desired new email. Please check either of them to confirm your update.')
 	else:
 		change_password = ChangePasswordForm(user)
-		# change_email = ChangeEmailForm()
-	return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages})
-	# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
+		change_email = ChangeEmailForm(request=request)
+		# change_email.fields['old_email'].initial = user.email
+	return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email,  'user' : user, 'messages' : messages})
+
+def resend_verification(request):
+	if request.method == 'POST':
+		form = ResendForm(request.POST)
+		if form.is_valid():
+			email = form.cleaned_data['email']
+			user = User.objects.get(email=email)
+			send_verification_email(user, email, False)
+			return HttpResponse('Please verify your email address to complete the registration. If you do not \
+				verify by {}, your account will be deleted.'.format(user.expiration_date))
+	else:
+		form = ResendForm()
+	return render(request, 'webapp/send_verification.html', {'form' : form})
+
+def update_email(request, uidb64, token, email_code):
+	try:
+		# uid = force_text(urlsafe_base64_decode(uidb64))
+		uid = urlsafe_base64_decode(uidb64).decode()
+		user = User.objects.get(pk=uid)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+
+	if user is not None and account_activation_token.check_token(user, token):
+		logout(request)
+		email_object = NewEmail.objects.get(email_code=email_code)
+		user.email = email_object.new_email
+		user.save()
+		return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+	else:
+		return HttpResponse('Activation link is invalid!')
 
 def register(request):
 	if request.method == 'POST':
@@ -54,19 +114,34 @@ def register(request):
 			password = form.cleaned_data['password1']
 			access_code = form.cleaned_data['access_field']
 			user.set_password(password)
+			user.is_active = False
+			"""Attaches an access_object to the user based on the inputted access code"""
+			access_object = AccessCode.objects.get(access_code=access_code)
+			user.access_object = access_object
 			user.save()
-			user = authenticate(email=email, password=password)
-			if user is not None:
-				if user.is_active:
-					"""Attaches an access_object to the user based on the inputted access code"""
-					access_object = AccessCode.objects.get(access_code=access_code)
-					user.access_object = access_object
-					user.save()
-					login(request, user)
-					return redirect('index')
+			
+			send_verification_email(user, email, False)
+			return HttpResponse('Please verify your email address to complete the registration. If you do not \
+				verify by {}, your account will be deleted.'.format(user.expiration_date))
 	else:
 		form = RegisterForm()
 	return render(request, 'webapp/signup.html', {'form' : form})
+
+def activate(request, uidb64, token):
+	try:
+		# uid = force_text(urlsafe_base64_decode(uidb64))
+		uid = urlsafe_base64_decode(uidb64).decode()
+		user = User.objects.get(pk=uid)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+
+	if user is not None and account_activation_token.check_token(user, token):
+		logout(request)
+		user.is_active = True
+		user.save()
+		return HttpResponse('Thank you for your email confirmation. You can now login your account.')
+	else:
+		return HttpResponse('Activation link is invalid!')
 
 """View for students to view their submissions to all modules OR for teachers
 to view all the submissions of the students"""
@@ -140,13 +215,13 @@ def generate_access_codes(request):
 			access_object = form.save(commit=False)
 			quantity = form.cleaned_data['quantity']
 			user_type = form.cleaned_data['user_type']
-			access_object.access_code = random_code_generator(5)
+			access_object.access_code = random_code_generator(5, 'access_code')
 			access_object.user_type = user_type
 			access_object.university = teacher.access_object.university
 			access_object.creator = teacher
 			access_object.save()
 			for x in range(1, quantity):
-				access_code = random_code_generator(5)
+				access_code = random_code_generator(5, 'access_code')
 				obj = AccessCode.objects.create(access_code=access_code, user_type=user_type, university=teacher.access_object.university, creator=teacher)
 			return redirect('manage_access_codes')
 	else:
