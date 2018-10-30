@@ -5,6 +5,10 @@ BioPhil
 {% endblock %}
 
 {% block body %}
+	{% if messages %}
+		{{ messages }}
+	{% endif %}
+
 	{% ifequal teacher.access_object.user_type "Teacher" %}
 	<div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center">
 		<div class="col-md-4 px-md-4 px-3">
@@ -12,26 +16,45 @@ BioPhil
 			<div class="bg-light rounded p-4">
 				<form method="post" class="mb-3">
 					{% csrf_token %}
-					<!-- 
-					{{ form.as_p }} 
-
-					integrate stuff here 
-					-->
 					<div class="form-group">
 						<label for="quantity">Quantity</label>
-						<input type="number" class="form-control" id="quantity" placeholder="0">
+						{% if form.quantity.errors %}
+		                    {{ form.quantity.errors }}
+		                {% endif %}
+						{{ form.quantity }}
 					</div>
 					<div class="form-group">
 						<label for="userType">User Type</label>
-						<select class="custom-select" id="userType">
-							<option>Student</option>
-							<option>Teacher</option>
-						</select>
+						{% if form.user_type.errors %}
+		                    {{ form.user_type.errors }}
+		                {% endif %}
+						{{ form.user_type }}
 					</div>
 					<div class="container-fluid text-right px-0">
                 		<button type="reset" class="btn btn-secondary">Reset</button>
                 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#generateConfirmationModal">Generate</button>
                 	</div>
+
+                	<!-- Generate confirmation modal -->
+					<div class="modal fade" id="generateConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="generateConfirmationModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="generateConfirmationModalLabel">Confirmation</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									Are you sure you want to generate these access codes? <strong>This action cannot be undone.</strong>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-light" data-dismiss="modal">Go back</button>
+									<button type="submit" class="btn btn-primary">Generate</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -45,50 +68,25 @@ BioPhil
 							<th scope="col">Status</th>
 							<th scope="col">Access Code</th>							
 							<th scope="col">Used By:</th>
+							<th scope="col">User Type</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th scope="row">1</th>
-							<td>USED</td>
-							<td>ADS5JH52</td>
-							<td>User</td>
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>UNUSED</td>
-							<td>1EGADS</td>
-							<td></td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td>UNUSED</td>
-							<td>213GASA</td>
-							<td></td>
-						</tr>
+						{% for access_object in access_objects %}
+							<tr>
+								<th scope="row">{{ forloop.counter }}</th>
+								{% if access_object.user %}
+									<td>USED</td>
+								{% else %}
+									<td>UNUSED</td>
+								{% endif %}
+								<td>{{ access_object.access_code }}</td>
+								<td>{{ access_object.user.get_full_name }}</td>
+								<td>{{ access_object.user_type }}</td>
+							</tr>
+						{% endfor %}
 					</tbody>
 				</table>
-			</div>
-		</div>
-	</div>
-
-	<!-- Generate confirmation modal -->
-	<div class="modal fade" id="generateConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="generateConfirmationModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="generateConfirmationModalLabel">Confirmation</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					Are you sure you want to generate these access codes? <strong>This action cannot be undone.</strong>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-light" data-dismiss="modal">Generate</button>
-					<button type="button" class="btn btn-primary">Go back</button>
-				</div>
 			</div>
 		</div>
 	</div>

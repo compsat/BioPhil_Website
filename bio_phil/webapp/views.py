@@ -274,6 +274,7 @@ class DeleteAnswer(DeleteView):
 either for their students or fellow teachers"""
 @login_required
 def generate_access_codes(request):
+	access_objects = AccessCode.objects.filter(creator=request.user)
 	if request.method == 'POST':
 		teacher = request.user
 		form = GenerateCodeForm(request.POST)
@@ -289,10 +290,10 @@ def generate_access_codes(request):
 			for x in range(1, quantity):
 				access_code = random_code_generator(5, 'access_code')
 				obj = AccessCode.objects.create(access_code=access_code, user_type=user_type, university=teacher.access_object.university, creator=teacher)
-			return redirect('manage_access_codes')
+			return render(request, 'webapp/generate_access_codes.html', {'form' : form, 'teacher' : request.user, 'access_objects' : access_objects, 'messages' : "Successfully generated access codes!"})
 	else:
 		form = GenerateCodeForm()
-	return render(request, 'webapp/generate_access_codes.html', {'form' : form, 'teacher' : request.user})
+	return render(request, 'webapp/generate_access_codes.html', {'form' : form, 'teacher' : request.user, 'access_objects' : access_objects})
 
 """View for teachers only for them to manage the access codes they generated."""
 @login_required
