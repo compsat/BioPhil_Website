@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block title %}
@@ -17,15 +18,15 @@ BioPhil
     <p><strong>{{ messages }}</strong></p>
   {% endif %}
 
-  <div class="container-fluid py-4 px-5 row justify-content-around">
-    <div class="col-md-5">
+  <div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center">
+    <div class="col-md-6 px-md-4 px-3">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">ACCOUNT SETTINGS</h1>
       <div class="bg-light rounded p-4">
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
-            <a class="nav-item nav-link" id="nav-update-email-tab" data-toggle="tab" href="#nav-update-email" role="tab" aria-controls="nav-update-email" aria-selected="false">Change Password</a>
-            <a class="nav-item nav-link" id="nav-change-password-tab" data-toggle="tab" href="#nav-change-password" role="tab" aria-controls="nav-change-password" aria-selected="false">Update Email</a>
+            <a class="nav-item nav-link" id="nav-update-email-tab" data-toggle="tab" href="#nav-update-email" role="tab" aria-controls="nav-update-email" aria-selected="false">Update Email</a>
+            <a class="nav-item nav-link" id="nav-change-password-tab" data-toggle="tab" href="#nav-change-password" role="tab" aria-controls="nav-change-password" aria-selected="false">Change Password</a>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -60,27 +61,7 @@ BioPhil
             </form>
           </div>
           <div class="tab-pane fade" id="nav-update-email" role="tabpanel" aria-labelledby="nav-update-email-tab">
-            <div class="p-3 container-fluid">
-              <form>
-                <div class="form-group">
-                  <label for="currentPassword">Current password</label>
-                  <input type="password" class="form-control" id="currentPassword" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <label for="newPassword">New password</label>
-                  <input type="password" class="form-control" id="newPassword" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <label for="newPassword2">Confirm new password</label>
-                  <input type="password" class="form-control" id="newPassword2" placeholder="Password">
-                </div>
-                <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#passwordConfirmationModal">Submit</button>
-                <button type="reset" class="btn btn-secondary float-right">Reset</button>
-              </form>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="nav-change-password" role="tabpanel" aria-labelledby="nav-change-password-tab">
-            <div class="p-3 container-fluid">
+            <div class="pt-3 pb-5 px-0 container-fluid">
               <form>
                 <div class="form-group">
                   <label for="currentEmail">Current email</label>
@@ -88,13 +69,49 @@ BioPhil
                 </div>
                 <div class="form-group">
                   <label for="newEmail">New email</label>
-                  <input type="email" class="form-control" id="newEmail" placeholder="Email address">
+                  <input type="email" class="form-control" id="newEmail" placeholder="Email address" required>
+                  <!-- <div class="invalid-feedback">
+                    Please choose a valid e-mail address.
+                  </div> -->
                 </div>
                 <div class="form-group">
                   <label for="newEmail2">Confirm new email</label>
-                  <input type="email" class="form-control" id="newEmail2" placeholder="Email address">
+                  <input type="email" class="form-control" id="newEmail2" placeholder="Email address" required>
+                  <!-- <div class="invalid-feedback">
+                    The email addresses do not match. Please try again.
+                  </div> -->
                 </div>
                 <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#emailConfirmationModal">Submit</button>
+                <button type="reset" class="btn btn-secondary float-right">Reset</button>
+              </form>
+              
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-change-password" role="tabpanel" aria-labelledby="nav-change-password-tab">
+            <div class="pt-3 pb-5 px-0 container-fluid">
+              <form>
+                <div class="form-group">
+                  <label for="currentPassword">Current password</label>
+                  <input type="password" class="form-control" id="currentPassword" placeholder="Password">
+                  <!-- <div class="invalid-feedback">
+                    Wrong password.
+                  </div> -->
+                </div>
+                <div class="form-group">
+                  <label for="newPassword">New password</label>
+                  <input type="password" class="form-control" id="newPassword" placeholder="Password">
+                  <!-- <div class="invalid-feedback">
+                    IDK kung anong limits ng passwords natin pa-edit na lang HAHA
+                  </div> -->
+                </div>
+                <div class="form-group">
+                  <label for="newPassword2">Confirm new password</label>
+                  <input type="password" class="form-control" id="newPassword2" placeholder="Password">
+                  <!-- <div class="invalid-feedback">
+                    The passwords do not match. Please try again.
+                  </div> -->
+                </div>
+                <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#passwordConfirmationModal">Submit</button>
                 <button type="reset" class="btn btn-secondary float-right">Reset</button>
               </form>
             </div>
@@ -103,14 +120,14 @@ BioPhil
       </div>
     </div>
 
-    <div class="col-md-6 px-0">
-      <h1 class="font-weight-bold my-0 mb-2 text-dark">ACCOUNT SETTINGS</h1>
+    <div class="col-md-6 px-md-4 px-3 my-md-0 my-4">
+      <h1 class="font-weight-bold my-0 mb-2 text-dark">MODULE RESPONSES</h1>
       <div class="bg-light rounded p-4">
-        <table class="table table-responsive-sm">
+        <table class="table table-responsive-xs">
           <thead class="thead-light" style="background-color:#353F4B">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Module Name</th>
+              <th scope="col" style="width:60%">Module Name</th>
               <th scope="col">Submitted on</th>
             </tr>
           </thead>
@@ -135,8 +152,6 @@ BioPhil
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- Modals below -->
   <!-- Password confirmation modal -->
@@ -183,27 +198,27 @@ BioPhil
 
   <!-- Example modal for response -->
   <div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="responseModalLabel">Module title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
-          <span aria-hidden="true">&times;</span>
-        </button>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="responseModalLabel">Module title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form>
+          <div class="modal-body">
+            <textarea class="form-control" id="responseTextArea" rows="6" disabled></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
+            <button type="button" class="btn btn-warning" id="responseEditButton">Edit</button>
+            <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
+          </div>
+        </form>
       </div>
-      <form>
-        <div class="modal-body">
-          <textarea class="form-control" id="responseTextArea" rows="6" disabled></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
-          <button type="button" class="btn btn-warning" id="responseEditButton">Edit</button>
-          <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
-        </div>
-      </form>
     </div>
   </div>
-</div>
 
   <script>
   $('#responseEditButton').click(function(event) {
