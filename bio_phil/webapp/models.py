@@ -100,7 +100,7 @@ def random_code_generator(length):
 		
 	return access_code
 
-class image_carousel(models.Model):
+class ImageCarousel(models.Model):
     img = models.ImageField(upload_to='images')
     img_name = models.CharField(max_length=30)
     pub_date = models.DateTimeField(auto_now_add=True)
@@ -108,7 +108,7 @@ class image_carousel(models.Model):
     def __str__(self):
         return self.img_name
 
-class module_img(models.Model):
+class ModuleImage(models.Model):
     image = models.ImageField(upload_to = 'module/images')
     img_name = models.CharField(max_length = 30)
     pub_date = models.DateTimeField(auto_now_add = True)
@@ -123,7 +123,7 @@ class Module(models.Model):
     module_summary = models.CharField(max_length = 300, default = title)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    module_image = models.ForeignKey(module_img, on_delete = models.DO_NOTHING)
+    module_image = models.ForeignKey(ModuleImage, on_delete = models.DO_NOTHING)
     
     class Meta:
         ordering = ('id',)

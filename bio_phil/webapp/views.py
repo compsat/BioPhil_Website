@@ -10,26 +10,27 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 def index(request):
-	# form = RegisterForm(request.POST)
-	# print(request.POST.get('first_name'))
-	# print("I WORK BOI")
-	# # if form.is_valid():
-	# print('FORM IS VALID BOI')
-	# form.is_valid()
-	# user = form.save(commit= False)
-	# email = form.cleaned_data['email']
-	# password = form.cleaned_data['password1']
-	# access_code = form.cleaned_data['access_field']
-	# user.set_password(password)
-	# user.save()
-	# user = authenticate(email=email, password=password)
-	# if user is not None:
-	# 	if user.is_active:
-	# 		"""Attaches an access_object to the user based on the inputted access code"""
-	# 		access_object = AccessCode.objects.get(access_code=access_code)
-	# 		user.access_object = access_object
-	# 		user.save()
-	# 		login(request, user)
+	if request.method == 'POST':
+		form = RegisterForm(request.POST)
+		if form.is_valid():
+			print('form is valid')
+			user = form.save(commit=False)
+			email = form.cleaned_data['email']
+			password = form.cleaned_data['password1']
+			access_code = form.cleaned_data['access_field']
+			user.set_password(password)
+			user.save()
+			user = authenticate(email=email, password=password)
+			print('user is saved!')
+			if user is not None:
+				if user.is_active:
+					"""Attaches an access_object to the user based on the inputted access code"""
+					access_object = AccessCode.objects.get(access_code=access_code)
+					user.access_object = access_object
+					user.save()
+					print('user is saved!')
+					# login(request, user)
+					# return redirect('index')
 	return render(request, 'webapp/index.html')
 
 """
@@ -63,7 +64,8 @@ def profile(request):
 	# return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'change_email' : change_email, 'user' : user, 'messages' : messages})
 
 def confirm(request):
-	if request.method == 'POST':
+	form = RegisterForm(request.POST)
+	if form.is_valid:
 		first_name = request.POST.get('first_name')
 		last_name = request.POST.get('last_name')
 		email_add = request.POST.get('email')
@@ -78,24 +80,25 @@ def confirm(request):
 		form.fields['password2'].widget.render_value = True		
 		context = {'first_name':first_name, 'last_name':last_name, 'email_add': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'form':form}
 		return render(request, 'webapp/signup_confirm.html',context)
-	else:
-		form = RegisterForm(request.GET)
-		if form.is_valid():
-			user = form.save(commit=False)
-			email = form.cleaned_data['email']
-			password = form.cleaned_data['password1']
-			access_code = form.cleaned_data['access_field']
-			user.set_password(password)
-			user.save()
-			user = authenticate(email=email, password=password)
-			if user is not None:
-				if user.is_active:
-					"""Attaches an access_object to the user based on the inputted access code"""
-					access_object = AccessCode.objects.get(access_code=access_code)
-					user.access_object = access_object
-					user.save()
-					login(request, user)
-					return redirect('index')
+	# else:
+	# 	form = RegisterForm(request.GET)
+	# 	if form.is_valid():
+	# 		print('form is valid')
+	# 		user = form.save(commit=False)
+	# 		email = form.cleaned_data['email']
+	# 		password = form.cleaned_data['password1']
+	# 		access_code = form.cleaned_data['access_field']
+	# 		user.set_password(password)
+	# 		user.save()
+	# 		user = authenticate(email=email, password=password)
+	# 		if user is not None:
+	# 			if user.is_active:
+	# 				"""Attaches an access_object to the user based on the inputted access code"""
+	# 				access_object = AccessCode.objects.get(access_code=access_code)
+	# 				user.access_object = access_object
+	# 				user.save()
+	# 				login(request, user)
+	# 				return redirect('index')
 
 	# first_name = request.POST.get('first_name')
 	# last_name = request.POST.get('last_name')

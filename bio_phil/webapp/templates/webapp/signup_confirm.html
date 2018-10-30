@@ -5,13 +5,18 @@
     <h2>Confirm Details</h2>
     <p>First Name: {{ first_name }}</p>
     <p>Last Name: {{ last_name }}</p>
+    <p>Email: {{ email_add }}</p>
     <p>Access Code Type: {{ usertype }} </p>
     <p>University: {{ school }} </p>
     
-    <form method = "get">
+    <form action ="../../" method = "post">
         <div style = "display:none;">
             {% csrf_token %}
-            {{ form.as_p }}
+            <input type="email" name="email" value="{{ email_add }}" maxlength="254" autofocus="" required="" id="id_email">
+            <input type="first_name" name="first_name" value="{{ first_name }}" maxlength="254" autofocus="" required="" id="id_email">
+            <input type="email" name="email" value="{{ email_add }}" maxlength="254" autofocus="" required="" id="id_email">
+            <input type="email" name="email" value="{{ email_add }}" maxlength="254" autofocus="" required="" id="id_email">
+
         </div>
         
         <button type = submit> Confirm Registration</button>
