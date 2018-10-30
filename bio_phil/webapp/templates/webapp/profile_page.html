@@ -14,7 +14,7 @@ BioPhil
   <!-- Insert Navbar Here! -->
 
   {% if messages %}
-    <p><strong>{{ messages }}</strong></p>
+    <p>{{ messages }}</p>
   {% endif %}
 
   <div class="container-fluid py-4 px-5 row justify-content-around">
@@ -61,41 +61,106 @@ BioPhil
           </div>
           <div class="tab-pane fade" id="nav-update-email" role="tabpanel" aria-labelledby="nav-update-email-tab">
             <div class="p-3 container-fluid">
-              <form>
+              <form method="post" id="change-password-form">
+                {% csrf_token %}
                 <div class="form-group">
                   <label for="currentPassword">Current password</label>
-                  <input type="password" class="form-control" id="currentPassword" placeholder="Password">
+                  {% if change_password.old_password.errors %}
+                    {{ change_password.old_password.errors }}
+                  {% endif %}
+                  {{ change_password.old_password }}
+                  <!-- <input name="{{ change_password.old_password.name }}" type="password" class="form-control" id="currentPassword" placeholder="Password"> -->
                 </div>
                 <div class="form-group">
                   <label for="newPassword">New password</label>
-                  <input type="password" class="form-control" id="newPassword" placeholder="Password">
+                  {% if change_password.new_password1.errors %}
+                    {{ change_password.new_password1.errors }}
+                  {% endif %}
+                  {{ change_password.new_password1 }}
+                  <!-- <input name="{{ change_password.password1.name }}" type="password" class="form-control" id="newPassword" placeholder="Password"> -->
                 </div>
                 <div class="form-group">
                   <label for="newPassword2">Confirm new password</label>
-                  <input type="password" class="form-control" id="newPassword2" placeholder="Password">
+                  {% if change_password.new_password2.errors %}
+                    {{ change_password.new_password2.errors }}
+                  {% endif %}
+                  {{ change_password.new_password2 }}
+                  <!-- <input name="{{ change_password.password2.name }}" type="password" class="form-control" id="newPassword2" placeholder="Password"> -->
                 </div>
                 <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#passwordConfirmationModal">Submit</button>
                 <button type="reset" class="btn btn-secondary float-right">Reset</button>
+                <!-- Password confirmation modal -->
+                <div class="modal fade" id="passwordConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="emailConfirmationModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="emailConfirmationModalLabel">Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to change your password? <strong>This action cannot be undone.</strong>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Go back</button>
+                        <button type="submit" class="btn btn-primary confirm-password" >Submit changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
           <div class="tab-pane fade" id="nav-change-password" role="tabpanel" aria-labelledby="nav-change-password-tab">
             <div class="p-3 container-fluid">
-              <form>
+              <form method="post" id="change-email-form">
+                {% csrf_token %}
                 <div class="form-group">
                   <label for="currentEmail">Current email</label>
-                  <input type="email" class="form-control" id="currentEmail" placeholder="get.data@controller.com" readonly>
+                  {% if change_email.old_email.errors %}
+                    {{ change_email.old_email.errors }}
+                  {% endif %}
+                  {{ change_email.old_email }}
                 </div>
                 <div class="form-group">
                   <label for="newEmail">New email</label>
-                  <input type="email" class="form-control" id="newEmail" placeholder="Email address">
+                  {% if change_email.new_email.errors %}
+                    {{ change_email.new_email.errors }}
+                  {% endif %}
+                  {{ change_email.new_email }}
+                  <!-- <input name="{{ change_email.new_email.name }}" type="email" class="form-control" id="newEmail" placeholder="Email address"> -->
                 </div>
                 <div class="form-group">
                   <label for="newEmail2">Confirm new email</label>
-                  <input type="email" class="form-control" id="newEmail2" placeholder="Email address">
+                  {% if change_email.confirm_email.errors %}
+                    {{ change_email.confirm_email.errors }}
+                  {% endif %}
+                  {{ change_email.confirm_email }}
+                  <!-- <input name="{{ change_email.confirm_email.name }}" type="email" class="form-control" id="newEmail2" placeholder="Email address"> -->
                 </div>
                 <button type="button" class="btn btn-primary float-right ml-2" data-toggle="modal" data-target="#emailConfirmationModal">Submit</button>
                 <button type="reset" class="btn btn-secondary float-right">Reset</button>
+                <!-- Email confirmation modal -->
+                <div class="modal fade" id="emailConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="passwordConfirmationModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="passwordConfirmationModalLabel">Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to update your email address? <strong>This action cannot be undone.</strong>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Go back</button>
+                        <button type="submit" class="btn btn-primary">Submit changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
@@ -103,105 +168,58 @@ BioPhil
       </div>
     </div>
 
+    {% ifequal user.access_object.user_type "Student" %}
     <div class="col-md-6 px-0">
-      <h1 class="font-weight-bold my-0 mb-2 text-dark">ACCOUNT SETTINGS</h1>
+      <h1 class="font-weight-bold my-0 mb-2 text-dark">SUBMISSIONS</h1>
       <div class="bg-light rounded p-4">
         <table class="table table-responsive-sm">
           <thead class="thead-light" style="background-color:#353F4B">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Module Name</th>
+              <th scope="col">Module</th>
               <th scope="col">Submitted on</th>
+              <th scope="col">Last Edit</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td><button type="button" class="btn btn-link p-0" data-toggle="modal" data-target="#responseModal"> Mark</td>
-              <td>Otto</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-            </tr>
+            {% for submission in submissions_list %}
+              <tr> 
+                <td scope="row">{{ forloop.counter }}</td>
+                <td><button type="button" class="btn btn-link p-0" data-toggle="modal" data-target="#responseModal{{ submission.id }}">{{ submission.module }}</td>
+                <td>{{ submission.created_at }}</td>
+                <td>{{ submission.updated_at }}</td>
+              </tr>
+              <div class="modal fade" id="responseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="responseModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="responseModalLabel">{{ submission.module }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="post">
+                      {% csrf_token %}
+                      <div class="modal-body">
+                        <textarea name="submission-answer" class="form-control" id="responseTextArea" rows="6">{{ submission.answer }}</textarea>
+                      </div>
+                      <input type="hidden" name="submission-id" value="{{ submission.pk }}">
+                      <!-- ADD A DELETE BUTTON -->
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
+                        <button type="submit" class="btn btn-warning" id="responseEditButton">Edit</button>
+                        <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
-  </div>
-</div>
-
-
-  <!-- Modals below -->
-  <!-- Password confirmation modal -->
-  <div class="modal fade" id="passwordConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="emailConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="emailConfirmationModalLabel">Confirmation</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to change your password? <strong>This action cannot be undone.</strong>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-dismiss="modal">Submit changes</button>
-          <button type="button" class="btn btn-primary">Go back</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Email confirmation modal -->
-  <div class="modal fade" id="emailConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="passwordConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="passwordConfirmationModalLabel">Confirmation</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to update your email address? <strong>This action cannot be undone.</strong>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-dismiss="modal">Submit changes</button>
-          <button type="button" class="btn btn-primary">Go back</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Example modal for response -->
-  <div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="responseModalLabel">Module title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form>
-        <div class="modal-body">
-          <textarea class="form-control" id="responseTextArea" rows="6" disabled></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
-          <button type="button" class="btn btn-warning" id="responseEditButton">Edit</button>
-          <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
-        </div>
-      </form>
-    </div>
+    {% endifequal %}
   </div>
 </div>
 
@@ -220,8 +238,6 @@ BioPhil
     $('#moduleResponseSave').attr("hidden", true);
     $('moduleResponseBack').attr("value", "Go back");
   });
-
-
 
   </script>
 {% endblock %}
