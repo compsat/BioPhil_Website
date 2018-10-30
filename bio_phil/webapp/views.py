@@ -130,27 +130,66 @@ def update_email(request, uidb64, token, email_code):
 		request.session['message'] = 'Email update link is invalid!'
 	return redirect('index')
 
+def confirm(request):
+	if 'email' in request.session:
+		email = request.session['email']
+		first_name = request.session['first_name']
+		last_name = request.session['last_name']
+		password1 = request.session['password1']
+		access_field = request.session['access_field']
+		access_object = AccessCode.objects.get(access_code=access_field)
+
+		if request.method == 'POST':
+			if 'confirm_reg' in request.POST:
+				user = User.objects.create(email=email, first_name=first_name, last_name=last_name, password=password1, access_object=access_object)
+				user.is_active = False
+				user.save()
+				del request.session['email']
+				del request.session['first_name']
+				del request.session['last_name']
+				del request.session['password1']
+				del request.session['access_field']
+				send_verification_email(user, email, False)
+				request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
+					verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+				return redirect('index')
+			elif 'go_back' in request.POST:
+				request.session['initial_data'] = {
+					'email' : email,
+					'first_name' : first_name,
+					'last_name' : last_name,
+					'access_field' : access_field,
+				}
+				del request.session['email']
+				del request.session['first_name']
+				del request.session['last_name']
+				del request.session['password1']
+				del request.session['access_field']
+				return redirect('register')
+
+		context = {'first_name' : first_name, 'last_name':last_name, 'email': email, 'university' : access_object.university, 'user_type' : access_object.user_type}
+		return render(request, 'webapp/confirmation.html', context)
+
+	else:
+		return redirect('register')
+
 def register(request):
 	if request.method == 'POST':
 		form = RegisterForm(request.POST)
 		if form.is_valid():
-			user = form.save(commit=False)
-			email = form.cleaned_data['email']
-			password = form.cleaned_data['password1']
-			access_code = form.cleaned_data['access_field']
-			user.set_password(password)
-			user.is_active = False
-			"""Attaches an access_object to the user based on the inputted access code"""
-			access_object = AccessCode.objects.get(access_code=access_code)
-			user.access_object = access_object
-			user.save()
-			
-			send_verification_email(user, email, False)
-			request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
-				verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
-			return redirect('index')
+			request.session['email'] = request.POST['email']
+			request.session['first_name'] = request.POST['first_name']
+			request.session['last_name'] = request.POST['last_name']
+			request.session['password1'] = request.POST['password1']
+			request.session['access_field'] = request.POST['access_field']
+			return redirect('conf_reg')
 	else:
 		form = RegisterForm()
+
+		if 'initial_data' in request.session:
+			form = RegisterForm(initial=request.session['initial_data'])
+			del request.session['initial_data']
+
 	return render(request, 'webapp/signup.html', {'form' : form})
 
 def activate(request, uidb64, token):
@@ -276,13 +315,6 @@ def manage_access_codes(request):
 	used_access_codes = access_codes.exclude(user=None)
 	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'unused_access_codes' : unused_access_codes, 'used_access_codes' : used_access_codes})
 
-# View for the update model. 
-
-# def updates(request):
-#     update_text = Updates.object.all()[0:5]
-#     context = {'update_text':update_text}
-#     return render(<insert html file name here pls ty =D>, context)
-
 #View for image_carousel model
 def images(request):
 	image_list = image_carousel.objects.order_by('-id')[:5]
@@ -293,3 +325,16 @@ def module(request):
 	modules_list = Module.objects.all()
 	context = {'modules_list': modules_list}
 	return render(request, 'webapp/modules.html', context)
+
+def send_file(request, file_name):
+    import os, tempfile, zipfile, mimetypes
+    from wsgiref.util import FileWrapper
+    from django.conf import settings
+    from django.http import HttpResponse
+    filename = os.path.join(settings.MEDIA_ROOT, file_name)
+    wrapper = FileWrapper(open(filename, 'rb'))
+    content_type = mimetypes.guess_type(filename)[0]
+    response = HttpResponse(wrapper, content_type=content_type)
+    response['Content-Length'] = os.path.getsize(filename)    
+    response['Content-Disposition'] = "attachment; filename=%s"%file_name
+    return response

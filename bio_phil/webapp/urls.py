@@ -6,8 +6,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from bio_phil import settings
 from django.contrib.auth.decorators import login_required
 
+
 urlpatterns = [
     path('', views.index, name='index'),
+    path('register/confirm_reg/',views.confirm , name = 'conf_reg'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('register/', views.register, name='register'),
     path('gallery/', views.gallery, name='gallery'),

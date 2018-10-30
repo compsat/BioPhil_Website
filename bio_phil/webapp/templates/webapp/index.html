@@ -112,24 +112,14 @@ BioPhil
                     <h3 class="font-weight-bold">Downloads</h3>
                       <table class="table table-striped table-sm">
                         <tbody>
-                          <tr>
-                            <td>FILENAME_EXAMPLE_TEMPLATE.PDF</td>
-                            <td>Oct 10, 2018</td>
-                            <td>81M</td>
-                            <td>PDF</td>
-                          </tr>
-                          <tr>
-                            <td>FILENAME_EXAMPLE_TEMPLATE_2162.PDF</td>
-                            <td>Oct 10, 2018</td>
-                            <td>219KB</td>
-                            <td>PDF</td>
-                          </tr>
-                          <tr>
-                            <td>FILENAME_EXAMPLE_TEMPLATE_YES.DOC</td>
-                            <td>Oct 10, 2018</td>
-                            <td>952KB</td>
-                            <td>DOC</td>
-                          </tr>
+                          {% for download in module.downloads.all %}
+                            <tr>
+                              <td><a href="{{ download.file.url }}">{{ download.title }}</a></td>
+                              <td>{{ download.created_at }}</td>
+                              <td class="size">{{ download.file_size | filesizeformat }}</td>
+                              <td>{{ download.extension }}</td>
+                            </tr>
+                          {% endfor %}
                         </tbody>
                       </table>
                     <br>

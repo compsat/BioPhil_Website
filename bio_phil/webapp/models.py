@@ -67,7 +67,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
-
+    
     @property
     def expiration_date(self):
         return self.created_at + timedelta(days=30)
@@ -116,7 +116,7 @@ class Submission(models.Model):
     class Meta:
         ordering = ('created_at',)
 
-class image_carousel(models.Model):
+class ImageCarousel(models.Model):
     img = models.ImageField(upload_to='images')
     img_name = models.CharField(max_length=30)
     pub_date = models.DateTimeField(auto_now_add=True)
@@ -124,17 +124,35 @@ class image_carousel(models.Model):
     def __str__(self):
         return self.img_name
 
+class ModuleImage(models.Model):
+    image = models.ImageField(upload_to = 'module/images')
+    img_name = models.CharField(max_length = 30)
+    pub_date = models.DateTimeField(auto_now_add = True)
+    def __str__(self):
+        return self.img_name
+    class Meta:
+        ordering = ('id',)
+        
+
 class Module(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
+    module_summary = models.CharField(max_length = 300, default = title)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    module_image = models.ForeignKey(ModuleImage, on_delete = models.DO_NOTHING)
+    
     class Meta:
         ordering = ('id',)
 
     def __str__(self):
         return self.title
+
+class Download(models.Model):
+    title = models.CharField(max_length=120)
+    module = models.ForeignKey('Module', on_delete=models.CASCADE, blank=True, null=True)
+    file = models.FileField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class DeletionLog(models.Model):
     email = models.EmailField()

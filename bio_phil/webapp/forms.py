@@ -122,6 +122,7 @@ class RegisterForm(UserCreationForm):
 			return False
  
 		return True
+		
 
 class GenerateCodeForm(forms.ModelForm):
 	quantity = forms.IntegerField()
