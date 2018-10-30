@@ -1,20 +1,15 @@
-<!doctype html>
-<html class="no-js" lang="">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Confirmation</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% block title %}
+Confirm Sign-up
+{% endblock %}
 
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/confirmation.css">
-</head>
+{% block gallery %}
+  <link rel="stylesheet" href="{% static 'webapp/css/confirmation.css' %}">
+{% endblock %}
 
-<body>
+{% block body %}
   <!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
@@ -22,21 +17,21 @@
   <!-- Add your site or application content here -->
   <div class="container text-center" id="confirmation-container">
     <div class="container" id="confirmContatiner">
-      <img src="img/logo/biophil.png" class="img-fluid" id="logo" width="50%">
+      <img src="{% static 'webapp/img/logo/biophil.png' %}" class="img-fluid" id="logo" width="50%">
       <h1 class="text-center">Confirmation of Details</h1>
       <div class="container p-3 mb-2 bg-light text-dark rounded">
         <h6>First Name</h6>
-        <input class="form-control lead text-center" name="first_name" required id="disabledInput" value="Jessica Anne" disabled>
+        <input class="form-control lead text-center" name="first_name" required id="disabledInput" value="{{ first_name }}" disabled>
         <h6>Last Name</h6>
-        <input class="form-control lead text-center" name="last_name" required id="disabledInput" value="Manzano" disabled>
+        <input class="form-control lead text-center" name="last_name" required id="disabledInput" value="{{ last_name }}" disabled>
         <h6>Email Address</h6>
-        <input class="form-control lead text-center" name="email_address" required id="disabledInput" value="ilovebio@hotmail.com" disabled>
+        <input class="form-control lead text-center" name="email_address" required id="disabledInput" value="{{ email }}" disabled>
         <h6>Access Code Type</h6>
-        <input class="form-control lead text-center" name="access_field" required id="disabledInput" value="Student" disabled>
+        <input class="form-control lead text-center" name="user_type" required id="disabledInput" value="{{ user_type }}" disabled>
         <h6>University</h6>
-        <input class="form-control lead text-center" name="university" required id="disabledInput" value="Ateneo de Manila University" disabled>
+        <input class="form-control lead text-center" name="university" required id="disabledInput" value="{{ university }}" disabled>
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-sm-6 mx-auto">
             <div class="form-group">
               <label for="exampleInputPassword1">Password</label>
@@ -52,24 +47,17 @@
               <input type="password" class="form-control">
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="mx-auto">
-          <button type="button" class="btn btn-dark" onclick="location.signup.html">Go Back</button>
-          <button type="submit" class="btn btn-dark">Confirm</button>
+          <form method="post">
+          {% csrf_token %}
+            <button type="submit" class="btn btn-dark" name="go_back" onclick="location.signup.html">Go Back</button>
+            <button type="submit" class="btn btn-dark" name="confirm_reg">Confirm</button>
+          </form>
         </div>
 
       </div>
     </div>
   </div>
-
-  <!-- Content End -->
-  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
-</body>
-
-</html>
+{% endblock %}
