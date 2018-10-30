@@ -6,23 +6,23 @@ Modules
 {% endblock %}
 
 {% block body %}
-<body data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
+<body data-spy="scroll" data-target="#modulesList" data-offset="0" class="scrollspy-example">
   <!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
 
   <!-- Add your site or application content here -->
   <!-- Insert Navbar Here! -->
-  <div class="container-fluid py-4 px-5 row justify-content-around" >
-    <div class="col-md-3">
-      <div id="list-example" class="list-group position-sticky" style="top: 0">
+  <div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center" >
+    <div class="col-md-3 px-md-4 px-3">
+      <div id="modulesList" class="list-group position-sticky" style="top: 40px">
         {% for module in modules_list %}
         <a class="list-group-item list-group-item-action" href="#list-item-{{ module.pk }}">{{ module.title }}</a>
         {% endfor %}
       </div>
     </div>
 
-    <div class="col-md-9 px-0">
+   <div class="col-md-9 px-md-4 px-3 my-md-0 my-4">
       <div class="bg-light rounded p-4">
         {% for module in modules_list %}
           <h3 class="text-dark font-weight-bold" id="#list-item-{{ module.pk }}">{{ module.title }}</h3>
