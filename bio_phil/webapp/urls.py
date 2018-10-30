@@ -15,7 +15,6 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('gallery/', views.gallery, name='gallery'),
     path('generate/', views.generate_access_codes, name='generate_access_codes'),
-    path('manage/', views.manage_access_codes, name='manage_access_codes'),
     path('my_profile/', views.profile, name='profile'),
     path('img_test',views.images,name ='image_tester'),
     path('submit/', login_required(views.SubmitAnswer.as_view(template_name='webapp/submit.html')), name='submit'),
