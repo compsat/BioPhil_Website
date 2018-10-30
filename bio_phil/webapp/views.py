@@ -149,7 +149,7 @@ def confirm(request):
 				return redirect('register')
 
 		context = {'first_name':first_name, 'last_name':last_name, 'email_add': email, 'school':access_object.university, 'usertype':access_object.user_type, 'access_field': access_field}
-		return render(request, 'webapp/signup_confirm.html', context)
+		return render(request, 'webapp/confirmation.html', context)
 
 	else:
 		return redirect('register')

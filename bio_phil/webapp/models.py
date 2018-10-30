@@ -15,6 +15,7 @@ class AccessCode(models.Model):
 	user_type = models.CharField(max_length=10, choices=USER_TYPE, default='Student')
 	university = models.CharField(max_length=50)
 	creator = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL, related_name='access_codes')
+    
 
 	def __str__(self):
 		return self.access_code
@@ -96,6 +97,7 @@ class NewEmail(models.Model):
 class Updates(models.Model):# to get the last 5 in the query, order it by ID number in descending order, then get [0:4]
     update_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField(verbose_name='Date Published')
+    test = models.CharField(max_length = 10)
 
     def __str__(self):
         return self.update_text

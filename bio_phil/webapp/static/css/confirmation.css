@@ -1,0 +1,14 @@
+#disabledInput {
+	border: 0;
+	box-shadow: none;
+	background-color: #F8F9FA;
+}
+
+.lead {
+	font-size: 1.2em;
+}
+
+#disabledInput {
+	padding-bottom: 1em;
+	font-size: 1.1em;
+}
