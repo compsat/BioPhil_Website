@@ -1,6 +1,141 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+BioPhil
+{% endblock %}
 
 {% block body %}
-{% csrf_token %}
-  <h1>Welcome!</h1>
+  {% if message %}
+  {{ message }}
+  {% endif %}
+
+  <!-- Add your site or application content here -->
+  <div class="jumbotron" style="background-image: url({% static 'webapp/img/bg/photo1.jpeg' %}); background-size: 1000%;">
+    <div class="container">
+      <h1 class="font-weight-bold display-1 text-white">I'M A HEADLINE</h1>
+      <p class="lead text-white">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per.</p>
+      <p class="lead text-white">
+      Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam. Vix cu case ponderum patrioque. Dicat exerci postea ea mea, putent dolores menandri eos id.</p><br>
+      <div class="justify-content-center mx-auto">
+        <a class="btn btn-outline-light btn-lg mx-auto" href="#" role="button">Learn more</a>
+      </div>
+    </div> 
+  </div>
+
+  <div class="container-fluid">
+    <!-- ABOUT -->
+    <div class="container">
+      <h1 class="font-weight-bold">ABOUT</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+        <br><br><br>
+      </div>
+    </div>
+
+    <!-- PARTNERS -->
+    <div class="container">
+      <h1 class="font-weight-bold">PARTNERS</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+
+        
+        <img src="{% static 'webapp/img/partners/logo_xavier.png' %}" class="img-fluid mr-md-4 rounded-circle mx-auto shadow mb-5" alt="xavier" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="fsuu" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_daad.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="daad" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_mfnb.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="mfnb" width="20%">
+        
+        <img src="{% static 'webapp/img/partners/logo_nmpm.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="nmpm" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_ateneo.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="ateneo" width="20%">
+        <img src="{% static 'webapp/img/partners/logo_rupp.png' %}" class="img-fluid mr-md-4 rounded-circle shadow mb-5" alt="daad" width="20%">
+      </div>
+    </div>
+
+    <!-- MEET THE TEAM -->
+    <div class="container">
+      <h1 class="font-weight-bold">MEET THE TEAM</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+        <div class="row">
+          <!-- Researcher Card -->
+          <div class="col-sm">
+            <div class="card">
+              <img class="card-img-top" src="" alt="Researcher Image">
+              <div class="card-body">
+                <h5 class="card-title">Name of Researcher</h5>
+                <p class="card-text">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
+              </div>
+            </div>
+          </div>
+          <!-- -->
+          <!-- Researcher Card -->
+          <div class="col-sm">
+            <div class="card">
+              <img class="card-img-top" src="" alt="Researcher Image">
+              <div class="card-body">
+                <h5 class="card-title">Name of Researcher</h5>
+                <p class="card-text">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
+              </div>
+            </div>
+          </div>
+          <!-- -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="container">
+      <h1 class="font-weight-bold">MODULES</h1>
+      <div class="p-3 mb-2 bg-light text-dark rounded">
+        <!-- Card Row -->
+        <div class="row">
+          {% for module in modules_list %}
+            <div class="col-sm">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ module.title }}</h5>
+                  <h6 class="card-subtitle text-muted">{{ module.created_at }}</h6> <br>
+                  <p class="card-text">{{ module.content }}</p>
+                  <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal{{ module.pk }}">View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="modal fade" id="modal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <div class="container"><br>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="font-weight-bold">{{ module.title }}</h3>
+                    <h6 class="text-muted">{{ module.created_at }}</h6><br>
+                    <p>{{ module.content }}</p>
+                    <h3 class="font-weight-bold">Downloads</h3>
+                      <table class="table table-striped table-sm">
+                        <tbody>
+                          {% for download in module.downloads.all %}
+                            <tr>
+                              <td><a href="{{ download.file.url }}">{{ download.title }}</a></td>
+                              <td>{{ download.created_at }}</td>
+                              <td class="size">{{ download.file_size | filesizeformat }}</td>
+                              <td>{{ download.extension }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p class="text-sm-right">Made by the Computer Society of the Ateneo ¤</p>
+  </div>
 {% endblock %}

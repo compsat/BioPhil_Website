@@ -1,17 +1,12 @@
-<!doctype html>
-<html class="no-js" lang="">
+{% extends 'base.html' %}
+{% load static %}
 
-{% block head %}
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Confirmation</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
-  <link rel="stylesheet" href=" {% static 'css/confirmation.css' %}">
+{% block title %}
+Confirm Sign-up
+{% endblock %}
+
+{% block gallery %}
+  <link rel="stylesheet" href="{% static 'webapp/css/confirmation.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -22,19 +17,19 @@
   <!-- Add your site or application content here -->
   <div class="container text-center" id="confirmation-container">
     <div class="container" id="confirmContatiner">
-      <img src="{% static 'img/logo/biophil.png' %}" class="img-fluid" id="logo" width="50%">
+      <img src="{% static 'webapp/img/logo/biophil.png' %}" class="img-fluid" id="logo" width="50%">
       <h1 class="text-center">Confirmation of Details</h1>
       <div class="container p-3 mb-2 bg-light text-dark rounded">
         <h6>First Name</h6>
         <input class="form-control lead text-center" name="first_name" required id="disabledInput" value="{{ first_name }}" disabled>
         <h6>Last Name</h6>
-        <input class="form-control lead text-center" name="last_name" required id="disabledInput" value="{{last_name}}" disabled>
+        <input class="form-control lead text-center" name="last_name" required id="disabledInput" value="{{ last_name }}" disabled>
         <h6>Email Address</h6>
-        <input class="form-control lead text-center" name="email_address" required id="disabledInput" value="{{ email_add }}" disabled>
+        <input class="form-control lead text-center" name="email_address" required id="disabledInput" value="{{ email }}" disabled>
         <h6>Access Code Type</h6>
-        <input class="form-control lead text-center" name="access_field" required id="disabledInput" value="{{ usertype }}" disabled>
+        <input class="form-control lead text-center" name="user_type" required id="disabledInput" value="{{ user_type }}" disabled>
         <h6>University</h6>
-        <input class="form-control lead text-center" name="university" required id="disabledInput" value="{{ school }}" disabled>
+        <input class="form-control lead text-center" name="university" required id="disabledInput" value="{{ university }}" disabled>
 
         <!-- <div class="row">
           <div class="col-sm-6 mx-auto">
@@ -54,31 +49,15 @@
           </div>
         </div> -->
 
-
         <div class="mx-auto">
-          <!-- <button type="button" class="btn btn-dark" onclick="location.signup.html">Go Back</button>
-          <button type="submit" class="btn btn-dark">Confirm</button> -->
           <form method="post">
-            {% csrf_token %}
-            <input type="text" name="go_back" hidden>
-            <button type="submit" class="btn btn-dark" > Go Back</button>
-            
-            <input type="text" name="confirm_reg" hidden>
-            <button type="submit" class ="btn btn-dark"> Confirm</button>
+          {% csrf_token %}
+            <button type="submit" class="btn btn-dark" name="go_back" onclick="location.signup.html">Go Back</button>
+            <button type="submit" class="btn btn-dark" name="confirm_reg">Confirm</button>
           </form>
         </div>
 
       </div>
     </div>
   </div>
-
-  <!-- Content End -->
-  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
 {% endblock %}
-
-</html>

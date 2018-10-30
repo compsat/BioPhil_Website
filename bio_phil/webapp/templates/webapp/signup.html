@@ -1,13 +1,85 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Sign-up
+{% endblock %}
 
 {% block body %}
-	<h2>Sign up</h2>
-	{% if error_message %}
-		<p><strong>{{ error_message }}</strong></p>
-	{% endif %}
-	<form method="post">
-		{% csrf_token %}
-    	{{ form.as_p }}
-    	<button type="submit">Sign up</button>
-	</form>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+  <br>
+  <div class="container-fluid" id="signup-container">
+      <div class="col">
+        <div class="text-center">
+          <img src="{% static 'webapp/img/logo/biophil.png' %}" class="img-fluid" id="logo" width="50%">
+          <h1>Create an Account</h1>
+        </div>
+      </div>
+      <!-- Form -->
+      <div class="col">
+        <div class="container bg-light rounded">
+          <br>
+          <form method="post" id="register-form">
+          {% csrf_token %}
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              {% if form.email.errors %}
+                {{ form.email.errors }}
+              {% endif %}
+              {{ form.email }}
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">First Name</label>
+              {% if form.first_name.errors %}
+                {{ form.first_name.errors }}
+              {% endif %}
+              {{ form.first_name }}
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">Last Name</label>
+              {% if form.last_name.errors %}
+                {{ form.last_name.errors }}
+              {% endif %}
+              {{ form.last_name }}
+            </div>            
+
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              {% if form.password1.errors %}
+                {{ form.password1.errors }}
+              {% endif %}
+              {{ form.password1 }}
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputPassword1">Confirm Password</label>
+              {% if form.password2.errors %}
+                {{ form.password2.errors }}
+              {% endif %}
+              {{ form.password2 }}
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputPassword1">Access Code</label>
+              {% if form.access_field.errors %}
+                {{ form.access_field.errors }}
+              {% endif %}
+              {{ form.access_field }}
+            </div>
+            <div class="text-center">
+              
+            </div>
+            <button type="submit" class="btn btn-dark btn-block">Sign Up</button>
+          </form>
+          <br>
+        </div>
+      </div>      
+  </div>
+  <br>
 {% endblock %}

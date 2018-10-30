@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Modules
+{% endblock %}
+
+{% block body %}
+<body data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+  <!-- Insert Navbar Here! -->
+  <div class="container-fluid py-4 px-5 row justify-content-around" >
+    <div class="col-md-3">
+      <div id="list-example" class="list-group position-sticky" style="top: 0">
+        {% for module in modules_list %}
+        <a class="list-group-item list-group-item-action" href="#list-item-{{ module.pk }}">{{ module.title }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="col-md-9 px-0">
+      <div class="bg-light rounded p-4">
+        {% for module in modules_list %}
+          <h3 class="text-dark font-weight-bold" id="#list-item-{{ module.pk }}">{{ module.title }}</h3>
+          <h5 class="text-secondary">{{ module.created_at }}</h5>
+          <p>{{ module.content }}</p>
+          <div class="accordion mb-4" id="downloadAccordion1">
+            <div class="card">
+              <div class="card-header p-0" id="downloadHeading1">
+                <h5 class="mb-0">
+                  <button class="btn btn-link text-dark font-weight-bold" type="button" data-toggle="collapse" data-target="#downloadCollapse{{ module.pk }}" aria-expanded="false" aria-controls="downloadCollapse1">
+                    Downloads
+                  </button>
+                </h5>
+              </div>
+
+              <div id="downloadCollapse{{ module.pk }}" class="panel-collapse collapse" aria-labelledby="downloadHeading1" data-parent="#downloadAccordion1">
+                <div class="card-body row justify-content-around">
+                  <a class="col-sm mx-2" href="#">
+                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
+                      <div class="col-sm-3 px-0">
+                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="row">
+                          <strong class="text-truncate">filename_example_template.pdf</strong>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">10/15/2019</span>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">PDF, 4.12MB</span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="col-sm mx-2" href="#">
+                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
+                      <div class="col-sm-3 px-0">
+                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="row">
+                          <strong class="text-truncate">filename_example_template.pdf</strong>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">10/15/2019</span>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">PDF, 4.12MB</span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="col-sm mx-2" href="#">
+                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
+                      <div class="col-sm-3 px-0">
+                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="row">
+                          <strong class="text-truncate">filename_example_template.pdf</strong>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">10/15/2019</span>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">PDF, 4.12MB</span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="col-sm mx-2" href="#">
+                    <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
+                      <div class="col-sm-3 px-0">
+                        <img src="{% static 'webapp/img/icons/pdf.png' %}" height="70" width="70" alt="">
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="row">
+                          <strong class="text-truncate">filename_example_template.pdf</strong>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">10/15/2019</span>
+                        </div>
+                        <div class="row">
+                          <span class="text-muted">PDF, 4.12MB</span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

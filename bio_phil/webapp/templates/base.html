@@ -1,10 +1,90 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="">
 <head>
-    <meta charset="UTF-8">
-    <title>Bio Phil</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{% block title %}{% endblock %}</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="{% static 'webapp/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'webapp/css/normalize.css' %}">
+  <link rel="stylesheet" href="{% static 'webapp/css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'webapp/css/navbar.css' %}">
+
+  {% block gallery %}
+  {% endblock %}
 </head>
 <body>
+	 <!-- Add your site or application content here -->
+  <nav class="navbar navbar-expand-lg navbar-light px-5 py-0 shadow-sm" id="navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand mr-5" href="{% url 'index' %}"">
+        <img src="{% static 'webapp/img/logo/biophil.png' %}" height="85" width="106" alt="">
+      </a>
+
+      <!-- Button when navbar is collapsed -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item mr-5 px-1 nav-item-hover">
+            <a class="nav-link text-dark font-weight-bold align-middle" href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="nav-item mr-5 px-1 nav-item-hover">
+            <a class="nav-link text-dark font-weight-bold my-auto" href="{% url 'gallery' %}">Gallery</a>
+          </li>
+          <li class="nav-item mr-5 px-1 nav-item-hover">
+            <a class="nav-link text-dark font-weight-bold my-auto" href="{% url 'modules' %}">Modules</a>
+          </li>
+        </ul>
+        <button class="btn btn-dark" data-toggle="modal" data-target="#signIn" id="signIn-btn">Sign In</button>
+      </div>
+    </div>
+  </nav>
+
+  <!--Sign-in Modal -->
+  <div class="modal fade" id="signIn" tabindex="-1" role="dialog" aria-labelledby="signInModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <br>
+        <center><img src="{% static 'webapp/img/logo/biophil.png' %}" height="85" width="106" alt=""></center>
+        <div class="modal-body">
+
+          <form method="post">
+          	{% csrf_token %}
+            <div class="form-group">
+              <label for="recipient-name" class="col-form-label">Email address</label>
+              {% if login_form.username.errors %}
+                {{ login_form.username.errors }}
+              {% endif %}
+              {{ login_form.username }}
+              <!-- <input type="email" class="form-control" id="signInEmail"> -->
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Password</label>
+              {% if login_form.password.errors %}
+                {{ login_form.password.errors }}
+              {% endif %}
+              {{ login_form.password }}
+              <!-- <input type="password" class="form-control" id="signinPassword"> -->
+            </div>
+	          <div class="text-center">
+	            <span><a href="{% url 'password_reset' %}">Forgot your password?</a></span><br>
+	            <span>Don't have an account yet?</span><br>
+	            <span><a href="{% url 'register' %}">Sign up here.</a></span><br><br>
+	            <button type="submit" class="btn btn-dark btn-block">Sign In</button>
+	          </div>        
+          </form>
+        
+        </div>
+      </div>
+    </div>
+  </div>
 	<p><a href="{% url 'index' %}">Home</a></p>
 	{% if request.user.is_authenticated %}
 		<p>Hello, <a href="{% url 'profile' %}">{{ request.user.get_full_name }}</a>!</p>
@@ -15,5 +95,12 @@
 	{% endif %}
 	{% block body %}
 	{% endblock %}
+
+	<script src="{% static 'webapp/js/vendor/modernizr-3.6.0.min.js' %}"></script>
+	<script src="{% static 'webapp/https://code.jquery.com/jquery-3.3.1.min.js' %}" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write("<script src='{% static 'webapp/js/vendor/jquery-3.3.1.min.js' %}'><\/script>")</script>
+	<script src="{% static 'webapp/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'webapp/js/plugins.js' %}"></script>
+	<script src="{% static 'webapp/js/main.js' %}"></script>
 </body>
 </html>

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Page Not Found!
+{% endblock %}
+
+{% block body %}
+  <!-- Add your site or application content here -->
+  <div class="container">
+    <img src="{% static 'webapp/img/404/cactus-404.png'" class="float-right" width="50%">
+    <h1 class="display-1">Oops!</h1>
+    <p class="lead">We can't find what you're looking for.</p>
+    <p class="lead">Go back to the <a href="#">Home page</a></p>
+    <p class="lead font-weight-bold">Error Code: 404</p>
+  </div>
+{% endblock %}

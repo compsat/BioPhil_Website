@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Gallery
+{% endblock %}
+
+{% block gallery %}
+<!-- Unite Gallery -->
+<script type='text/javascript' src="{% static 'webapp/unitegallery/js/jquery-11.0.min.js' %}"></script> 
+<script type='text/javascript' src="{% static 'webapp/unitegallery/js/unitegallery.min.js' %}"></script>  
+
+<link rel='stylesheet' href="{% static 'webapp/unitegallery/css/unite-gallery.css' %}" type='text/css' />
+
+<script type='text/javascript' src="{% static 'webapp/unitegallery/themes/tiles/ug-theme-tiles.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+  <!-- Add your site or application content here -->  
+  <div id="gallery" style="display:none;">
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img1.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img2.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img3.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img4.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img5.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img6.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img7.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img8.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img9.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
+  </div>
+
+  <!-- Content End -->
+  <script type="text/javascript">
+
+    jQuery(document).ready(function(){
+
+      jQuery("#gallery").unitegallery();
+
+    });
+    
+  </script>
+{% endblock %}
