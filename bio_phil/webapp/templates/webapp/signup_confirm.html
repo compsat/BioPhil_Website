@@ -8,18 +8,16 @@
     <p>Email: {{ email_add }}</p>
     <p>Access Code Type: {{ usertype }} </p>
     <p>University: {{ school }} </p>
-    
-    <form action ="../../" method = "post">
-        <div style = "display:none;">
-            {% csrf_token %}
-            <input type="email" name="email" value="{{ email_add }}" maxlength="254" autofocus="" required="" id="id_email">
-            <input type="first_name" name="first_name" value="{{ first_name }}" maxlength="254" autofocus="" required="" id="id_email">
-            <input type="email" name="email" value="{{ email_add }}" maxlength="254" autofocus="" required="" id="id_email">
-            <input type="email" name="email" value="{{ email_add }}" maxlength="254" autofocus="" required="" id="id_email">
 
-        </div>
-        
-        <button type = submit> Confirm Registration</button>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="confirm_reg" hidden>
+        <button type="submit"> Confirm Registration</button>
+    </form>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="go_back" hidden>
+        <button type="submit"> Go Back</button>
     </form>
 
 {% endblock %}

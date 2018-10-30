@@ -124,76 +124,78 @@ def update_email(request, uidb64, token, email_code):
 		return HttpResponse('Activation link is invalid!')
 
 def confirm(request):
-	form = RegisterForm(request.POST)
-	if form.is_valid:
-		first_name = request.POST.get('first_name')
-		last_name = request.POST.get('last_name')
-		email_add = request.POST.get('email')
-		password = request.POST.get('password1')
-		access_code_number = request.POST.get('access_field')
-		access_code1 = AccessCode.objects.get(access_code = access_code_number)
-		school = access_code1.university
-		usertype = access_code1.user_type
-		init = {'first_name':first_name, 'last_name':last_name, 'email': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'password1':password,'password2':password}
-		form = RegisterForm(initial = init)
-		form.fields['password1'].widget.render_value = True
-		form.fields['password2'].widget.render_value = True		
-		context = {'first_name':first_name, 'last_name':last_name, 'email_add': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'form':form}
-		return render(request, 'webapp/signup_confirm.html',context)
-	# else:
-	# 	form = RegisterForm(request.GET)
-	# 	if form.is_valid():
-	# 		print('form is valid')
-	# 		user = form.save(commit=False)
-	# 		email = form.cleaned_data['email']
-	# 		password = form.cleaned_data['password1']
-	# 		access_code = form.cleaned_data['access_field']
-	# 		user.set_password(password)
-	# 		user.save()
-	# 		user = authenticate(email=email, password=password)
-	# 		if user is not None:
-	# 			if user.is_active:
-	# 				"""Attaches an access_object to the user based on the inputted access code"""
-	# 				access_object = AccessCode.objects.get(access_code=access_code)
-	# 				user.access_object = access_object
-	# 				user.save()
-	# 				login(request, user)
-	# 				return redirect('index')
+	if 'email' in request.session:
+		email = request.session['email']
+		first_name = request.session['first_name']
+		last_name = request.session['last_name']
+		password1 = request.session['password1']
+		access_field = request.session['access_field']
+		access_object = AccessCode.objects.get(access_code=access_field)
 
-	# first_name = request.POST.get('first_name')
-	# last_name = request.POST.get('last_name')
-	# email_add = request.POST.get('email')
-	# password = request.POST.get('password1')
-	# access_code_number = request.POST.get('access_field')
-	# access_code1 = AccessCode.objects.get(access_code = access_code_number)
-	# school = access_code1.university
-	# usertype = access_code1.user_type
-	# init = {'first_name':first_name, 'last_name':last_name, 'email': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'password1':password,'password2':password}
-	# form = RegisterForm(initial = init)
-	# form.fields['password1'].widget.render_value = True
-	# form.fields['password2'].widget.render_value = True
-	
-	# context = {'first_name':first_name, 'last_name':last_name, 'email_add': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'form':form}
-	# return render(request, 'webapp/signup_confirm.html',context)
+		if request.method == 'POST':
+			if 'confirm_reg' in request.POST:
+				user = User.objects.create(email=email, first_name=first_name, last_name=last_name, password=password1, access_object=access_object)
+				user.is_active = False
+				user.save()
+				del request.session['email']
+				del request.session['first_name']
+				del request.session['last_name']
+				del request.session['password1']
+				del request.session['access_field']
+				send_verification_email(user, email, False)
+				return HttpResponse('Please verify your email address to complete the registration. If you do not \
+					verify by {}, your account will be deleted.'.format(user.expiration_date))
+			elif 'go_back' in request.POST:
+				return redirect('register')
+
+		context = {'first_name':first_name, 'last_name':last_name, 'email_add': email, 'school':access_object.university, 'usertype':access_object.user_type, 'access_field': access_field}
+		return render(request, 'webapp/signup_confirm.html', context)
+
+	else:
+		return redirect('register')
+
+	# form = RegisterForm(request.POST)
+	# if form.is_valid:
+	# 	first_name = request.POST.get('first_name')
+	# 	last_name = request.POST.get('last_name')
+	# 	email_add = request.POST.get('email')
+	# 	password = request.POST.get('password1')
+	# 	access_code_number = request.POST.get('access_field')
+	# 	access_code1 = AccessCode.objects.get(access_code = access_code_number)
+	# 	school = access_code1.university
+	# 	usertype = access_code1.user_type
+	# 	init = {'first_name':first_name, 'last_name':last_name, 'email': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'password1':password,'password2':password}
+	# 	form = RegisterForm(initial = init)
+	# 	form.fields['password1'].widget.render_value = True
+	# 	form.fields['password2'].widget.render_value = True		
+	# 	context = {'first_name':first_name, 'last_name':last_name, 'email_add': email_add, 'school':school, 'usertype':usertype, 'access_field': access_code_number,'form':form}
+	# 	return render(request, 'webapp/signup_confirm.html',context)
 
 def register(request):
 	if request.method == 'POST':
 		form = RegisterForm(request.POST)
 		if form.is_valid():
-			user = form.save(commit=False)
-			email = form.cleaned_data['email']
-			password = form.cleaned_data['password1']
-			access_code = form.cleaned_data['access_field']
-			user.set_password(password)
-			user.is_active = False
-			"""Attaches an access_object to the user based on the inputted access code"""
-			access_object = AccessCode.objects.get(access_code=access_code)
-			user.access_object = access_object
-			user.save()
+			request.session['email'] = request.POST['email']
+			request.session['first_name'] = request.POST['first_name']
+			request.session['last_name'] = request.POST['last_name']
+			request.session['password1'] = request.POST['password1']
+			request.session['access_field'] = request.POST['access_field']
+			return redirect('conf_reg')
+
+			# user = form.save(commit=False)
+			# email = form.cleaned_data['email']
+			# password = form.cleaned_data['password1']
+			# access_code = form.cleaned_data['access_field']
+			# user.set_password(password)
+			# user.is_active = False
+			# """Attaches an access_object to the user based on the inputted access code"""
+			# access_object = AccessCode.objects.get(access_code=access_code)
+			# user.access_object = access_object
+			# user.save()
 			
-			send_verification_email(user, email, False)
-			return HttpResponse('Please verify your email address to complete the registration. If you do not \
-				verify by {}, your account will be deleted.'.format(user.expiration_date))
+			# send_verification_email(user, email, False)
+			# return HttpResponse('Please verify your email address to complete the registration. If you do not \
+			# 	verify by {}, your account will be deleted.'.format(user.expiration_date))
 	else:
 		form = RegisterForm()
 	return render(request, 'webapp/signup.html', {'form' : form})
