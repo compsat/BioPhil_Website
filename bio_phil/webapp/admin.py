@@ -111,7 +111,8 @@ class NewEmailAdmin(admin.ModelAdmin):
 
 admin.site.register(AccessCode, AccessCodeAdmin)
 admin.site.register(Submission, SubmissionAdmin)
-admin.site.register(image_carousel)
+admin.site.register(ImageCarousel)
 admin.site.register(Module, ModuleAdmin)
+admin.site.register(ModuleImage)
 admin.site.register(Download, DownloadAdmin)
 admin.site.register(NewEmail, NewEmailAdmin)
