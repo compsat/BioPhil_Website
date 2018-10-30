@@ -26,10 +26,10 @@
         <form method="post" id="register-form" action="{% url 'login' %}">
           {% csrf_token %}
           <div class="form-group">
-            <label for="username">Username</label>
-            {% if form.email.errors %}
+            <label for="username">Email Address</label>
+            {% if form.username.errors %}
             <div class="invalid-feedback">
-              {{ form.email.errors }}
+              {{ form.username.errors }}
             </div>
             {% endif %}
             {{ form.username }}
