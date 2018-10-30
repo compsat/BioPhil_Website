@@ -180,24 +180,51 @@ BioPhil
       <h1 class="font-weight-bold my-0 mb-2 text-dark">SUBMISSIONS</h1>
       <div class="bg-light rounded p-4">
         <table class="table table-responsive-xs my-0">
-          <thead class="thead-light" style="background-color:#353F4B">
+          <thead class="thead-light" style="background-color: #353F4B">
             <tr>
               <th scope="col">#</th>
-              <th scope="col" style="width:60%>Module</th>
+              <th scope="col" style="width:40%">Module Name</th>
               <th scope="col">Submitted on</th>
               <th scope="col">Last Edit</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
             {% for submission in submissions_list %}
               <tr> 
                 <td scope="row">{{ forloop.counter }}</td>
-                <td><button type="button" class="btn btn-link p-0" data-toggle="modal" data-target="#responseModal{{ submission.id }}">{{ submission.module }}</td>
+                <td>{{ submission.module }}</td>
                 <td>{{ submission.created_at }}</td>
                 <td>{{ submission.updated_at }}</td>
+                <td>{{ submission.updated_at }}</td>
+                <td>
+                  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewResponseModal{{ submission.id }}">View</button>
+                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editResponseModal{{ submission.id }}">Edit</button>
+                </td>
               </tr>
-                                                                                                                                      
-              <div class="modal fade" id="responseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="responseModal" aria-hidden="true">
+
+              <!-- View Response Modal -->                                                                                       
+              <div class="modal fade" id="viewResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="responseModalLabel">{{ submission.module }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <textarea name="submission-answer" class="form-control" id="responseTextArea" rows="6" readonly>{{ submission.answer }}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edit Response Modal -->                                                                                       
+              <div class="modal fade" id="editResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -212,10 +239,8 @@ BioPhil
                         <textarea name="submission-answer" class="form-control" id="responseTextArea" rows="6">{{ submission.answer }}</textarea>
                       </div>
                       <input type="hidden" name="submission-id" value="{{ submission.pk }}">
-                      <!-- ADD A DELETE BUTTON -->
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
-                        <button type="submit" class="btn btn-warning" id="responseEditButton">Edit</button>
                         <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
                       </div>
                     </form>
@@ -229,22 +254,4 @@ BioPhil
     </div>
     {% endifequal %}
   </div>
-
-  <script>
-  $('#responseEditButton').click(function(event) {
-    $('#responseTextArea').prop("disabled", false );
-    $('#responseEditButton').prop("hidden", true);
-    $('#moduleResponseSave').prop("hidden", false);
-    $('moduleResponseBack').prop("value", "Cancel");
-  });
-
-  $('#responseCloseButton').click(function(event) {
-    $('#responseTextArea').attr("disabled", true);
-    //get original value from JSON file and make it value of textarea
-    $('#responseEditButton').attr("hidden", false);
-    $('#moduleResponseSave').attr("hidden", true);
-    $('moduleResponseBack').attr("value", "Go back");
-  });
-
-  </script>
 {% endblock %}
