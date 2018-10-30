@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
 from .models import *
+from .helper_methods import random_code_generator
 from . import forms
 
 # Register your models here.
@@ -22,8 +23,8 @@ class UserAdmin(DjangoUserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'user_type', 'university', 'is_staff')
-    list_filter = ('access_object__user_type', 'access_object__university')
+    list_display = ('email', 'first_name', 'last_name', 'user_type', 'university', 'is_staff', 'is_active')
+    list_filter = ('access_object__user_type', 'access_object__university', 'is_active')
     search_fields = ('email', 'first_name', 'last_name',)
     ordering = ('email',)
 
@@ -64,7 +65,7 @@ class AccessCodeAdmin(admin.ModelAdmin):
         university = obj.university
         quantity = form.cleaned_data.get('quantity')
         for x in range(0, quantity):
-            obj.access_code = random_code_generator(5)
+            obj.access_code = random_code_generator(5, 'access_code')
             super(AccessCodeAdmin, self).save_model(request, obj, form, change)
             if x != (quantity-1):
                 obj = AccessCode.objects.create(user_type=user_type, university=university)
@@ -86,8 +87,18 @@ class ModuleAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     readonly_fields = ('created_at', 'updated_at')
 
+class NewEmailAdmin(admin.ModelAdmin):
+    list_display = ('user_full_name', 'new_email', 'old_email', 'email_code', 'created_at')
+    readonly_fields = ('new_email', 'old_email', 'user_full_name', 'created_at')
+    exclude = ('user',)
+
+    def user_full_name(self, x):
+        return x.user.get_full_name()
+    user_full_name.short_description = 'User'
+
 admin.site.register(AccessCode, AccessCodeAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(image_carousel)
 admin.site.register(Module, ModuleAdmin)
-admin.site.register(module_img)
+admin.site.register(ModuleImage)
+admin.site.register(NewEmail, NewEmailAdmin)

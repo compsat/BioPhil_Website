@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-import string, secrets
+from datetime import timedelta
+from django.utils import timezone
+from webapp.tasks import *
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -50,7 +52,6 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-
 class User(AbstractUser):
     """User model."""
 
@@ -60,13 +61,37 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=150)
     access_object = models.OneToOneField(AccessCode, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    activated_at = models.DateTimeField(null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
-    # def get_absolute_url(self):
-    #     return "confirm_reg/"
+    
+    @property
+    def expiration_date(self):
+        return self.created_at + timedelta(days=30)
+
+    def save(self, *args, **kwargs):
+        do_tasks = False
+        if self.pk is None: 
+            do_tasks = True
+
+        super(User, self).save(*args, **kwargs)
+
+        if do_tasks:
+            alert_inactive_user(self.pk)
+            delete_inactive_user(self.pk)
+
+class NewEmail(models.Model):
+    email_code = models.CharField(max_length=20, unique=True)
+    new_email = models.EmailField()
+    old_email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.get_full_name() + ": " + self.new_email
     
 class Updates(models.Model):# to get the last 5 in the query, order it by ID number in descending order, then get [0:4]
     update_text = models.CharField(max_length=200)
@@ -90,15 +115,6 @@ class Submission(models.Model):
     
     class Meta:
         ordering = ('created_at',)
-
-"""Generates a string of five randomly generated characters"""
-def random_code_generator(length):
-	access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
-
-	while(AccessCode.objects.filter(access_code=access_code).count() > 0):
-		access_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(length))
-		
-	return access_code
 
 class ImageCarousel(models.Model):
     img = models.ImageField(upload_to='images')
@@ -131,3 +147,10 @@ class Module(models.Model):
 
     def __str__(self):
         return self.title
+
+class DeletionLog(models.Model):
+    email = models.EmailField()
+    full_name = models.CharField(max_length=200)
+    access_code = models.CharField(max_length=10)
+    user_created_at = models.DateTimeField()
+    deleted_at = models.DateTimeField(auto_now_add=True)
