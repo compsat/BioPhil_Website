@@ -131,6 +131,18 @@ class GenerateCodeForm(forms.ModelForm):
 		model = AccessCode
 		fields = ['quantity', 'user_type']
 
+	def __init__(self, *args, **kwargs):
+		super(GenerateCodeForm, self).__init__(*args, **kwargs)
+		self.fields['quantity'].widget.attrs={
+			'id' : 'quantity',
+			'class' : 'form-control',
+			'placeholder' : 0
+		}
+		self.fields['user_type'].widget.attrs={
+			'id' : 'userType',
+			'class' : 'custom-select',
+		}
+
 class ChangePasswordForm(PasswordChangeForm):
 	def __init__(self, *args, **kwargs):
 		super(ChangePasswordForm, self).__init__(*args, **kwargs)
