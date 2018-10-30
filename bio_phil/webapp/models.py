@@ -116,6 +116,7 @@ class ModuleImage(models.Model):
         return self.img_name
     class Meta:
         ordering = ('id',)
+        
 
 class Module(models.Model):
     title = models.CharField(max_length=100)
