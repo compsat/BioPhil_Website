@@ -3,7 +3,7 @@
 {% block body %}
   {% if form.errors %}
     {% if form.username.errors %}
-      <p>You haven't verified your email. Resend your verification email <a href="">here</a>.</p>
+      <p>You haven't verified your email. Resend your verification email <a href="{% url 'resend_verification' %}">here</a>.</p>
     {% else %}
       <p>Your email and password didn't match. Please try again.</p>
     {% endif %}
