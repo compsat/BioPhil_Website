@@ -148,6 +148,12 @@ class Module(models.Model):
     def __str__(self):
         return self.title
 
+class Download(models.Model):
+    title = models.CharField(max_length=120)
+    module = models.ForeignKey('Module', on_delete=models.CASCADE, blank=True, null=True)
+    file = models.FileField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
 class DeletionLog(models.Model):
     email = models.EmailField()
     full_name = models.CharField(max_length=200)
