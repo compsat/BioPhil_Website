@@ -1,45 +1,48 @@
 {% extends 'base.html' %}
+<script src="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"></script>
 
 {% block body %}
 	{% ifequal user.access_object.user_type "Teacher" %}
-		<h2>Submissions</h2>
-		<table>
-			<tr>
-				<th>Module</th>
-				<th>User</th>
-				<th>University</th>
-				<th>Answer</th> 
-				<th>Date of Submission</th> 
-				<th>Last Edit</th> 
-			</tr>
-		  	{% for submission in submissions_list %}
-				<tr> 
-					<td>{{ submission.module }}</td>
-					<td>{{ submission.user.get_full_name }}</td>
-					<td>{{ submission.user.access_object.university }}</td>
-					<td>{{ submission.answer }}</td>
-					<td>{{ submission.created_at }}</td>
-					<td>{{ submission.updated_at }}</td>
-				</tr>
-			{% endfor %}
-		</table>
-	{% else %}
-		<h2>Your Submissions</h2>
-		<table>
-			<tr>
-				<th>Module</th>
-				<th>Answer</th> 
-				<th>Date of Submission</th> 
-				<th>Last Edit</th> 
-			</tr>
-		  	{% for submission in submissions_list %}
-				<tr> 
-					<td>{{ submission.module }}</td>
-					<td><a href="{% url 'edit' pk=submission.id%}">{{ submission.answer }}</a></td>
-					<td>{{ submission.created_at }}</td>
-					<td>{{ submission.updated_at }}</td>
-				</tr>
-			{% endfor %}
-		</table>
+
+	<div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center">
+		<div class="col-md-11">
+			<h1 class="font-weight-bold my-0 mb-2 text-dark">USER SUBMISSIONS</h1>
+			<div class="bg-light rounded p-4">
+				<table id="submissionsList">
+					<thead>
+						<tr>
+							<th>Module</th>
+							<th>User</th>
+							<th>University</th>
+							<th>Answer</th> 
+							<th>Date of Submission</th> 
+							<th>Last Edit</th> 
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" language="javascript" class="init">
+		$(document).ready(function() {
+			$('#submissionsList').DataTable( {
+				"processing": true,
+				"ajax": {
+					"processing": true,
+					"url": "{% url 'submissions_list' %}",
+					"dataSrc": ""
+				},
+				"columns": [
+				{ "data": "submissions_list.submission.module" },
+				{ "data": "submissions_list.submission.user.get_full_name" },
+				{ "data": "submissions_list.submission.user.access_object.university" },
+				{ "data": "submissions_list.submission.answer" },
+				{ "data": "submissions_list.submission.created_at" },
+				{ "data": "submissions_list.submission.updated_at" },
+				]
+			} );
+		} );
+	</script>
 	{% endifequal %}
 {% endblock %}
