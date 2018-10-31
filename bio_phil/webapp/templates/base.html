@@ -71,7 +71,9 @@
           <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
         </div>
         {% else %}
-        <button class="btn btn-dark" data-toggle="modal" id="signIn-btn">Sign In</button>
+        <form action="{% url 'login' %}">
+        <button class="btn btn-dark" type="submit" id="signIn-btn">Sign In</button>
+        </form>
         {% endif %}
       </div>
     </div>
