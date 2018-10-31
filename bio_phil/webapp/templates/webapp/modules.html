@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load user_submission %}
 
 {% block title %}
 Modules
 {% endblock %}
 
 {% block body %}
+{% if message  %}
+  {{ message }}
+{% endif %}
 <body data-spy="scroll" data-target="#modulesList" data-offset="0" class="scrollspy-example">
   <!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
@@ -28,16 +32,21 @@ Modules
           <h3 class="text-dark font-weight-bold" id="#list-item-{{ module.pk }}">{{ module.title }}</h3>
           <h5 class="text-secondary">{{ module.created_at }}</h5>
           <p>{{ module.content }}</p>
+          {% if user.access_object.user_type == "Student" %}
           <div class="container-fluid p-0 mb-3">
-            <span class="mr-2 text-uppercase align-middle">Actions:</span><button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addResponseModal{{ submission.id }}">Add Response</button>
-            <!-- 
-            Show Below when student has responded. 
-            Replace "Add Response" with "View Response" if user has response. if-else statement.
-            -->
-            <!-- <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#viewResponseModal{{ submission.id }}">View Response</button> -->
-            <!-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editResponseModal{{ submission.id }}">Edit Response</button> -->
+            {% user_submission user module as submission %}
+            {% if submission %}
+              <!-- 
+              Show Below when student has responded. 
+              Replace "Add Response" with "View Response" if user has response. if-else statement.
+              -->
+              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#viewResponseModal{{ submission.id }}">View Response</button>
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editResponseModal{{ submission.id }}">Edit Response</button>
+            {% else %}
+              <span class="mr-2 text-uppercase align-middle">Actions:</span><button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addResponseModal{{ submission.id }}">Add Response</button>
+            {% endif %}
           </div>
-          
+           {% endif %}
 
           <!-- Add Response Modal -->
           <div class="modal fade" id="addResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="addResponseModal" aria-hidden="true">
@@ -49,19 +58,24 @@ Modules
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6"></textarea>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
-                  <button type="submit" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Submit</button>
-                </div>
+                <form method="post">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6"></textarea>
+                  </div>
+
+                  <div class="modal-footer">
+                    <input type="number" name="module-id" value="{{ module.id }}" hidden>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
+                    <button type="submit" name= "add-response" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Submit</button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
 
           <!-- View Response Modal -->
-          <!-- <div class="modal fade" id="viewResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
+          <div class="modal fade" id="viewResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -78,10 +92,10 @@ Modules
                 </div>
               </div>
             </div>
-          </div> -->
+          </div>
 
           <!-- Edit Response Modal -->                                                                               
-          <!-- <div class="modal fade" id="editResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
+          <div class="modal fade" id="editResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -96,14 +110,15 @@ Modules
                     <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6" >{{ submission.answer }}</textarea>
                   </div>
                   <input type="hidden" name="submission-id" value="{{ submission.pk }}">
+                  
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
-                    <button type="submit" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Save changes</button>
+                    <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Save changes</button>
                   </div>
                 </form>
               </div>
             </div>
-          </div> -->
+          </div>
 
           <!-- Downloads -->
           <div class="accordion mb-4" id="downloadAccordion1">

@@ -324,7 +324,23 @@ def images(request):
 
 def module(request):
 	modules_list = Module.objects.all()
-	context = {'modules_list': modules_list}
+	message = None
+	if request.method == 'POST':
+		if 'add-response' in request.POST:
+			module_id = request.POST['module-id']
+			module = Module.objects.get(pk=module_id)
+			answer = request.POST['submission-answer']
+			Submission.objects.create(user=request.user, module=module, answer=answer)
+			message = "Successfully submitted an answer!"
+		elif 'edit-response' in request.POST:
+			submission_pk = request.POST['submission-id']
+			new_answer = request.POST['submission-answer']
+			submission = Submission.objects.get(pk=submission_pk)
+			submission.answer = new_answer
+			submission.save()
+			message = "Your submission has been edited!"
+
+	context = {'modules_list': modules_list, 'user' : request.user, 'message' : message}
 	return render(request, 'webapp/modules.html', context)
 
 def send_file(request, file_name):
