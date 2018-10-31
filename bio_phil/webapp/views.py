@@ -238,38 +238,6 @@ class SubmitAnswer(CreateView):
 		form.instance.user = self.request.user
 		return super().form_valid(form)
 
-"""View for students to edit their answers to modules"""
-class EditAnswer(UpdateView):
-	model = Submission
-	fields = ['answer']
-	success_url = reverse_lazy('submissions_list')
-	template_name_suffix = '_update_form'
-
-	def get_context_data(self, **kwargs):
-		context = super(EditAnswer, self).get_context_data(**kwargs)
-		context['user'] = self.request.user
-		context['module'] = self.object.module
-		return context
-
-	def get_queryset(self):
-		queryset = Submission.objects.all()
-		if self.request.user.access_object.user_type == 'Student':
-			queryset = queryset.filter(user=self.request.user)
-
-		return queryset
-
-"""View for students to delete their answers to modules"""
-class DeleteAnswer(DeleteView):
-	model = Submission
-	success_url = reverse_lazy('submissions_list')
-
-	def get_queryset(self):
-		queryset = Submission.objects.all()
-		if self.request.user.access_object.user_type == 'Student':
-			queryset = queryset.filter(user=self.request.user)
-
-		return queryset
-
 """View for teachers only for them to generate a specified number of access codes
 either for their students or fellow teachers"""
 @login_required
@@ -295,32 +263,11 @@ def generate_access_codes(request):
 		form = GenerateCodeForm()
 	return render(request, 'webapp/generate_access_codes.html', {'form' : form, 'teacher' : request.user, 'access_objects' : access_objects})
 
-"""View for teachers only for them to manage the access codes they generated."""
-@login_required
-def manage_access_codes(request):
-	teacher = request.user
-	access_codes = AccessCode.objects.filter(creator=teacher)
-	unused_access_codes = access_codes.filter(user=None, user_type='Student')
-	used_access_codes = access_codes.filter(user_type='Student').exclude(user=None)
-	unused_teacher_access_codes = access_codes.filter(user=None, user_type='Teacher')
-	used_teacher_access_codes = access_codes.filter(user_type='Teacher').exclude(user=None)
-	return render(request, 'webapp/manage_access_codes.html', {
-		'teacher' : teacher, 
-		'unused_access_codes' : unused_access_codes, 
-		'used_access_codes' : used_access_codes, 
-		'unused_teacher_access_codes' : unused_teacher_access_codes, 
-		'used_teacher_access_codes' : used_teacher_access_codes
-		})
-	access_codes = AccessCode.objects.filter(owner=teacher)
-	unused_access_codes = access_codes.filter(user=None)
-	used_access_codes = access_codes.exclude(user=None)
-	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'unused_access_codes' : unused_access_codes, 'used_access_codes' : used_access_codes})
-
 #View for image_carousel model
-def images(request):
-	image_list = image_carousel.objects.order_by('-id')[:5]
-	context = {'image_list':image_list}
-	return render(request, 'webapp/img_carousel_test.html',context)
+# def images(request):
+# 	image_list = image_carousel.objects.order_by('-id')[:5]
+# 	context = {'image_list':image_list}
+# 	return render(request, 'webapp/img_carousel_test.html',context)
 
 def module(request):
 	modules_list = Module.objects.all()
