@@ -194,9 +194,8 @@ BioPhil
               <tr> 
                 <td scope="row">{{ forloop.counter }}</td>
                 <td>{{ submission.module }}</td>
-                <td>{{ submission.created_at }}</td>
-                <td>{{ submission.updated_at }}</td>
-                <td>{{ submission.updated_at }}</td>
+                <td>{{ submission.created_at|date:'n-j-Y, H:i' }}</td>
+                <td>{{ submission.updated_at|date:'n-j-Y, H:i'  }}</td>
                 <td>
                   <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewResponseModal{{ submission.id }}">View</button>
                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editResponseModal{{ submission.id }}">Edit</button>
@@ -208,16 +207,16 @@ BioPhil
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="responseModalLabel">{{ submission.module }}</h5>
+                      <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
-                      <textarea name="submission-answer" class="form-control" id="responseTextArea" rows="6" readonly>{{ submission.answer }}</textarea>
+                      <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6" readonly>{{ submission.answer }}</textarea>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
                     </div>
                   </div>
                 </div>
@@ -228,25 +227,42 @@ BioPhil
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="responseModalLabel">{{ submission.module }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
+                      <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton{{ submission.id }}">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <form method="post">
                       {% csrf_token %}
                       <div class="modal-body">
-                        <textarea name="submission-answer" class="form-control" id="responseTextArea" rows="6">{{ submission.answer }}</textarea>
+                        <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6" >{{ submission.answer }}</textarea>
                       </div>
                       <input type="hidden" name="submission-id" value="{{ submission.pk }}">
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
-                        <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
+                        <button type="submit" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Save changes</button>
                       </div>
                     </form>
                   </div>
                 </div>
               </div>
+              <script>
+                $('#responseEditButton{{ submission.id }}').click(function(event) {
+                  console.log("sdadas")
+                  $('#responseTextArea{{ submission.id }}').prop("disabled", false );
+                  $('#responseEditButton{{ submission.id }}').prop("hidden", true);
+                  $('#moduleResponseSave{{ submission.id }}').prop("hidden", false);
+                  $('#moduleResponseBack{{ submission.id }}').prop("value", "Cancel");
+                });
+
+                $('#responseCloseButton{{ submission.id }}').click(function(event) {
+                  $('#responseTextArea{{ submission.id }}').attr("disabled", true);
+                  //get original value from JSON file and make it value of textarea
+                  $('#responseEditButton{{ submission.id }}').attr("hidden", false);
+                  $('#moduleResponseSave{{ submission.id }}').attr("hidden", true);
+                  $('#moduleResponseBack{{ submission.id }}').attr("value", "Go back");
+                });
+              </script>
             {% endfor %}
           </tbody>
         </table>
