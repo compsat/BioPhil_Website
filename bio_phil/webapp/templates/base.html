@@ -13,6 +13,17 @@
   <link rel="stylesheet" href="{% static 'webapp/css/normalize.css' %}">
   <link rel="stylesheet" href="{% static 'webapp/css/main.css' %}">
   <link rel="stylesheet" href="{% static 'webapp/css/navbar.css' %}">
+  <style>
+    @media screen and (max-width: 992px) {
+      .dropdown-menu-right {
+        right: auto;
+      }
+
+      .navbarDropdown {
+        float: left;
+      }
+    }
+  </style>
 
   <!---
   Move the lines with <scripts> up here!
@@ -45,22 +56,37 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item mr-5 px-1 nav-item-hover">
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover">
             <a class="nav-link text-dark font-weight-bold align-middle" href="{% url 'index' %}">Home</a>
           </li>
-          <li class="nav-item mr-5 px-1 nav-item-hover">
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover">
             <a class="nav-link text-dark font-weight-bold my-auto" href="{% url 'gallery' %}">Gallery</a>
           </li>
-          <li class="nav-item mr-5 px-1 nav-item-hover">
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover">
             <a class="nav-link text-dark font-weight-bold my-auto" href="{% url 'modules' %}">Modules</a>
           </li>
+          {% if request.user.is_authenticated %}
+          <div class="dropdown-divider"></div>
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover d-block d-lg-none">
+              <span class="text-dark font-weight-bold my-auto">{{ request.user.get_full_name }}</span>
+              <ul class="list-unstyled mt-2 mb-3">
+                <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+                {% ifequal user.access_object.user_type "Teacher" %}
+                <li><a class="dropdown-item" href="{% url 'generate_access_codes' %}">Generate Codes</a></li>
+                <li><a class="dropdown-item" href="{% url 'submissions_list' %}">View Submissions</a></li>
+                {% endifequal %}
+                <li><a class="dropdown-item" href="#">Contact Us</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+          </li>
+          {% endif %}
         </ul>
 
         {% if request.user.is_authenticated %}
-        <a class="nav-link dropdown-toggle text-dark font-weight-bold" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-item nav-link dropdown-toggle text-dark font-weight-bold d-none d-lg-block" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ request.user.get_full_name }}
         </a>
-        <div class="dropdown-menu dropdown-menu-right my-0 mr-5" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu dropdown-menu-right my-0 mr-lg-5" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
           {% ifequal user.access_object.user_type "Teacher" %}
           <a class="dropdown-item" href="{% url 'generate_access_codes' %}">Generate Codes</a>
@@ -71,7 +97,7 @@
           <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
         </div>
         {% else %}
-        <button class="btn btn-dark" data-toggle="modal" id="signIn-btn">Sign In</button>
+        <a href="{% url 'login' %}" class="btn btn-dark" role="button" id="signIn-btn">Sign In</a>
         {% endif %}
       </div>
     </div>
