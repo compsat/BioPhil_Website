@@ -3,7 +3,7 @@
 
   {% if form.errors %}
     {% if form.username.errors %}
-      <p>You haven't verified your email. Resend your verification email <a href="">here</a>.</p>
+      <p>You haven't verified your email. Resend your verification email <a href="{% url 'resend_verification' %}">here</a>.</p>
     {% else %}
       <p>Your email and password didn't match. Please try again.</p>
     {% endif %}
@@ -18,24 +18,39 @@
     {% endif %}
   {% endif %}
 
-  <form method="post" action="{% url 'login' %}">
-  {% csrf_token %}
+  <div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center">
+    <div class="col-md-3 px-md-4 px-3">
+      <h1 class="font-weight-bold my-0 mb-2 text-dark text-center">Login :: BioPhil</h1>
+      <!-- Form -->
+      <div class="bg-light rounded p-4">
+        <form method="post" id="register-form" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="username">Email Address</label>
+            {% if form.username.errors %}
+            <div class="invalid-feedback">
+              {{ form.username.errors }}
+            </div>
+            {% endif %}
+            {{ form.username }}
+          </div>       
 
-  <div>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-  </div>
-  <div>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
+          <div class="form-group">
+            <label for="password">Password</label>
+            {% if form.password1.errors %}
+            <div class="invalid-feedback">
+              {{ form.password1.errors }}
+            </div>
+            {% endif %}
+            {{ form.password }}
+          </div>
+          <div class="text-center mb-2"><button type="submit" class="btn btn-dark">Login</button></div>
+          {# Assumes you setup the password_reset view in your URLconf #}
+          <div class="text-center mb-2"><a href="{% url 'password_reset' %}">Forgot your password?</a></div>
+          <div class="text-center"><a href="{% url 'register' %}">Create an account</a></div>
+        </form>
+      </div>
+    </div>      
   </div>
 
-  <div>
-    <input type="submit" value="login" />
-    <input type="hidden" name="next" value="{{ next }}" />
-  </div>
-  </form>
-
-  {# Assumes you setup the password_reset view in your URLconf #}
-  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 {% endblock %}

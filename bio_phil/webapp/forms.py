@@ -1,7 +1,7 @@
 from django import forms
 from .models import User, AccessCode, NewEmail
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, PasswordResetForm
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.contrib.auth import authenticate
@@ -28,7 +28,26 @@ class ResendForm(forms.Form):
 
 		return True
 
+class CustomPasswordResetForm(PasswordResetForm):
+	def __init__(self, *args, **kwargs):
+		super(CustomPasswordResetForm, self).__init__(*args, **kwargs)
+		self.fields['email'].widget.attrs={
+			'id' : 'username',
+			'class' : 'form-control',
+		}
+
 class LoginForm(AuthenticationForm):
+	def __init__(self, *args, **kwargs):
+		super(LoginForm, self).__init__(*args, **kwargs)
+		self.fields['username'].widget.attrs={
+			'id' : 'signInEmail',
+			'class' : 'form-control',
+		}
+		self.fields['password'].widget.attrs={
+			'id' : 'signinPassword',
+			'class' : 'form-control',
+		}
+
 	def is_valid(self):
  
         # run the parent validation first
@@ -57,6 +76,36 @@ class RegisterForm(UserCreationForm):
 	class Meta:
 		model = User
 		fields = ['email', 'first_name', 'last_name', 'access_field']
+
+	def __init__(self, *args, **kwargs):
+		super(RegisterForm, self).__init__(*args, **kwargs)
+		self.fields['email'].widget.attrs={
+			'id' : 'exampleInputEmail1',
+			'class' : 'form-control',
+			'aria-describedby' : 'emailHelp'
+		}
+		self.fields['first_name'].widget.attrs={
+			'id' : 'exampleInputName',
+			'class' : 'form-control',
+			'aria-describedby' : 'emailHelp'
+		}
+		self.fields['last_name'].widget.attrs={
+			'id' : 'exampleInputName',
+			'class' : 'form-control',
+			'aria-describedby' : 'emailHelp'
+		}
+		self.fields['password1'].widget.attrs={
+			'id' : 'exampleInputPassword1',
+			'class' : 'form-control',
+		}
+		self.fields['password2'].widget.attrs={
+			'id' : 'exampleInputPassword1',
+			'class' : 'form-control',
+		}
+		self.fields['access_field'].widget.attrs={
+			'id' : 'exampleInputPassword1',
+			'class' : 'form-control',
+		}
 
 	def is_valid(self):
  
@@ -90,22 +139,64 @@ class GenerateCodeForm(forms.ModelForm):
 		model = AccessCode
 		fields = ['quantity', 'user_type']
 
+	def __init__(self, *args, **kwargs):
+		super(GenerateCodeForm, self).__init__(*args, **kwargs)
+		self.fields['quantity'].widget.attrs={
+			'id' : 'quantity',
+			'class' : 'form-control',
+			'placeholder' : 0
+		}
+		self.fields['user_type'].widget.attrs={
+			'id' : 'userType',
+			'class' : 'custom-select',
+		}
+
 class ChangePasswordForm(PasswordChangeForm):
-	pass 
+	def __init__(self, *args, **kwargs):
+		super(ChangePasswordForm, self).__init__(*args, **kwargs)
+		self.fields['old_password'].widget.attrs={
+			'id' : 'currentPassword',
+			'class' : 'form-control',
+			'placeholder' : 'Password'
+		}
+		self.fields['new_password1'].widget.attrs={
+			'id' : 'newPassword',
+			'class' : 'form-control',
+			'placeholder' : 'Password'
+		}
+		self.fields['new_password2'].widget.attrs={
+			'id' : 'newPassword2',
+			'class' : 'form-control',
+			'placeholder' : 'Password'
+		}
 
 class ChangeEmailForm(forms.ModelForm):
-	password = forms.CharField(widget=forms.PasswordInput)
 	confirm_email = forms.EmailField()
 	old_email = forms.EmailField(disabled=True)
 
 	class Meta:
 		model = NewEmail
-		fields = ['password', 'old_email', 'new_email', 'confirm_email']
+		fields = ['old_email', 'new_email', 'confirm_email']
 
 	def __init__(self, *args, **kwargs):
 		self.request = kwargs.pop("request")
 		super(ChangeEmailForm, self).__init__(*args, **kwargs)
 		self.fields['old_email'].initial = self.request.user.email
+
+		self.fields['old_email'].widget.attrs={
+			'id' : 'currentEmail',
+			'class' : 'form-control',
+		}
+		self.fields['new_email'].widget.attrs={
+			'id' : 'newEmail',
+			'class' : 'form-control',
+			'placeholder' : 'Email address'
+		}
+		self.fields['confirm_email'].widget.attrs={
+			'id' : 'newEmail2',
+			'class' : 'form-control',
+			'placeholder' : 'Email address'
+		}
 
 	def is_valid(self):
         # run the parent validation first
@@ -115,7 +206,6 @@ class ChangeEmailForm(forms.ModelForm):
 		if not valid:
 			return valid
  
-		password = self.cleaned_data['password']
 		new_email = self.cleaned_data['new_email']
 		confirm_email = self.cleaned_data['confirm_email']
 		old_email = self.cleaned_data['old_email']
@@ -126,12 +216,6 @@ class ChangeEmailForm(forms.ModelForm):
 
 		if User.objects.filter(email=new_email).count() > 0:
 			self.add_error('new_email', "Email is already taken.")
-			return False
-
-		user = authenticate(email=old_email, password=password)
-
-		if user is None:
-			self.add_error('password', "Invalid password")
 			return False
 
 		return True

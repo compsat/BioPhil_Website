@@ -1,19 +1,129 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="">
 <head>
-    <meta charset="UTF-8">
-    <title>Bio Phil</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{% block title %}{% endblock %}</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+  <link rel="stylesheet" href="{% static 'webapp/css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'webapp/css/navbar.css' %}">
+  <style>
+    @media screen and (max-width: 992px) {
+      .dropdown-menu-right {
+        right: auto;
+      }
+
+      .navbarDropdown {
+        float: left;
+      }
+    }
+  </style>
+
+  <script src="{% static 'webapp/js/vendor/modernizr-3.6.0.min.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write("<script src='https://code.jquery.com/jquery-3.3.1.min.js'><\/script>")</script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script src="{% static 'webapp/js/plugins.js' %}"></script>
+  <script src="{% static 'webapp/js/main.js' %}"></script>
+
+  <!---
+  Move the lines with <scripts> up here!
+
+  Also, could you change the hrefs so that we're calling from CDNs? Apparently you need to add that pa sa django settings or something?
+
+  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css
+  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js
+  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js
+  https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css
+  https://code.jquery.com/jquery-3.3.1.min.js
+
+  -->
+
+  <!---
+  Move the lines with <scripts> up here!
+
+  Also, could you change the hrefs so that we're calling from CDNs? Apparently you need to add that pa sa django settings or something?
+
+  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css
+  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js
+  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js
+  https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css
+  https://code.jquery.com/jquery-3.3.1.min.js
+
+  -->
+
+  {% block gallery %}
+  {% endblock %}
 </head>
 <body>
-	<p><a href="{% url 'index' %}">Home</a></p>
-	{% if request.user.is_authenticated %}
-		<p>Hello, <a href="{% url 'profile' %}">{{ request.user.get_full_name }}</a>!</p>
-		<p><a href="{% url 'logout' %}">Log out</a></p>
-	{% else %}
-		<p><a href="{% url 'login' %}">Log in</a></p>
-		<p><a href="{% url 'register' %}">Sign up</a></p>
-	{% endif %}
+	 <!-- Add your site or application content here -->
+  <nav class="navbar navbar-expand-lg navbar-light px-5 py-0 shadow-sm" id="navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand mr-5" href="{% url 'index' %}"">
+        <img src="{% static 'webapp/img/logo/biophil.png' %}" height="80" width="102" alt="">
+      </a>
+
+      <!-- Button when navbar is collapsed -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover">
+            <a class="nav-link text-dark font-weight-bold align-middle" href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover">
+            <a class="nav-link text-dark font-weight-bold my-auto" href="{% url 'gallery' %}">Gallery</a>
+          </li>
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover">
+            <a class="nav-link text-dark font-weight-bold my-auto" href="{% url 'modules' %}">Modules</a>
+          </li>
+          {% if request.user.is_authenticated %}
+          <div class="dropdown-divider"></div>
+          <li class="nav-item mr-lg-5 px-1 nav-item-hover d-block d-lg-none">
+              <span class="text-dark font-weight-bold my-auto">{{ request.user.get_full_name }}</span>
+              <ul class="list-unstyled mt-2 mb-3">
+                <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+                {% ifequal user.access_object.user_type "Teacher" %}
+                <li><a class="dropdown-item" href="{% url 'generate_access_codes' %}">Generate Codes</a></li>
+                <li><a class="dropdown-item" href="{% url 'submissions_list' %}">View Submissions</a></li>
+                {% endifequal %}
+                <li><a class="dropdown-item" href="#">Contact Us</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+          </li>
+          {% endif %}
+        </ul>
+
+        {% if request.user.is_authenticated %}
+        <a class="nav-item nav-link dropdown-toggle text-dark font-weight-bold d-none d-lg-block" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ request.user.get_full_name }}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right my-0 mr-lg-5" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
+          {% ifequal user.access_object.user_type "Teacher" %}
+          <a class="dropdown-item" href="{% url 'generate_access_codes' %}">Generate Codes</a>
+          <a class="dropdown-item" href="{% url 'submissions_list' %}">View Submissions</a>
+          {% endifequal %}
+          <a class="dropdown-item" href="#">Contact Us</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+        </div>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-dark" role="button" id="signIn-btn">Sign In</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
 	{% block body %}
 	{% endblock %}
+
 </body>
 </html>

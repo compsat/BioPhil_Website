@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import timedelta
 from django.utils import timezone
 from webapp.tasks import *
+import os
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -15,6 +16,7 @@ class AccessCode(models.Model):
 	user_type = models.CharField(max_length=10, choices=USER_TYPE, default='Student')
 	university = models.CharField(max_length=50)
 	creator = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL, related_name='access_codes')
+    
 
 	def __str__(self):
 		return self.access_code
@@ -96,6 +98,7 @@ class NewEmail(models.Model):
 class Updates(models.Model):# to get the last 5 in the query, order it by ID number in descending order, then get [0:4]
     update_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField(verbose_name='Date Published')
+    test = models.CharField(max_length = 10)
 
     def __str__(self):
         return self.update_text
@@ -124,35 +127,41 @@ class ImageCarousel(models.Model):
     def __str__(self):
         return self.img_name
 
+class Module(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    module_summary = models.CharField(max_length=300)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.title
+
 class ModuleImage(models.Model):
     image = models.ImageField(upload_to = 'module/images')
     img_name = models.CharField(max_length = 30)
     pub_date = models.DateTimeField(auto_now_add = True)
+    module = models.ForeignKey(Module, on_delete=models.DO_NOTHING, related_name='images', blank=True, null=True)
+
     def __str__(self):
         return self.img_name
-    class Meta:
-        ordering = ('id',)
-        
 
-class Module(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    module_summary = models.CharField(max_length = 300, default = title)
-    updated_at = models.DateTimeField(auto_now=True)
+class Download(models.Model):
+    title = models.CharField(max_length=120, unique=True)
+    module = models.ForeignKey('Module', on_delete=models.CASCADE, related_name='downloads', blank=True, null=True)
+    file = models.FileField()
     created_at = models.DateTimeField(auto_now_add=True)
-    module_image = models.ForeignKey(ModuleImage, on_delete = models.DO_NOTHING)
-    
-    class Meta:
-        ordering = ('id',)
 
     def __str__(self):
         return self.title
 
-class Download(models.Model):
-    title = models.CharField(max_length=120)
-    module = models.ForeignKey('Module', on_delete=models.CASCADE, blank=True, null=True)
-    file = models.FileField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    def extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension[1:]
+
+    def file_size(self):
+        """Returns the filesize of the filename given in value"""
+        return self.file.size
 
 class DeletionLog(models.Model):
     email = models.EmailField()
