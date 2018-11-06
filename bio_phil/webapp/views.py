@@ -257,12 +257,10 @@ def module(request):
 				message = "Successfully submitted an answer!"
 			else:
 				message = "There was an error in submitting an answer."
-			# answer = request.POST['submission-answer']
-			# Submission.objects.create(user=request.user, module=module, fil=answer)
 		elif 'edit-response' in request.POST:
+
 			submit_form = SubmitForm(request.POST, request.FILES)
 			submission_pk = request.POST['submission-id']
-			print(submission_pk)
 			if submit_form.is_valid():
 				submission = Submission.objects.get(pk=submission_pk)
 				submission_form = submit_form.save(commit=False)
