@@ -9,6 +9,9 @@ Modules
 {% block body %}
 {% if message  %}
   {{ message }}
+  {% if submit_form.errors %}
+    {{ submit_form.errors }}
+  {% endif %}
 {% endif %}
 <body data-spy="scroll" data-target="#modulesList" data-offset="0" class="scrollspy-example">
   <!--[if lte IE 9]>
@@ -40,34 +43,34 @@ Modules
               Show Below when student has responded. 
               Replace "Add Response" with "View Response" if user has response. if-else statement.
               -->
-              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#viewResponseModal{{ submission.id }}">View Response</button>
-              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editResponseModal{{ submission.id }}">Edit Response</button>
+              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#viewResponseModal{{ module.pk }}">View Response</button>
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editResponseModal{{ module.pk }}">Edit Response</button>
             {% else %}
-              <span class="mr-2 text-uppercase align-middle">Actions:</span><button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addResponseModal{{ submission.id }}">Add Response</button>
+              <span class="mr-2 text-uppercase align-middle">Actions:</span><button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Add Response</button>
             {% endif %}
           </div>
            {% endif %}
 
           <!-- Add Response Modal -->
-          <div class="modal fade" id="addResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="addResponseModal" aria-hidden="true">
+          <div class="modal fade" id="addResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="addResponseModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="addModalLabel{{ submission.id }}">Add Response</h5>
+                  <h5 class="modal-title" id="addModalLabel{{ module.pk }}">Add Response</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addResponseCloseButton">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                   {% csrf_token %}
-                  <div class="modal-body">
-                    <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6"></textarea>
-                  </div>
+                  {{ submit_form.file }}
+                  <p>Maximum size for new files: 25MB, maximum attachments: 1</p>
+                  <p>If you need to submit mulitple files, compress them into a zip file.</p>
+                  <input type="number" name="module-id" value="{{ module.pk }}" hidden>
 
                   <div class="modal-footer">
-                    <input type="number" name="module-id" value="{{ module.id }}" hidden>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
-                    <button type="submit" name= "add-response" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
+                    <button type="submit" name= "add-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Submit</button>
                   </div>
                 </form>
               </div>
@@ -75,45 +78,53 @@ Modules
           </div>
 
           <!-- View Response Modal -->
-          <div class="modal fade" id="viewResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
+          <div class="modal fade" id="viewResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
+                  <h5 class="modal-title" id="responseModalLabel{{ module.pk }}">{{ submission.module }}</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6" readonly>{{ submission.answer }}</textarea>
-                </div>
+                <table class="table table-striped table-sm">
+                  <tbody>
+                    <tr>
+                      <td><a href="{{ submission.file.url }}">{{ submission.file.name }}</a></td>
+                      <td>{{ submission.created_at }}</td>
+                      <td>{{ submission.updated_at }}</td>
+                      <td class="size">{{ submission.file_size | filesizeformat }}</td>
+                      <td>{{ submission.extension }}</td>
+                    </tr>
+                  </tbody>
+                </table>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Edit Response Modal -->                                                                               
-          <div class="modal fade" id="editResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
+          <div class="modal fade" id="editResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton{{ submission.id }}">
+                  <h5 class="modal-title" id="responseModalLabel{{ module.pk }}">{{ submission.module }}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton{{ module.pk }}">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                   {% csrf_token %}
-                  <div class="modal-body">
-                    <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6" >{{ submission.answer }}</textarea>
-                  </div>
+                  {{ submit_form.file }}
+                  <p>Maximum size for new files: 25MB, maximum attachments: 1</p>
+                  <p>If you need to submit mulitple files, compress them into a zip file.</p>
                   <input type="hidden" name="submission-id" value="{{ submission.pk }}">
                   
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
-                    <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.pk }}">Close</button>
+                    <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ submission.pk }}">Save changes</button>
                   </div>
                 </form>
               </div>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm, LoginForm, ChangeEmailForm, ResendForm
+from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm, LoginForm, ChangeEmailForm, ResendForm, SubmitForm
 from .models import *
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -209,35 +209,6 @@ def activate(request, uidb64, token):
 		request.session['message'] = 'Activation link is invalid!'
 	return redirect('index')
 
-"""View for students to view their submissions to all modules OR for teachers
-to view all the submissions of the students"""
-class SubmissionList(ListView):
-	model = Submission
-	paginate_by = 50
-
-	def get_context_data(self, **kwargs):
-		context = super(SubmissionList, self).get_context_data(**kwargs)
-		context['user'] = self.request.user
-		context['submissions_list'] = self.get_queryset()
-		return context
-
-	def get_queryset(self):
-		queryset = Submission.objects.all()
-		if self.request.user.access_object.user_type == 'Student':
-			queryset = queryset.filter(user=self.request.user)
-
-		return queryset
-
-"""View for students to submit their answers to modules"""
-class SubmitAnswer(CreateView):
-	model = Submission
-	fields = ['module', 'answer']
-	success_url = reverse_lazy('submissions_list')
-
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super().form_valid(form)
-
 """View for teachers only for them to generate a specified number of access codes
 either for their students or fellow teachers"""
 @login_required
@@ -275,19 +246,35 @@ def module(request):
 	if request.method == 'POST':
 		if 'add-response' in request.POST:
 			module_id = request.POST['module-id']
-			module = Module.objects.get(pk=module_id)
-			answer = request.POST['submission-answer']
-			Submission.objects.create(user=request.user, module=module, answer=answer)
-			message = "Successfully submitted an answer!"
+			submit_form = SubmitForm(request.POST, request.FILES)
+			if submit_form.is_valid():
+				from django.forms.models import model_to_dict
+				module = Module.objects.get(pk=module_id)
+				submission = submit_form.save(commit=False)
+				submission.module = module
+				submission.user = request.user
+				submission.save()
+				message = "Successfully submitted an answer!"
+			else:
+				message = "There was an error in submitting an answer."
+			# answer = request.POST['submission-answer']
+			# Submission.objects.create(user=request.user, module=module, fil=answer)
 		elif 'edit-response' in request.POST:
+			submit_form = SubmitForm(request.POST, request.FILES)
 			submission_pk = request.POST['submission-id']
-			new_answer = request.POST['submission-answer']
-			submission = Submission.objects.get(pk=submission_pk)
-			submission.answer = new_answer
-			submission.save()
-			message = "Your submission has been edited!"
+			print(submission_pk)
+			if submit_form.is_valid():
+				submission = Submission.objects.get(pk=submission_pk)
+				submission_form = submit_form.save(commit=False)
+				submission.file = submission_form.file
+				submission.save()
+				message = "Your submission has been edited!"
+			else:
+				message = "There was an error in submitting an answer."
+	else:
+		submit_form = SubmitForm()
 
-	context = {'modules_list': modules_list, 'user' : request.user, 'message' : message}
+	context = {'modules_list': modules_list, 'user' : request.user, 'message' : message, 'submit_form': submit_form}
 	return render(request, 'webapp/modules.html', context)
 
 def send_file(request, file_name):

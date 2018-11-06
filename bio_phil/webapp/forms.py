@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, AccessCode, NewEmail
+from .models import User, AccessCode, NewEmail, Submission
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, PasswordResetForm
 from django.utils.html import format_html
@@ -219,6 +219,11 @@ class ChangeEmailForm(forms.ModelForm):
 			return False
 
 		return True
+
+class SubmitForm(forms.ModelForm):
+	class Meta:
+		model = Submission
+		fields = ['file']
 
 class AdminAccessCodeAddForm(forms.ModelForm):
 	quantity = forms.IntegerField()
