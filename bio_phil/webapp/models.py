@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.utils import timezone
 from webapp.tasks import *
 import os
@@ -127,6 +127,9 @@ class Submission(models.Model):
     def file_size(self):
         """Returns the filesize of the filename given in value"""
         return self.file.size
+
+    def title(self):
+        return "{}_{}_Module {}_{}".format(self.user.last_name, self.user.first_name, self.module.pk, self.updated_at.date())
 
 class ImageCarousel(models.Model):
     img = models.ImageField(upload_to='images')
