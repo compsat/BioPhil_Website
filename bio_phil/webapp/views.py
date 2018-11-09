@@ -106,7 +106,7 @@ def resend_verification(request):
 			user = User.objects.get(email=email)
 			send_verification_email(user, email, False)
 			request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
-				verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+				verify by {} GMT+8, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
 			return redirect('index')
 	else:
 		form = ResendForm()
@@ -151,7 +151,7 @@ def confirm(request):
 				del request.session['access_field']
 				send_verification_email(user, email, False)
 				request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
-					verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+					verify by {} GMT+8, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
 				return redirect('index')
 			elif 'go_back' in request.POST:
 				request.session['initial_data'] = {
