@@ -16,6 +16,9 @@ BioPhil
 
   {% if messages %}
     <p>{{ messages }}</p>
+    {% if submit_form.errors %}
+      {{ submit_form.errors }}
+    {% endif %}
   {% endif %}
 
   <div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center">
@@ -194,78 +197,72 @@ BioPhil
               <tr> 
                 <td scope="row">{{ forloop.counter }}</td>
                 <td>{{ submission.module }}</td>
-                <td>{{ submission.created_at|date:'n-j-Y, H:i' }}</td>
-                <td>{{ submission.updated_at|date:'n-j-Y, H:i'  }}</td>
+                <td>{{ submission.created_at|date:'n-j-Y, H:i' }} GMT+8</td>
+                <td>{{ submission.updated_at|date:'n-j-Y, H:i' }} GMT+8</td>
                 <td>
                   <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewResponseModal{{ submission.id }}">View</button>
                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editResponseModal{{ submission.id }}">Edit</button>
                 </td>
               </tr>
-
-              <!-- View Response Modal -->                                                                                       
-              <div class="modal fade" id="viewResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6" readonly>{{ submission.answer }}</textarea>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Edit Response Modal -->                                                                                       
-              <div class="modal fade" id="editResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton{{ submission.id }}">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <form method="post">
-                      {% csrf_token %}
-                      <div class="modal-body">
-                        <textarea name="submission-answer" class="form-control" id="responseTextArea{{ submission.id }}" rows="6" >{{ submission.answer }}</textarea>
-                      </div>
-                      <input type="hidden" name="submission-id" value="{{ submission.pk }}">
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
-                        <button type="submit" class="btn btn-primary" id="moduleResponseSave{{ submission.id }}">Save changes</button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <script>
-                $('#responseEditButton{{ submission.id }}').click(function(event) {
-                  console.log("sdadas")
-                  $('#responseTextArea{{ submission.id }}').prop("disabled", false );
-                  $('#responseEditButton{{ submission.id }}').prop("hidden", true);
-                  $('#moduleResponseSave{{ submission.id }}').prop("hidden", false);
-                  $('#moduleResponseBack{{ submission.id }}').prop("value", "Cancel");
-                });
-
-                $('#responseCloseButton{{ submission.id }}').click(function(event) {
-                  $('#responseTextArea{{ submission.id }}').attr("disabled", true);
-                  //get original value from JSON file and make it value of textarea
-                  $('#responseEditButton{{ submission.id }}').attr("hidden", false);
-                  $('#moduleResponseSave{{ submission.id }}').attr("hidden", true);
-                  $('#moduleResponseBack{{ submission.id }}').attr("value", "Go back");
-                });
-              </script>
             {% endfor %}
           </tbody>
         </table>
+
+        {% for submission in submissions_list %}
+        <!-- View Response Modal -->                                                                                       
+        <div class="modal fade" id="viewResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <table class="table table-striped table-sm">
+                <tbody>
+                  <tr>
+                    <td><a href="{{ submission.file.url }}">{{ submission.title }}</a></td>
+                    <td>{{ submission.created_at }} GMT+8</td>
+                    <td>{{ submission.updated_at }} GMT+8</td>
+                    <td class="size">{{ submission.file_size | filesizeformat }}</td>
+                    <td>{{ submission.extension }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.id }}">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Response Modal -->                                                                                       
+        <div class="modal fade" id="editResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton{{ submission.id }}">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ submit_form.file }}
+                <p>Maximum size for new files: 25MB, maximum attachments: 1</p>
+                <p>If you need to submit mulitple files, compress them into a zip file.</p>
+                <input type="hidden" name="submission-id" value="{{ submission.pk }}">
+                
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.pk }}">Close</button>
+                  <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ submission.pk }}">Save changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
     </div>
     {% endifequal %}

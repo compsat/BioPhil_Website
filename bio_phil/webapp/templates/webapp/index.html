@@ -130,7 +130,7 @@ BioPhil
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">{{ module.title }}</h5>
-                <h6 class="card-subtitle text-muted">{{ module.created_at }}</h6> <br>
+                <h6 class="card-subtitle text-muted">{{ module.created_at }} GMT+8</h6> <br>
                 <p class="card-text">{{ module.content }}</p>
                 <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal{{ module.pk }}">View Details
                 </button>
@@ -146,7 +146,7 @@ BioPhil
                       <span aria-hidden="true">&times;</span>
                     </button>
                     <h3 class="font-weight-bold">{{ module.title }}</h3>
-                    <h6 class="text-muted">{{ module.created_at }}</h6><br>
+                    <h6 class="text-muted">{{ module.created_at }} GMT+8</h6><br>
                     <p>{{ module.content }}</p>
                     <h3 class="font-weight-bold">Downloads</h3>
                     <table class="table table-striped table-sm">
@@ -154,7 +154,7 @@ BioPhil
                         {% for download in module.downloads.all %}
                         <tr>
                           <td><a href="{{ download.file.url }}">{{ download.title }}</a></td>
-                          <td>{{ download.created_at }}</td>
+                          <td>{{ download.created_at }} GMT+8</td>
                           <td class="size">{{ download.file_size | filesizeformat }}</td>
                           <td>{{ download.extension }}</td>
                         </tr>
