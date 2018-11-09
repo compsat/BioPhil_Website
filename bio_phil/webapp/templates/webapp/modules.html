@@ -33,7 +33,7 @@ Modules
       <div class="bg-light rounded p-4">
         {% for module in modules_list %}
           <h3 class="text-dark font-weight-bold" id="list-item-{{ module.pk }}">{{ module.title }}</h3>
-          <h5 class="text-secondary">{{ module.created_at }}</h5>
+          <h5 class="text-secondary">{{ module.created_at }} GMT+8</h5>
           <p>{{ module.content }}</p>
           {% if user.access_object.user_type == "Student" %}
           <div class="container-fluid p-0 mb-3">
@@ -91,8 +91,8 @@ Modules
                   <tbody>
                     <tr>
                       <td><a href="{{ submission.file.url }}">{{ submission.title }}</a></td>
-                      <td>{{ submission.created_at }}</td>
-                      <td>{{ submission.updated_at }}</td>
+                      <td>{{ submission.created_at }} GMT+8</td>
+                      <td>{{ submission.updated_at }} GMT+8</td>
                       <td class="size">{{ submission.file_size | filesizeformat }}</td>
                       <td>{{ submission.extension }}</td>
                     </tr>
@@ -157,7 +157,7 @@ Modules
                             <strong class="text-truncate">{{ download.file.name }}</strong>
                           </div>
                           <div class="row">
-                            <span class="text-muted">{{ download.created_at }}</span>
+                            <span class="text-muted">{{ download.created_at }} GMT+8</span>
                           </div>
                           <div class="row">
                             <span class="text-muted">{{ download.extension }}, {{ download.file_size | filesizeformat }}</span>

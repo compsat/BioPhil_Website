@@ -41,6 +41,7 @@ def profile(request):
 		if 'new_password1' in request.POST:
 			change_password = ChangePasswordForm(user, request.POST)
 			change_email = ChangeEmailForm(request=request)
+			submit_form = SubmitForm()
 			if change_password.is_valid():
 				user = change_password.save()
 				update_session_auth_hash(request, user)
@@ -50,6 +51,7 @@ def profile(request):
 		elif 'new_email' in request.POST:
 			change_password = ChangePasswordForm(user)
 			change_email = ChangeEmailForm(request.POST, request=request)
+			submit_form = SubmitForm()
 			if change_email.is_valid():
 				old_email = user.email
 				new_email_object = change_email.save(commit=False)
@@ -76,26 +78,31 @@ def profile(request):
 				messages = 'An email was sent to your old email and your desired new email. Please check either of them to confirm your update.'
 				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages, 'submissions_list' : submissions_list})
 			messages = "There was an error while updating your email."
-		elif 'submission-answer' in request.POST:
+		elif 'edit-response' in request.POST:
 			change_password = ChangePasswordForm(user)
 			change_email = ChangeEmailForm(request=request)
+			submit_form = SubmitForm(request.POST, request.FILES)
 
 			submission_pk = request.POST['submission-id']
-			new_answer = request.POST['submission-answer']
-			submission = Submission.objects.get(pk=submission_pk)
-			submission.answer = new_answer
-			submission.save()
-			messages = "Your submission has been edited!"
-
+			if submit_form.is_valid():
+				submission = Submission.objects.get(pk=submission_pk)
+				submission_form = submit_form.save(commit=False)
+				submission.file = submission_form.file
+				submission.save()
+				messages = "Your submission has been edited!"
+			else:
+				messages = "There was an error in submitting an answer."
 	else:
 		change_password = ChangePasswordForm(user)
 		change_email = ChangeEmailForm(request=request)
+		submit_form = SubmitForm()
 	return render(request, 'webapp/profile_page.html', {
 		'change_password' : change_password, 
 		'change_email' : change_email,  
 		'user' : user, 
 		'messages' : messages,
-		'submissions_list' : submissions_list
+		'submissions_list' : submissions_list,
+		'submit_form' : submit_form
 		})
 
 def resend_verification(request):
