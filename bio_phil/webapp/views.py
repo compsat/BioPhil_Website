@@ -216,24 +216,14 @@ def activate(request, uidb64, token):
 		request.session['message'] = 'Activation link is invalid!'
 	return redirect('index')
 
-"""View for students to view their submissions to all modules OR for teachers
-to view all the submissions of the students"""
-class SubmissionList(ListView):
-	model = Submission
-	paginate_by = 50
+"""View for teachers to view all the submissions of the students"""
+def submissions(request):
+	if request.user.access_object.user_type == 'Student':
+		request.session['message'] = 'Only teachers can view this page.'
+		return redirect('index')
 
-	def get_context_data(self, **kwargs):
-		context = super(SubmissionList, self).get_context_data(**kwargs)
-		context['user'] = self.request.user
-		context['submissions_list'] = self.get_queryset()
-		return context
-
-	def get_queryset(self):
-		queryset = Submission.objects.all()
-		if self.request.user.access_object.user_type == 'Student':
-			queryset = queryset.filter(user=self.request.user)
-
-		return queryset
+	submissions_list = Submission.objects.all()
+	return render(request, 'webapp/submissions_list.html', {'user' : request.user, 'submissions_list' : submissions_list})
 
 """View for teachers only for them to generate a specified number of access codes
 either for their students or fellow teachers"""
