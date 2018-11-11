@@ -18,42 +18,18 @@
               <th scope="col" style="width:35%">Module</th>
               <th scope="col" style="width:20%">User</th>
               <th scope="col" style="width:25%">University</th>
-              <th scope="col" style="width:20%">Date of Submission</th> 
+              <th scope="col" style="width:20%">Date of Submission (GMT +8)</th> 
             </tr>
           </thead>
           <tbody>
-            <tr> 
-              <td scope="row"><a href="#">Module #1</a></td>
-              <td>Kurt de Leon</td>
-              <td>Ateneo de Manila University</td>
-              <td>April 21, 2018 / 10:58 AM</td>
-            </tr>
-            <tr> 
-              <td scope="row"><a href="#">Module #1</a></td>
-              <td>Miles Davis</td>
-              <td>University of the Philippines</td>
-              <td>March 5, 2018 / 9:21 PM</td>
-            </tr>
-            <tr> 
-              <td scope="row"><a href="#">Module #3</a></td>
-              <td>Kurt de Leon</td>
-              <td>Ateneo de Manila University</td>
-              <td>May 5, 2018 / 2:00 PM</td>
-            </tr>
-            <tr> 
-              <td scope="row"><a href="#">Module #4</a></td>
-              <td>Ryo Fukui</td>
-              <td>De La Salle University</td>
-              <td>January 4, 2019 / 5:30 PM</td>
-            </tr>
-            <!-- {% for submission in submissions_list %}
-            <tr> 
-              <td>{{ submission.module }}</td>
-              <td>{{ submission.user.get_full_name }}</td>
-              <td>{{ submission.user.access_object.university }}</td>
-              <td>{{ submission.answer }}</td>
-            </tr>
-            {% endfor %} -->
+            {% for submission in submissions_list %}
+              <tr> 
+                <td scope="row"><a href="{{ submission.file.url }}">{{ submission.module.title }}</a></td>
+                <td>{{ submission.user.get_full_name }}</td>
+                <td>{{ submission.user.access_object.university }}</td>
+                <td>{{ submission.updated_at }}</td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
