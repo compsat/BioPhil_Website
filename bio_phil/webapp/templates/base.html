@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+  <link rel="stylesheet" href="{% static 'webapp/css/sortable.min.css' %}">
   <link rel="stylesheet" href="{% static 'webapp/css/main.css' %}">
   <link rel="stylesheet" href="{% static 'webapp/css/navbar.css' %}">
   <style>
@@ -31,32 +32,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   <script src="{% static 'webapp/js/plugins.js' %}"></script>
   <script src="{% static 'webapp/js/main.js' %}"></script>
-
-  <!---
-  Move the lines with <scripts> up here!
-
-  Also, could you change the hrefs so that we're calling from CDNs? Apparently you need to add that pa sa django settings or something?
-
-  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css
-  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js
-  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js
-  https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css
-  https://code.jquery.com/jquery-3.3.1.min.js
-
-  -->
-
-  <!---
-  Move the lines with <scripts> up here!
-
-  Also, could you change the hrefs so that we're calling from CDNs? Apparently you need to add that pa sa django settings or something?
-
-  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css
-  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js
-  https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js
-  https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css
-  https://code.jquery.com/jquery-3.3.1.min.js
-
-  -->
+  <script src="{% static 'webapp/js/sortable.min.js' %}"></script>
 
   {% block gallery %}
   {% endblock %}
