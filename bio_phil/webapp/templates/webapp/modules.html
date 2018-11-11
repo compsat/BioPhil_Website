@@ -32,8 +32,12 @@ Modules
    <div class="col-md-9 px-md-4 px-3 my-md-0 my-4">
       <div class="bg-light rounded p-4">
         {% for module in modules_list %}
-          <h3 class="text-dark font-weight-bold" id="list-item-{{ module.pk }}">{{ module.title }}</h3>
-          <h5 class="text-secondary">{{ module.created_at }} GMT+8</h5>
+          <h3 class="text-dark font-weight-bold" id="list-item-{{ module.pk }}">{{ module.title }} - {{ module.module_summary }} </h3>
+          {% if module.end_date %}
+            <h5 class="text-secondary">{{ module.start_date }} to {{ module.end_date }} GMT+8</h5>
+          {% else %}
+            <h5 class="text-secondary">{{ module.start_date.year }} TBA GMT+8</h5>
+          {% endif %}
           <p>{{ module.content }}</p>
           {% if user.access_object.user_type == "Student" %}
           <div class="container-fluid p-0 mb-3">
