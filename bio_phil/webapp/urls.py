@@ -18,6 +18,6 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('register/confirm_reg/',views.confirm, name='conf_reg'),
     path('resend_verification/', views.resend_verification, name='resend_verification'),
-    path('submissions/', login_required(views.SubmissionList.as_view(template_name='webapp/submissions_list.html')), name='submissions_list'),
+    path('submissions/', login_required(views.submissions), name='submissions_list'),
     path('update_email/<uidb64>/<token>/<email_code>', views.update_email, name='update_email'),
 ]
