@@ -5,8 +5,11 @@ echo "Create the Database Migrations"
 python3 bio_phil/manage.py makemigrations
 
 # Apply database migrations
-echo "Apply databse"
+echo "Apply database"
 python3 bio_phil/manage.py migrate
+
+echo "Run Fixtures"
+python3 bio_phil/manage.py loaddata modules.yaml
 
 echo "Create superuser"
 python bio_phil/manage.py shell << END
