@@ -1,0 +1,50 @@
+- model: webapp.module
+  pk: 1
+  fields:
+    title: "Module 1"
+    content: "Ability to write research papers & to develop a publication strategy, familiarity with Open Access strategies, illustration of results, editorial and peer-review processes; (2) Ability to present successfully at conferences and select conferences strategically; (3) Ability to write applications by translating a research idea into a competitive grant proposal, familiarity with general aspects of research funding and project planning; (4) Awareness of science ethics and proper scientific practise based on recommendations of DFG, PHREB and EU, familiarity with specific best practises for biodiversity research, particularly regarding reproducibility (documentation and vouchering)."
+    module_summary: "Core scientific skills / Graduate Seminar"
+    created_at: 2018-11-10 12:00
+    updated_at: 2018-11-10 12:00
+    start_date: '2018-10-27'
+    end_date: '2018-11-02'
+- model: webapp.module
+  pk: 2
+  fields:
+    title: "Module 2"
+    content: "(1) Experience in using identification keys; (2) Practical familiarity with common groups of aquatic and/or terrestrial animals and epilithic algae; (3) Familiarity with appropriate sampling and collection techniques, including environmental sampling, and documentation/sustainable vouchering; (4) Skills in sampling strategies and sampling design; (5) Knowledge of legal aspects relevant to field-based research and subsequent work (ABS, Nagoya); (6) Recording of secondary field data."
+    module_summary: "Core scientific skills / Graduate Seminar"
+    created_at: 2018-11-10 12:00
+    updated_at: 2018-11-10 12:00
+    start_date: '2019-01-01'
+    end_date: 
+- model: webapp.module
+  pk: 3
+  fields:
+    title: "Module 3"
+    content: "(1) Practical familiarity with basic lab procedures in molecular systematics (DNA isolation, PCR), documentation of experiments; (2) Familiarity with basic molecular phylogenetic data analyses (from raw sequences to phylogenetic trees); (3) Skills in interpreting molecular systematic data for species identification and phylogenetics; (4) Familiarity with providing sequence data and associated information in global databases (BOLD, GenBank)."
+    module_summary: "Molecular Systematics & Taxonomy "
+    created_at: 2018-11-10 12:00
+    updated_at: 2018-11-10 12:00
+    start_date: '2019-01-01'
+    end_date: 
+- model: webapp.module
+  pk: 4
+  fields:
+    title: "Module 4"
+    content: "(1) Familiarity with study design for geo-spatial and spatio-temporal analyses; (2) Capability of turning species-environment interactions into GIS representations for modeling and analysis; (3) Familiarity with species distribution modeling (SDM): how to model, predict and analyse outcomes of predictive models in ecological research; (5) Understanding basics of area and issue prioritisation, and developing geospatial and environmental strategies to counter biodiversity loss."
+    module_summary: "Special Topics: GIS and species distribution modelling"
+    created_at: 2018-11-10 12:00
+    updated_at: 2018-11-10 12:00
+    start_date: '2020-01-01'
+    end_date: 
+- model: webapp.module
+  pk: 5
+  fields:
+    title: "Module 5"
+    content: "(1) Familiarity with types of biodiversity data and international data standards; (2) Familiarity with international biodiversity databases and taxonomic online resources and collaborative tools; (3) Understanding of georeferencing procedures for making biodiversity data from literature and collections available; (4) Familiarity with common macroscopic and microscopic digital imaging techniques; (5) Ability to select appropriate imaging techniques for a project."
+    module_summary: "Special Topics: Biodiversity data management and imaging"
+    created_at: 2018-11-10 12:00
+    updated_at: 2018-11-10 12:00
+    start_date: '2021-01-01'
+    end_date: 
