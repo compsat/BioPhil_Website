@@ -156,18 +156,15 @@ class ChangePasswordForm(PasswordChangeForm):
 		super(ChangePasswordForm, self).__init__(*args, **kwargs)
 		self.fields['old_password'].widget.attrs={
 			'id' : 'currentPassword',
-			'class' : 'form-control',
-			'placeholder' : 'Password'
+			'class' : 'form-control'
 		}
 		self.fields['new_password1'].widget.attrs={
 			'id' : 'newPassword',
-			'class' : 'form-control',
-			'placeholder' : 'Password'
+			'class' : 'form-control'
 		}
 		self.fields['new_password2'].widget.attrs={
 			'id' : 'newPassword2',
-			'class' : 'form-control',
-			'placeholder' : 'Password'
+			'class' : 'form-control'
 		}
 
 class ChangeEmailForm(forms.ModelForm):
@@ -189,13 +186,11 @@ class ChangeEmailForm(forms.ModelForm):
 		}
 		self.fields['new_email'].widget.attrs={
 			'id' : 'newEmail',
-			'class' : 'form-control',
-			'placeholder' : 'Email address'
+			'class' : 'form-control'
 		}
 		self.fields['confirm_email'].widget.attrs={
 			'id' : 'newEmail2',
-			'class' : 'form-control',
-			'placeholder' : 'Email address'
+			'class' : 'form-control'
 		}
 
 	def is_valid(self):
@@ -224,6 +219,13 @@ class SubmitForm(forms.ModelForm):
 	class Meta:
 		model = Submission
 		fields = ['file']
+
+	def __init__(self, *args, **kwargs):
+		super(SubmitForm, self).__init__(*args, **kwargs)
+		self.fields['file'].widget.attrs={
+			'id' : 'inputGroupFile',
+			'class' : 'custom-file-input'
+		}
 
 class AdminAccessCodeAddForm(forms.ModelForm):
 	quantity = forms.IntegerField()
