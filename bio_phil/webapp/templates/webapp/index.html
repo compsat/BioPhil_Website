@@ -163,8 +163,13 @@ BioPhil
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">{{ module.title }}</h5>
-                <h6 class="card-subtitle text-muted">{{ module.created_at }} GMT+8</h6> <br>
-                <p class="card-text">{{ module.content }}</p>
+                <!-- <h5 class="card-title">{{ module.title }} - {{ module.module_summary }}</h5> -->
+                {% if module.end_date %}
+                  <h6 class="card-subtitle text-muted">{{ module.start_date }} to {{ module.end_date }} GMT+8</h6> <br>
+                {% else %}
+                  <h6 class="card-subtitle text-muted">{{ module.start_date.year }} TBA</h6> <br>
+                {% endif %}
+                <p class="card-text">{{ module.content|truncatechars:275 }}</p>
                 <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal{{ module.pk }}">View Details
                 </button>
               </div>
