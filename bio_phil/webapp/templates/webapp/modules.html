@@ -20,7 +20,7 @@ Modules
 
   <!-- Add your site or application content here -->
   <!-- Insert Navbar Here! -->
-  <div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center" >
+  <div class="container-fluid py-5 px-md-4 px-0 row mx-auto justify-content-center" >
     <div class="col-md-3 px-md-4 px-3">
       <div id="modulesList" class="list-group position-sticky" style="top: 40px">
         {% for module in modules_list %}
@@ -30,109 +30,68 @@ Modules
     </div>
 
    <div class="col-md-9 px-md-4 px-3 my-md-0 my-4">
-      <div class="bg-light rounded p-4">
+      <div class="container-fluid">
         {% for module in modules_list %}
-          <h3 class="text-dark font-weight-bold" id="list-item-{{ module.pk }}">{{ module.title }}</h3>
-          <h5 class="text-secondary">{{ module.created_at }} GMT+8</h5>
+        <div class="row bg-light rounded p-4 mb-3">
+          <div class="container-fluid m-0 p-0"><h3 class="text-dark font-weight-bold" id="list-item-{{ module.pk }}">{{ module.title }}</h3></div>
+          <h5 class="text-secondary mb-4">{{ module.created_at }} GMT+8</h5>
           <p>{{ module.content }}</p>
           {% if user.access_object.user_type == "Student" %}
           <div class="container-fluid p-0 mb-3">
             {% user_submission user module as submission %}
             {% if submission %}
-              <!-- 
-              Show Below when student has responded. 
-              Replace "Add Response" with "View Response" if user has response. if-else statement.
-              -->
-              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#viewResponseModal{{ module.pk }}">View Response</button>
-              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editResponseModal{{ module.pk }}">Edit Response</button>
+              <a href="{{ submission.file.url }}" role="button" class="btn btn-dark" target="_blank">View Submission</a>
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Update</button>
             {% else %}
               <span class="mr-2 text-uppercase align-middle">Actions:</span><button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Add Response</button>
             {% endif %}
           </div>
            {% endif %}
 
-          <!-- Add Response Modal -->
+          <!-- Add Response Modal -->                                                                                      
           <div class="modal fade" id="addResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="addResponseModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="addModalLabel{{ module.pk }}">Add Response</h5>
+                  <h5 class="modal-title" id="addModalLabel{{ module.pk }}">Upload Submission</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addResponseCloseButton">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  {{ submit_form.file }}
-                  <p>Maximum size for new files: 25MB, maximum attachments: 1</p>
-                  <p>If you need to submit mulitple files, compress them into a zip file.</p>
-                  <input type="number" name="module-id" value="{{ module.pk }}" hidden>
-
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
-                    <button type="submit" name= "add-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Submit</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <!-- View Response Modal -->
-          <div class="modal fade" id="viewResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="viewResponseModal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="responseModalLabel{{ module.pk }}">{{ submission.module }}</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                  <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="number" name="module-id" value="{{ module.pk }}" hidden>
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Upload</span>
+                    </div>
+                    <div class="custom-file">
+                      {{ submit_form.file }}
+                      <label class="custom-file-label text-truncate" for="inputGroupFile">Choose file</label>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted mb-3">Maximum size for new files: 25MB, maximum attachments: 1</small>
+                  <div class="alert alert-warning alert-dismissible mb-0" role="alert">
+                    <small>If you need to submit multiple files, compress them all into one zip file. If you're unfamiliar with it, <a href="https://support.microsoft.com/en-ph/help/14200/windows-compress-uncompress-zip-files" class="alert-link">follow this guide.</a></small>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <input type="hidden" name="submission-id" value="{{ submission.pk }}">
                 </div>
-                <table class="table table-striped table-sm">
-                  <tbody>
-                    <tr>
-                      <td><a href="{{ submission.file.url }}">{{ submission.title }}</a></td>
-                      <td>{{ submission.created_at }} GMT+8</td>
-                      <td>{{ submission.updated_at }} GMT+8</td>
-                      <td class="size">{{ submission.file_size | filesizeformat }}</td>
-                      <td>{{ submission.extension }}</td>
-                    </tr>
-                  </tbody>
-                </table>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
+                  <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Save changes</button>
+                  </form>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Edit Response Modal -->                                                                               
-          <div class="modal fade" id="editResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="responseModalLabel{{ module.pk }}">{{ submission.module }}</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton{{ module.pk }}">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <form method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  {{ submit_form.file }}
-                  <p>Maximum size for new files: 25MB, maximum attachments: 1</p>
-                  <p>If you need to submit mulitple files, compress them into a zip file.</p>
-                  <input type="hidden" name="submission-id" value="{{ submission.pk }}">
-                  
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.pk }}">Close</button>
-                    <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ submission.pk }}">Save changes</button>
-                  </div>
-                </form>
               </div>
             </div>
           </div>
 
           <!-- Downloads -->
-          <div class="accordion mb-4" id="downloadAccordion1">
+          <div class="container-fluid p-0">
+          <div class="accordion" id="downloadAccordion1">
             <div class="card">
               <div class="card-header p-0" id="downloadHeading1">
                 <h5 class="mb-0">
@@ -169,10 +128,19 @@ Modules
                 </div>
               </div>
             </div>
+            </div>
+          </div>
           </div>
         {% endfor %}
-
       </div>
     </div>
   </div>
+
+  <script>
+    //https://stackoverflow.com/a/48942822
+    $('.custom-file-input').on('change',function(){
+      let fileName = $(this).val().split('\\').pop(); 
+      $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    })
+  </script>
 {% endblock %}
