@@ -36,7 +36,7 @@ Modules
           {% if module.end_date %}
             <h5 class="text-secondary">{{ module.start_date }} to {{ module.end_date }} GMT+8</h5>
           {% else %}
-            <h5 class="text-secondary">{{ module.start_date.year }} TBA GMT+8</h5>
+            <h5 class="text-secondary">{{ module.start_date.year }} TBA</h5>
           {% endif %}
           <p>{{ module.content }}</p>
           {% if user.access_object.user_type == "Student" %}
