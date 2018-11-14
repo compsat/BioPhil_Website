@@ -24,7 +24,8 @@ def index(request):
 		message = request.session['message']
 		del request.session['message']
 	modules_list = Module.objects.all().order_by('id')[:3]
-	return render(request, 'webapp/index.html', {'message' : message, 'modules_list' : modules_list})
+	carousel_list = ImageCarousel.objects.all().order_by('id')[:5]
+	return render(request, 'webapp/index.html', {'message' : message, 'modules_list' : modules_list, 'carousel_list':carousel_list})
 
 def gallery(request):
 	return render(request, 'webapp/gallery.html')
