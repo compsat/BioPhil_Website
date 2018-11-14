@@ -1,45 +1,82 @@
 {% extends 'base.html' %}
 
 {% block body %}
-	{% ifequal user.access_object.user_type "Teacher" %}
-		<h2>Submissions</h2>
-		<table>
-			<tr>
-				<th>Module</th>
-				<th>User</th>
-				<th>University</th>
-				<th>Answer</th> 
-				<th>Date of Submission</th> 
-				<th>Last Edit</th> 
-			</tr>
-		  	{% for submission in submissions_list %}
-				<tr> 
-					<td>{{ submission.module }}</td>
-					<td>{{ submission.user.get_full_name }}</td>
-					<td>{{ submission.user.access_object.university }}</td>
-					<td>{{ submission.answer }}</td>
-					<td>{{ submission.created_at }}</td>
-					<td>{{ submission.updated_at }}</td>
-				</tr>
-			{% endfor %}
-		</table>
-	{% else %}
-		<h2>Your Submissions</h2>
-		<table>
-			<tr>
-				<th>Module</th>
-				<th>Answer</th> 
-				<th>Date of Submission</th> 
-				<th>Last Edit</th> 
-			</tr>
-		  	{% for submission in submissions_list %}
-				<tr> 
-					<td>{{ submission.module }}</td>
-					<td><a href="{% url 'edit' pk=submission.id%}">{{ submission.answer }}</a></td>
-					<td>{{ submission.created_at }}</td>
-					<td>{{ submission.updated_at }}</td>
-				</tr>
-			{% endfor %}
-		</table>
-	{% endifequal %}
+  {% ifequal user.access_object.user_type "Teacher" %}
+  <div class="container-fluid py-4 px-md-4 px-0 row mx-auto justify-content-center">
+    <div class="col-md-11">
+      <h1 class="font-weight-bold my-0 mb-2 text-dark">USER SUBMISSIONS</h1>
+      <div class="bg-light rounded p-4 table-responsive-sm">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="filterLabel">Filter</span>
+          </div>
+          <input type="search" class="form-control light-table-filter" placeholder="Type anything here..." aria-label="Filter" data-table="table" aria-describedby="filterLabel">
+        </div>
+        <table class="table table-hover sortable" id="submissionsTable">
+          <thead class="thead-light" style="background-color: #353F4B">
+            <tr>
+              <th scope="col" style="width:35%">Module</th>
+              <th scope="col" style="width:20%">User</th>
+              <th scope="col" style="width:25%">University</th>
+              <th scope="col" style="width:20%">Date of Submission (GMT +8)</th> 
+            </tr>
+          </thead>
+          <tbody>
+            {% for submission in submissions_list %}
+              <tr> 
+                <td scope="row"><a href="{{ submission.file.url }}">{{ submission.module.title }}</a></td>
+                <td>{{ submission.user.get_full_name }}</td>
+                <td>{{ submission.user.access_object.university }}</td>
+                <td>{{ submission.updated_at }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Light Table Filter by Chris Coyier */
+    (function(document) {
+      'use strict';
+
+      var LightTableFilter = (function(Arr) {
+
+        var _input;
+
+        function _onInputEvent(e) {
+          _input = e.target;
+          var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+          Arr.forEach.call(tables, function(table) {
+            Arr.forEach.call(table.tBodies, function(tbody) {
+              Arr.forEach.call(tbody.rows, _filter);
+            });
+          });
+        }
+
+        function _filter(row) {
+          var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+          row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+        }
+
+        return {
+          init: function() {
+            var inputs = document.getElementsByClassName('light-table-filter');
+            Arr.forEach.call(inputs, function(input) {
+              input.oninput = _onInputEvent;
+            });
+          }
+        };
+      })(Array.prototype);
+
+      document.addEventListener('readystatechange', function() {
+        if (document.readyState === 'complete') {
+          LightTableFilter.init();
+        }
+      });
+
+    })(document);
+  </script>
+  {% endifequal %}
 {% endblock %}

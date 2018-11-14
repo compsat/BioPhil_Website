@@ -4,5 +4,5 @@ You have not activated your account. Please click on the link to confirm your re
 
 http://{{ default_domain }}{% url 'activate' uidb64=uid token=token %}
 
-Failure to confirm your email by {{ user.expiration_date }} will delete your account and make the access code available again.
+Failure to confirm your email by {{ user.expiration_date }} GMT+8 will delete your account and make the access code available again.
 {% endautoescape %}

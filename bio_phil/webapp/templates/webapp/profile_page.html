@@ -16,10 +16,13 @@ BioPhil
 
   {% if messages %}
     <p>{{ messages }}</p>
+    {% if submit_form.errors %}
+      {{ submit_form.errors }}
+    {% endif %}
   {% endif %}
 
-  <div class="container-fluid py-md-4 px-md-4 px-0 row mx-auto justify-content-center">
-    <div class="col-md-6 px-md-4 px-3">
+  <div class="container-fluid py-4 px-md-4 px-0 row mx-auto justify-content-center">
+    <div class="col-md-5 px-md-4 px-3">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">ACCOUNT SETTINGS</h1>
       <div class="bg-light rounded p-4">
         <nav>
@@ -77,7 +80,6 @@ BioPhil
                     {{ change_email.new_email.errors }}
                   {% endif %}
                   {{ change_email.new_email }}
-                  <!-- <input name="{{ change_email.new_email.name }}" type="email" class="form-control" id="newEmail" placeholder="Email address"> -->
                 </div>
                 <div class="form-group">
                   <label for="newEmail2">Confirm new email</label>
@@ -85,7 +87,6 @@ BioPhil
                     {{ change_email.confirm_email.errors }}
                   {% endif %}
                   {{ change_email.confirm_email }}
-                  <!-- <input name="{{ change_email.confirm_email.name }}" type="email" class="form-control" id="newEmail2" placeholder="Email address"> -->
                 </div>
                 <div class="container-fluid text-right px-0">
                   <button type="reset" class="btn btn-secondary">Reset</button>
@@ -124,7 +125,6 @@ BioPhil
                     {{ change_password.old_password.errors }}
                   {% endif %}
                   {{ change_password.old_password }}
-                  <!-- <input name="{{ change_password.old_password.name }}" type="password" class="form-control" id="currentPassword" placeholder="Password"> -->
                 </div>
                 <div class="form-group">
                   <label for="newPassword">New password</label>
@@ -132,7 +132,6 @@ BioPhil
                     {{ change_password.new_password1.errors }}
                   {% endif %}
                   {{ change_password.new_password1 }}
-                  <!-- <input name="{{ change_password.password1.name }}" type="password" class="form-control" id="newPassword" placeholder="Password"> -->
                 </div>
                 <div class="form-group">
                   <label for="newPassword2">Confirm new password</label>
@@ -140,7 +139,6 @@ BioPhil
                     {{ change_password.new_password2.errors }}
                   {% endif %}
                   {{ change_password.new_password2 }}
-                  <!-- <input name="{{ change_password.password2.name }}" type="password" class="form-control" id="newPassword2" placeholder="Password"> -->
                 </div>
                 <div class="container-fluid text-right px-0">
                  <button type="reset" class="btn btn-secondary">Reset</button>
@@ -176,75 +174,84 @@ BioPhil
     </div>
 
     {% ifequal user.access_object.user_type "Student" %}
-    <div class="col-md-6 px-md-4 px-3 my-md-0 my-4">
+    <div class="col-md-7 px-md-4 px-3 my-md-0 my-4">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">SUBMISSIONS</h1>
-      <div class="bg-light rounded p-4">
-        <table class="table table-responsive-xs my-0">
-          <thead class="thead-light" style="background-color:#353F4B">
+      <div class="bg-light rounded p-4 table-responsive-sm">
+        <table class="table my-0">
+          <thead class="thead-light" style="background-color: #353F4B">
             <tr>
               <th scope="col">#</th>
-              <th scope="col" style="width:40%">Module Name</th>
-              <th scope="col">Submitted on</th>
-              <th scope="col">Last Edit</th>
+              <th scope="col" style="width:65%">Module Name</th>
+              <th scope="col"></th>
+              <th scope="col" style="width:25%">Last Updated on</th>
             </tr>
           </thead>
           <tbody>
             {% for submission in submissions_list %}
               <tr> 
                 <td scope="row">{{ forloop.counter }}</td>
-                <td><button type="button" class="btn btn-link p-0" data-toggle="modal" data-target="#responseModal{{ submission.id }}">{{ submission.module }}</td>
-                <td>{{ submission.created_at }}</td>
-                <td>{{ submission.updated_at }}</td>
+                <td><a href="{{ submission.file.url }}" target="_blank">{{ submission.module }}</a></td>
+                <td>
+                  <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#editResponseModal{{ submission.id }}">Update</button>
+                </td>
+                <td>{{ submission.updated_at|date:'n-j-Y, H:i' }} GMT+8</td>
               </tr>
-                                                                                                                                      
-              <div class="modal fade" id="responseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="responseModal" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="responseModalLabel">{{ submission.module }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <form method="post">
-                      {% csrf_token %}
-                      <div class="modal-body">
-                        <textarea name="submission-answer" class="form-control" id="responseTextArea" rows="6">{{ submission.answer }}</textarea>
-                      </div>
-                      <input type="hidden" name="submission-id" value="{{ submission.pk }}">
-                      <!-- ADD A DELETE BUTTON -->
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack">Close</button>
-                        <button type="submit" class="btn btn-warning" id="responseEditButton">Edit</button>
-                        <button type="button" class="btn btn-primary" id="moduleResponseSave" hidden>Save changes</button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
             {% endfor %}
           </tbody>
         </table>
+
+        {% for submission in submissions_list %}
+        <!-- Edit Response Modal -->                                                                                       
+        <div class="modal fade" id="editResponseModal{{ submission.id }}" tabindex="-1" role="dialog" aria-labelledby="editResponseModal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="responseModalLabel{{ submission.id }}">{{ submission.module }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="responseCloseButton{{ submission.id }}">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-header">
+                <form method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Upload</span>
+                  </div>
+                  <div class="custom-file">
+                    {{ submit_form.file }}
+                    <label class="custom-file-label text-truncate" for="inputGroupFile">Choose file</label>
+                  </div>
+                </div>
+                <small class="form-text text-muted mb-3">Maximum size for new files: 25MB, maximum attachments: 1</small>
+                <div class="alert alert-warning alert-dismissible mb-0" role="alert">
+                  <small>If you need to submit multiple files, compress them all into one zip file. If you're unfamiliar with it, <a href="https://support.microsoft.com/en-ph/help/14200/windows-compress-uncompress-zip-files" class="alert-link">follow this guide.</a></small>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <input type="hidden" name="submission-id" value="{{ submission.pk }}">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ submission.pk }}">Close</button>
+                <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ submission.pk }}">Save changes</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
       </div>
     </div>
-    {% endifequal %}
   </div>
 
   <script>
-  $('#responseEditButton').click(function(event) {
-    $('#responseTextArea').prop("disabled", false );
-    $('#responseEditButton').prop("hidden", true);
-    $('#moduleResponseSave').prop("hidden", false);
-    $('moduleResponseBack').prop("value", "Cancel");
-  });
-
-  $('#responseCloseButton').click(function(event) {
-    $('#responseTextArea').attr("disabled", true);
-    //get original value from JSON file and make it value of textarea
-    $('#responseEditButton').attr("hidden", false);
-    $('#moduleResponseSave').attr("hidden", true);
-    $('moduleResponseBack').attr("value", "Go back");
-  });
-
+    //https://stackoverflow.com/a/48942822
+    $('.custom-file-input').on('change',function(){
+      let fileName = $(this).val().split('\\').pop(); 
+      $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    })
   </script>
+
+  {% endifequal %}
 {% endblock %}

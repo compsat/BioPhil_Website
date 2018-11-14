@@ -6,6 +6,7 @@ from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.conf import settings
 import string, secrets, webapp
+from django.core.exceptions import ValidationError
 
 """Generates a string of five randomly generated characters"""
 def random_code_generator(length, model):
@@ -47,3 +48,9 @@ def send_deletion_email(user):
 	})
 	email_body = EmailMessage(mail_subject, message, to=[user.email])
 	email_body.send()
+
+def file_size(value): # add this to some file where you can import it from
+	# Max size is 25MB
+    limit = 25 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('File too large. Size should not exceed 25 MB.')

@@ -90,7 +90,7 @@ BioPhil
   <main role="main" class="container-fluid mb-0">
     <!-- ABOUT -->
     <div class="container mb-5">
-      <h1 class="font-weight-bold my-0 mb-2 text-dark">ABOUT</h1>
+      <h1 class="font-weight-bold my-0 mb-2 text-dark" id="about">ABOUT</h1>
       <div class="p-3 mb-2 bg-light text-dark rounded">
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac pulvinar purus. Nam non ex a lectus luctus ultrices in a purus. Sed tincidunt, risus eget fringilla euismod, sapien felis aliquam eros, in dictum arcu ipsum et purus. Nunc massa est, mattis ut urna at, fermentum malesuada quam. Integer sit amet gravida ex, sit amet porta justo. Ut ac ex tristique, feugiat neque at, placerat eros. Suspendisse imperdiet tincidunt libero, a imperdiet nisi lobortis et. Nulla pulvinar tortor eget fringilla tempus.</p>
 
@@ -150,6 +150,17 @@ BioPhil
             </div>
           </div>
           <!-- -->
+          <!-- Researcher Card -->
+          <div class="col-md-4 col-sm-12">
+            <div class="card">
+              <img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
+              <div class="card-body">
+                <h5 class="card-title text-center font-weight-bold">Name of Researcher</h5>
+                <p class="card-text text-justify">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
+              </div>
+            </div>
+          </div>
+          <!-- -->
         </div>
       </div>
     </div>
@@ -165,7 +176,7 @@ BioPhil
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">{{ module.title }}</h5>
-                <h6 class="card-subtitle text-muted">{{ module.created_at }}</h6> <br>
+                <h6 class="card-subtitle text-muted">{{ module.created_at }} GMT+8</h6> <br>
                 <p class="card-text">{{ module.content }}</p>
                 <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal{{ module.pk }}">View Details
                 </button>
@@ -181,7 +192,7 @@ BioPhil
                       <span aria-hidden="true">&times;</span>
                     </button>
                     <h3 class="font-weight-bold">{{ module.title }}</h3>
-                    <h6 class="text-muted">{{ module.created_at }}</h6><br>
+                    <h6 class="text-muted">{{ module.created_at }} GMT+8</h6><br>
                     <p>{{ module.content }}</p>
                     <h3 class="font-weight-bold">Downloads</h3>
                     <table class="table table-striped table-sm">
@@ -189,7 +200,7 @@ BioPhil
                         {% for download in module.downloads.all %}
                         <tr>
                           <td><a href="{{ download.file.url }}">{{ download.title }}</a></td>
-                          <td>{{ download.created_at }}</td>
+                          <td>{{ download.created_at }} GMT+8</td>
                           <td class="size">{{ download.file_size | filesizeformat }}</td>
                           <td>{{ download.extension }}</td>
                         </tr>
@@ -204,13 +215,11 @@ BioPhil
           </div>
           {% endfor %}
         </div>
-
         <!-- Load more button -->
         <div class="text-center">
           <button class="btn btn-dark">Load more...</button>
         </div>
         <!-- -->
-        
       </div>
     </div>
   </main>

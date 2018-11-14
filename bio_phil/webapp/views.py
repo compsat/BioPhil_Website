@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm, LoginForm, ChangeEmailForm, ResendForm
+from .forms import RegisterForm, GenerateCodeForm, ChangePasswordForm, LoginForm, ChangeEmailForm, ResendForm, SubmitForm
 from .models import *
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -42,6 +42,7 @@ def profile(request):
 		if 'new_password1' in request.POST:
 			change_password = ChangePasswordForm(user, request.POST)
 			change_email = ChangeEmailForm(request=request)
+			submit_form = SubmitForm()
 			if change_password.is_valid():
 				user = change_password.save()
 				update_session_auth_hash(request, user)
@@ -51,6 +52,7 @@ def profile(request):
 		elif 'new_email' in request.POST:
 			change_password = ChangePasswordForm(user)
 			change_email = ChangeEmailForm(request.POST, request=request)
+			submit_form = SubmitForm()
 			if change_email.is_valid():
 				old_email = user.email
 				new_email_object = change_email.save(commit=False)
@@ -77,26 +79,31 @@ def profile(request):
 				messages = 'An email was sent to your old email and your desired new email. Please check either of them to confirm your update.'
 				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages, 'submissions_list' : submissions_list})
 			messages = "There was an error while updating your email."
-		elif 'submission-answer' in request.POST:
+		elif 'edit-response' in request.POST:
 			change_password = ChangePasswordForm(user)
 			change_email = ChangeEmailForm(request=request)
+			submit_form = SubmitForm(request.POST, request.FILES)
 
 			submission_pk = request.POST['submission-id']
-			new_answer = request.POST['submission-answer']
-			submission = Submission.objects.get(pk=submission_pk)
-			submission.answer = new_answer
-			submission.save()
-			messages = "Your submission has been edited!"
-
+			if submit_form.is_valid():
+				submission = Submission.objects.get(pk=submission_pk)
+				submission_form = submit_form.save(commit=False)
+				submission.file = submission_form.file
+				submission.save()
+				messages = "Your submission has been edited!"
+			else:
+				messages = "There was an error in submitting an answer."
 	else:
 		change_password = ChangePasswordForm(user)
 		change_email = ChangeEmailForm(request=request)
+		submit_form = SubmitForm()
 	return render(request, 'webapp/profile_page.html', {
 		'change_password' : change_password, 
 		'change_email' : change_email,  
 		'user' : user, 
 		'messages' : messages,
-		'submissions_list' : submissions_list
+		'submissions_list' : submissions_list,
+		'submit_form' : submit_form
 		})
 
 def resend_verification(request):
@@ -107,7 +114,7 @@ def resend_verification(request):
 			user = User.objects.get(email=email)
 			send_verification_email(user, email, False)
 			request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
-				verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+				verify by {} GMT+8, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
 			return redirect('index')
 	else:
 		form = ResendForm()
@@ -152,7 +159,7 @@ def confirm(request):
 				del request.session['access_field']
 				send_verification_email(user, email, False)
 				request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
-					verify by {}, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+					verify by {} GMT+8, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
 				return redirect('index')
 			elif 'go_back' in request.POST:
 				request.session['initial_data'] = {
@@ -210,66 +217,14 @@ def activate(request, uidb64, token):
 		request.session['message'] = 'Activation link is invalid!'
 	return redirect('index')
 
-"""View for students to view their submissions to all modules OR for teachers
-to view all the submissions of the students"""
-class SubmissionList(ListView):
-	model = Submission
-	paginate_by = 50
+"""View for teachers to view all the submissions of the students"""
+def submissions(request):
+	if request.user.access_object.user_type == 'Student':
+		request.session['message'] = 'Only teachers can view this page.'
+		return redirect('index')
 
-	def get_context_data(self, **kwargs):
-		context = super(SubmissionList, self).get_context_data(**kwargs)
-		context['user'] = self.request.user
-		context['submissions_list'] = self.get_queryset()
-		return context
-
-	def get_queryset(self):
-		queryset = Submission.objects.all()
-		if self.request.user.access_object.user_type == 'Student':
-			queryset = queryset.filter(user=self.request.user)
-
-		return queryset
-
-"""View for students to submit their answers to modules"""
-class SubmitAnswer(CreateView):
-	model = Submission
-	fields = ['module', 'answer']
-	success_url = reverse_lazy('submissions_list')
-
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super().form_valid(form)
-
-"""View for students to edit their answers to modules"""
-class EditAnswer(UpdateView):
-	model = Submission
-	fields = ['answer']
-	success_url = reverse_lazy('submissions_list')
-	template_name_suffix = '_update_form'
-
-	def get_context_data(self, **kwargs):
-		context = super(EditAnswer, self).get_context_data(**kwargs)
-		context['user'] = self.request.user
-		context['module'] = self.object.module
-		return context
-
-	def get_queryset(self):
-		queryset = Submission.objects.all()
-		if self.request.user.access_object.user_type == 'Student':
-			queryset = queryset.filter(user=self.request.user)
-
-		return queryset
-
-"""View for students to delete their answers to modules"""
-class DeleteAnswer(DeleteView):
-	model = Submission
-	success_url = reverse_lazy('submissions_list')
-
-	def get_queryset(self):
-		queryset = Submission.objects.all()
-		if self.request.user.access_object.user_type == 'Student':
-			queryset = queryset.filter(user=self.request.user)
-
-		return queryset
+	submissions_list = Submission.objects.all()
+	return render(request, 'webapp/submissions_list.html', {'user' : request.user, 'submissions_list' : submissions_list})
 
 """View for teachers only for them to generate a specified number of access codes
 either for their students or fellow teachers"""
@@ -296,36 +251,45 @@ def generate_access_codes(request):
 		form = GenerateCodeForm()
 	return render(request, 'webapp/generate_access_codes.html', {'form' : form, 'teacher' : request.user, 'access_objects' : access_objects})
 
-"""View for teachers only for them to manage the access codes they generated."""
-@login_required
-def manage_access_codes(request):
-	teacher = request.user
-	access_codes = AccessCode.objects.filter(creator=teacher)
-	unused_access_codes = access_codes.filter(user=None, user_type='Student')
-	used_access_codes = access_codes.filter(user_type='Student').exclude(user=None)
-	unused_teacher_access_codes = access_codes.filter(user=None, user_type='Teacher')
-	used_teacher_access_codes = access_codes.filter(user_type='Teacher').exclude(user=None)
-	return render(request, 'webapp/manage_access_codes.html', {
-		'teacher' : teacher, 
-		'unused_access_codes' : unused_access_codes, 
-		'used_access_codes' : used_access_codes, 
-		'unused_teacher_access_codes' : unused_teacher_access_codes, 
-		'used_teacher_access_codes' : used_teacher_access_codes
-		})
-	access_codes = AccessCode.objects.filter(owner=teacher)
-	unused_access_codes = access_codes.filter(user=None)
-	used_access_codes = access_codes.exclude(user=None)
-	return render(request, 'webapp/manage_access_codes.html', {'teacher' : teacher, 'unused_access_codes' : unused_access_codes, 'used_access_codes' : used_access_codes})
-
 #View for image_carousel model
-def images(request):
-	image_list = image_carousel.objects.order_by('-id')[:5]
-	context = {'image_list':image_list}
-	return render(request, 'webapp/img_carousel_test.html',context)
+# def images(request):
+# 	image_list = image_carousel.objects.order_by('-id')[:5]
+# 	context = {'image_list':image_list}
+# 	return render(request, 'webapp/img_carousel_test.html',context)
 
 def module(request):
 	modules_list = Module.objects.all()
-	context = {'modules_list': modules_list}
+	message = None
+	if request.method == 'POST':
+		if 'add-response' in request.POST:
+			module_id = request.POST['module-id']
+			submit_form = SubmitForm(request.POST, request.FILES)
+			if submit_form.is_valid():
+				from django.forms.models import model_to_dict
+				module = Module.objects.get(pk=module_id)
+				submission = submit_form.save(commit=False)
+				submission.module = module
+				submission.user = request.user
+				submission.save()
+				message = "Successfully submitted an answer!"
+			else:
+				message = "There was an error in submitting an answer."
+		elif 'edit-response' in request.POST:
+
+			submit_form = SubmitForm(request.POST, request.FILES)
+			submission_pk = request.POST['submission-id']
+			if submit_form.is_valid():
+				submission = Submission.objects.get(pk=submission_pk)
+				submission_form = submit_form.save(commit=False)
+				submission.file = submission_form.file
+				submission.save()
+				message = "Your submission has been edited!"
+			else:
+				message = "There was an error in submitting an answer."
+	else:
+		submit_form = SubmitForm()
+
+	context = {'modules_list': modules_list, 'user' : request.user, 'message' : message, 'submit_form': submit_form}
 	return render(request, 'webapp/modules.html', context)
 
 def send_file(request, file_name):

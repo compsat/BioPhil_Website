@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.utils import timezone
 from webapp.tasks import *
 import os
+from webapp.helper_methods import file_size
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -109,7 +110,7 @@ class Updates(models.Model):# to get the last 5 in the query, order it by ID num
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='submissions')
     module = models.ForeignKey('Module', on_delete=models.DO_NOTHING)
-    answer = models.TextField()
+    file = models.FileField(validators=[file_size])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -118,6 +119,17 @@ class Submission(models.Model):
     
     class Meta:
         ordering = ('created_at',)
+
+    def extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension[1:]
+
+    def file_size(self):
+        """Returns the filesize of the filename given in value"""
+        return self.file.size
+
+    def title(self):
+        return "{}_{}_Module {}_{}".format(self.user.last_name, self.user.first_name, self.module.pk, self.updated_at.date())
 
 class ImageCarousel(models.Model):
     img = models.ImageField(upload_to='images')
