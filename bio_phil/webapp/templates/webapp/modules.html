@@ -20,7 +20,7 @@ Modules
 
   <!-- Add your site or application content here -->
   <!-- Insert Navbar Here! -->
-  <div class="container-fluid py-5 px-md-4 px-0 row mx-auto justify-content-center" >
+  <div class="container-fluid py-4 py-md-5 px-md-4 px-0 row mx-auto justify-content-center">
     <div class="col-md-3 px-md-4 px-3">
       <div id="modulesList" class="list-group position-sticky" style="top: 40px">
         {% for module in modules_list %}
@@ -29,112 +29,167 @@ Modules
       </div>
     </div>
 
-   <div class="col-md-9 px-md-4 px-3 my-md-0 my-4">
-      <div class="container-fluid">
+    <div class="col-md-9 px-md-4 px-3 my-md-0 my-4">
+      <div class="container-fluid justify-content-center">
         {% for module in modules_list %}
         <div class="row bg-light rounded p-4 mb-3">
           <div class="container-fluid m-0 p-0"><h3 class="text-dark font-weight-bold" id="list-item-{{ module.pk }}">{{ module.title }}</h3></div>
           <h5 class="text-secondary mb-4">{{ module.created_at }} GMT+8</h5>
-          <p>{{ module.content }}</p>
-          {% if user.access_object.user_type == "Student" %}
-          <div class="container-fluid p-0 mb-3">
-            {% user_submission user module as submission %}
-            {% if submission %}
-              <a href="{{ submission.file.url }}" role="button" class="btn btn-dark" target="_blank">View Submission</a>
-              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Update</button>
-            {% else %}
-              <span class="mr-2 text-uppercase align-middle">Actions:</span><button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Add Response</button>
-            {% endif %}
-          </div>
-           {% endif %}
 
-          <!-- Add Response Modal -->                                                                                      
-          <div class="modal fade" id="addResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="addResponseModal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="addModalLabel{{ module.pk }}">Upload Submission</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addResponseCloseButton">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+          <div class="row container-fluid p-0 m-0">
+            <div class="col-xl-6 text-justify p-0 m-0 pr-xl-4">
+              <p>{{ module.content }}</p>
+            </div>
+
+            <div class="col-xl-6 p-0 m-0 pl-sm-0">
+             <div class="card">
+              <div class="card-header">
+                <div class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
+                  <a class="nav-item nav-link active" id="nav-downloads-tab-{{ module.pk }}" data-toggle="tab" href="#nav-downloads-{{ module.pk }}" role="tab" aria-controls="nav-downloads-{{ module.pk }}" aria-selected="true">Downloads</a>
+                  <a class="nav-item nav-link" id="nav-gallery-tab-{{ module.pk }}" data-toggle="tab" href="#nav-gallery-{{ module.pk }}" role="tab" aria-controls="nav-gallery-{{ module.pk }}" aria-selected="false">Gallery</a>
+                  <a class="nav-item nav-link" id="nav-submissions-tab-{{ module.pk }}" data-toggle="tab" href="#nav-submissions-{{ module.pk }}" role="tab" aria-controls="nav-submissions-{{ module.pk }}" aria-selected="false">Submissions</a>
                 </div>
-                <div class="modal-header">
-                  <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="number" name="module-id" value="{{ module.pk }}" hidden>
-                  <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Upload</span>
+              </div>
+
+              <div class="tab-content card-body p-0" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-downloads-{{ module.pk }}" role="tabpanel" aria-labelledby="nav-downloads-tab-{{ module.pk }}">
+                  <table class="table table-striped table-sm table-responsive table-hover table-borderless mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" style="width:40%">Filename</th>
+                        <th scope="col" style="width:40%">Created on</th>
+                        <th scope="col" style="width:10%">Size</th>
+                        <th scope="col" style="width:10%">Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for download in module.downloads.all %}
+                      <tr>
+                        <th scope="row"><a href="{{ download.file.url }}">{{ download.title }}</a></th>
+                        <td>{{ download.created_at }} GMT+8</td>
+                        <td>{{ download.file_size | filesizeformat }}</td>
+                        <td>{{ download.extension }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  <div class="card-footer text-right"><a class="text-dark font-weight-bold" href="#" target="_blank">DOWNLOAD AS .ZIP >></a></div>
+                </div>
+                <div class="tab-pane fade" id="nav-gallery-{{ module.pk }}" role="tabpanel" aria-labelledby="nav-gallery-tab-{{ module.pk }}">
+                  <div id="carouselExampleIndicators{{ module.pk }}" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                      <li data-target="#carouselExampleIndicators{{ module.pk }}" data-slide-to="0" class="active"></li>
+                      <li data-target="#carouselExampleIndicators{{ module.pk }}" data-slide-to="1"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <a href="https://dummyimage.com/600x400/ff9100/ffffff" target="_blank"><img class="d-block w-100" src="https://dummyimage.com/600x400/ff9100/ffffff" alt="First slide"></a>
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>Title</h5>
+                          <p>Description</p>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="https://dummyimage.com/600x400/000/fff" target="_blank"><img class="d-block w-100" src="https://dummyimage.com/600x400/000/fff" alt="Second slide"></a>
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>Title</h5>
+                          <p>Description</p>
+                        </div>
+                      </div>
                     </div>
-                    <div class="custom-file">
-                      {{ submit_form.file }}
-                      <label class="custom-file-label text-truncate" for="inputGroupFile">Choose file</label>
-                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators{{ module.pk }}" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators{{ module.pk }}" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
                   </div>
-                  <small class="form-text text-muted mb-3">Maximum size for new files: 25MB, maximum attachments: 1</small>
-                  <div class="alert alert-warning alert-dismissible mb-0" role="alert">
-                    <small>If you need to submit multiple files, compress them all into one zip file. If you're unfamiliar with it, <a href="https://support.microsoft.com/en-ph/help/14200/windows-compress-uncompress-zip-files" class="alert-link">follow this guide.</a></small>
+                  <div class="alert alert-warning alert-dismissible fade show mt-2 mb-0" role="alert">
+                    <small>To view the whole image, just click on the middle portion of the carousel.</small>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <input type="hidden" name="submission-id" value="{{ submission.pk }}">
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
-                  <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Save changes</button>
-                  </form>
+
+                {% if user.access_object.user_type == "Student" %}
+                {% user_submission user module as submission %}
+                {% if submission %}
+                <div class="tab-pane fade" id="nav-submissions-{{ module.pk }}" role="tabpanel" aria-labelledby="nav-submissions-tab-{{ module.pk }}">
+                  <div class="card m-2">
+                    <h5 class="card-header text-truncate">{{ submission.file.name }}</h5>
+                    <div class="card-body">
+                      <p class="card-text mb-0">Uploaded on {{ submission.file.uploaded_on }}</p>
+                      <p class="card-text">{{ submission.file.size | filesizeformat }}, {{ submission.file.extension }}</p>
+                      <a href="{{ submission.file.url }}" role="button" class="btn btn-dark" target="_blank">Download</a>
+                      <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Update</a>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
+                {% else %}
+                <div class="tab-pane fade" id="nav-submissions-{{ module.pk }}" role="tabpanel" aria-labelledby="nav-submissions-tab-{{ module.pk }}">
+                  <div class="card m-2">
+                    <div class="card-body">
+                      <p class="card-text">You haven't uploaded anything yet.</p>
+                      <a href="#" class="btn btn-primary">Submit a file</a>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
 
-          <!-- Downloads -->
-          <div class="container-fluid p-0">
-          <div class="accordion" id="downloadAccordion1">
-            <div class="card">
-              <div class="card-header p-0" id="downloadHeading1">
-                <h5 class="mb-0">
-                  <button class="btn btn-link text-dark font-weight-bold" type="button" data-toggle="collapse" data-target="#downloadCollapse{{ module.pk }}" aria-expanded="false" aria-controls="downloadCollapse1">
-                    Downloads
-                  </button>
-                </h5>
-              </div>
-
-              <div id="downloadCollapse{{ module.pk }}" class="panel-collapse collapse" aria-labelledby="downloadHeading1" data-parent="#downloadAccordion1">
-                <div class="card-body row justify-content-around">
-                  {% for download in module.downloads.all %}
-                    <a class="col-sm mx-2" href="{{ download.file.url }}">
-                      <div class="bg-light border border-muted rounded px-2 py-3 mb-3 row">
-                        <div class="col-sm-3 px-0">
-                          {% with 'webapp/img/icons/'|add:download.extension|add:'.png' as image_static %}
-                            <img src="{% static image_static %}" height="70" width="70" alt="">
-                          {% endwith %}
-                        </div>
-                        <div class="col-sm-9">
-                          <div class="row">
-                            <strong class="text-truncate">{{ download.file.name }}</strong>
-                          </div>
-                          <div class="row">
-                            <span class="text-muted">{{ download.created_at }} GMT+8</span>
-                          </div>
-                          <div class="row">
-                            <span class="text-muted">{{ download.extension }}, {{ download.file_size | filesizeformat }}</span>
-                          </div>
-                        </div>
+                <!-- Add Response Modal -->                                                                                      
+                <div class="modal fade" id="addResponseModal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="addResponseModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel{{ module.pk }}">Upload Submission</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addResponseCloseButton">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
                       </div>
-                    </a>
-                  {% endfor %}
+                      <div class="modal-header">
+                        <form method="post" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <input type="number" name="module-id" value="{{ module.pk }}" hidden>
+                          <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Upload</span>
+                            </div>
+                            <div class="custom-file">
+                              {{ submit_form.file }}
+                              <label class="custom-file-label text-truncate" for="inputGroupFile">Choose file</label>
+                            </div>
+                          </div>
+                          <small class="form-text text-muted mb-3">Maximum size for new files: 25MB, maximum attachments: 1</small>
+                          <div class="alert alert-warning alert-dismissible mb-0" role="alert">
+                            <small>If you need to submit multiple files, compress them all into one zip file. If you're unfamiliar with it, <a href="https://support.microsoft.com/en-ph/help/14200/windows-compress-uncompress-zip-files" class="alert-link">follow this guide.</a></small>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <input type="hidden" name="submission-id" value="{{ submission.pk }}">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
+                          <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Save changes</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                {% endif %}
               </div>
             </div>
-            </div>
           </div>
-          </div>
-        {% endfor %}
+        </div>
       </div>
+      {% endfor %}
     </div>
   </div>
+</div>
+</body>
 
   <script>
     //https://stackoverflow.com/a/48942822
