@@ -13,6 +13,7 @@ urlpatterns = [
     path('gallery/', views.gallery, name='gallery'),
     path('generate/', views.generate_access_codes, name='generate_access_codes'),
     path('media/<str:file_name>/', views.send_file, name='send_file'),
+    path('media/module_zip/<int:module_id>/', views.send_zip, name='send_zip'),
     path('modules/', login_required(views.module), name='modules'),
     path('my_profile/', views.profile, name='profile'),
     path('register/', views.register, name='register'),

@@ -17,6 +17,9 @@ from django.core.mail import EmailMessage
 from django.contrib.auth import views as auth_views
 from .helper_methods import send_verification_email, random_code_generator
 from django.conf import settings
+import os, tempfile, zipfile, mimetypes, io
+from wsgiref.util import FileWrapper
+from django.http import HttpResponse
 
 def index(request):
 	message = None
@@ -264,7 +267,6 @@ def module(request):
 			module_id = request.POST['module-id']
 			submit_form = SubmitForm(request.POST, request.FILES)
 			if submit_form.is_valid():
-				from django.forms.models import model_to_dict
 				module = Module.objects.get(pk=module_id)
 				submission = submit_form.save(commit=False)
 				submission.module = module
@@ -274,7 +276,6 @@ def module(request):
 			else:
 				message = "There was an error in submitting an answer."
 		elif 'edit-response' in request.POST:
-
 			submit_form = SubmitForm(request.POST, request.FILES)
 			submission_pk = request.POST['submission-id']
 			if submit_form.is_valid():
@@ -292,10 +293,6 @@ def module(request):
 	return render(request, 'webapp/modules.html', context)
 
 def send_file(request, file_name):
-    import os, tempfile, zipfile, mimetypes
-    from wsgiref.util import FileWrapper
-    from django.conf import settings
-    from django.http import HttpResponse
     filename = os.path.join(settings.MEDIA_ROOT, file_name)
     wrapper = FileWrapper(open(filename, 'rb'))
     content_type = mimetypes.guess_type(filename)[0]
@@ -303,3 +300,23 @@ def send_file(request, file_name):
     response['Content-Length'] = os.path.getsize(filename)    
     response['Content-Disposition'] = "attachment; filename=%s"%file_name
     return response
+
+def send_zip(request, module_id):
+	from io import BytesIO
+	module = Module.objects.get(pk=module_id)
+	filenames = []
+	for download in module.downloads.all():
+		filenames.append(os.path.join(settings.MEDIA_ROOT, download.file.name))
+
+	byte_data = BytesIO()
+	zip_file = zipfile.ZipFile(byte_data, "w")
+
+	for file in filenames:
+		filename = os.path.basename(os.path.normpath(file))
+		zip_file.write(file, filename)
+	zip_file.close()
+
+	response = HttpResponse(byte_data.getvalue(), content_type='application/zip')
+	response['Content-Disposition'] = 'attachment; filename={}.zip'.format(module.title)
+
+	return response
