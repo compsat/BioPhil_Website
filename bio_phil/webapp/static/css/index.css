@@ -1,3 +1,30 @@
-#carousel-jumbrotron {
-	margin: 100px;
+#carousel-caption {
+	bottom: 25%;
+}
+
+#carousel-img {
+	height: 600px;
+}
+
+#carousel-btn {
+	margin-top: 1%;
+	margin-bottom: 1%;
+}
+
+#carousel-size {
+	max-height: 600px;
+}
+
+p {
+	margin-bottom: 0;	
+}
+
+#card-module {
+	margin-top: 1%;
+	margin-bottom: 1%;
+}
+
+#card-text {
+	margin-top: 8%;
+	margin-bottom: 8%;
 }

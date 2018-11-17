@@ -66,11 +66,11 @@ BioPhil
         {% for i in carousel_list %}
           {% if i.id == 1 %}
             <div class="carousel-item active">
-              <img class="d-block w-100" src="{% static i.img.url %}" alt="{{i.image_name}}">
+              <img class="d-block w-100" id="carousel-img" src="{% static i.img.url %}" alt="{{i.image_name}}">
             </div>
           {% else %}
             <div class="carousel-item">
-              <img class="d-block w-100" src="{% static i.img.url %}" alt="{{i.image_name}}">
+              <img class="d-block w-100" id="carousel-img" src="{% static i.img.url %}" alt="{{i.image_name}}">
             </div>
           {% endif %}
         {% endfor %}
@@ -88,15 +88,29 @@ BioPhil
   </div>
 
   <main role="main" class="container-fluid mb-0">
-    <!-- ABOUT -->
-    <div class="container mb-5">
-      <h1 class="font-weight-bold my-0 mb-2 text-dark" id="about">ABOUT</h1>
-      <div class="p-3 mb-2 bg-light text-dark rounded">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ac pulvinar purus. Nam non ex a lectus luctus ultrices in a purus. Sed tincidunt, risus eget fringilla euismod, sapien felis aliquam eros, in dictum arcu ipsum et purus. Nunc massa est, mattis ut urna at, fermentum malesuada quam. Integer sit amet gravida ex, sit amet porta justo. Ut ac ex tristique, feugiat neque at, placerat eros. Suspendisse imperdiet tincidunt libero, a imperdiet nisi lobortis et. Nulla pulvinar tortor eget fringilla tempus.</p>
+    <!-- ABOUT & SPONSORS -->
+    <div class="container">
+      <div class="row">
+        <!-- ABOUT -->
+        <div class="col-sm-7">
+          <h1 class="font-weight-bold">ABOUT</h1>
+          <div class="p-3 bg-light text-dark rounded">
+            <p>Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam. Vix cu case ponderum patrioque. Dicat exerci postea ea mea, putent dolores menandri eos id.</p>
+          </div>
+        </div>
+        <!-- -->
 
-        <p>Duis leo lacus, dictum et ornare et, ornare vel augue. Praesent viverra laoreet metus, eget posuere dui volutpat eget. Suspendisse at ligula libero. Mauris sed orci quis arcu suscipit bibendum. Duis nec tellus egestas, consectetur ipsum non, tincidunt libero. Sed mattis leo neque, in efficitur arcu porttitor ac. Curabitur bibendum, leo ac eleifend varius, arcu massa accumsan tortor, at tempor libero ligula sit amet leo. Cras eu arcu blandit, luctus justo id, mollis sapien. Duis congue dapibus tortor eu consequat. Curabitur ut lectus gravida, cursus magna eu, convallis est. Etiam varius ultrices congue. Praesent enim elit, blandit in mattis ut, semper at urna. Fusce rhoncus enim non hendrerit molestie. Vivamus tincidunt nisi lacus, at ultrices ante luctus venenatis. Vivamus tempor dolor sit amet lorem convallis, eu maximus eros mattis.</p>
+        <!-- SPONSORS -->
+        <div class="col-sm-5">
+          <h1 class="font-weight-bold">SPONSORS</h1>
+          <div class="p-3 bg-light text-dark rounded">
+            <br><br><br>
+          </div>
+        </div>
+        <!-- -->
+
       </div>
-    </div>
+    </div> 
 
     <!-- PARTNERS -->
     <div class="container mb-5">
