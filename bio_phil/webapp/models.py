@@ -145,9 +145,14 @@ class Module(models.Model):
     module_summary = models.CharField(max_length=300)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
     
     def __str__(self):
         return self.title
+
+    def full_title(self):
+        return self.title + " - " + self.module_summary
 
 class ModuleImage(models.Model):
     image = models.ImageField(upload_to = 'module/images')
