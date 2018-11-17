@@ -47,7 +47,9 @@ Modules
                 <div class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
                   <a class="nav-item nav-link active" id="nav-downloads-tab-{{ module.pk }}" data-toggle="tab" href="#nav-downloads-{{ module.pk }}" role="tab" aria-controls="nav-downloads-{{ module.pk }}" aria-selected="true">Downloads</a>
                   <a class="nav-item nav-link" id="nav-gallery-tab-{{ module.pk }}" data-toggle="tab" href="#nav-gallery-{{ module.pk }}" role="tab" aria-controls="nav-gallery-{{ module.pk }}" aria-selected="false">Gallery</a>
+                  {% if user.access_object.user_type == "Student" %}
                   <a class="nav-item nav-link" id="nav-submissions-tab-{{ module.pk }}" data-toggle="tab" href="#nav-submissions-{{ module.pk }}" role="tab" aria-controls="nav-submissions-{{ module.pk }}" aria-selected="false">Submissions</a>
+                  {% endif %}
                 </div>
               </div>
 
@@ -73,7 +75,7 @@ Modules
                       {% endfor %}
                     </tbody>
                   </table>
-                  <div class="card-footer text-right"><a class="text-dark font-weight-bold" href="#" target="_blank">DOWNLOAD AS .ZIP >></a></div>
+                  <div class="card-footer text-right"><a class="text-dark font-weight-bold" href="{% url 'send_zip' module_id=module.pk %}" target="_blank">DOWNLOAD AS .ZIP >></a></div>
                 </div>
                 <div class="tab-pane fade" id="nav-gallery-{{ module.pk }}" role="tabpanel" aria-labelledby="nav-gallery-tab-{{ module.pk }}">
                   <div id="carouselExampleIndicators{{ module.pk }}" class="carousel slide" data-ride="carousel">
@@ -121,8 +123,8 @@ Modules
                   <div class="card m-2">
                     <h5 class="card-header text-truncate">{{ submission.file.name }}</h5>
                     <div class="card-body">
-                      <p class="card-text mb-0">Uploaded on {{ submission.file.uploaded_on }}</p>
-                      <p class="card-text">{{ submission.file.size | filesizeformat }}, {{ submission.file.extension }}</p>
+                      <p class="card-text mb-0">Uploaded on {{ submission.updated_at }} GMT+8</p>
+                      <p class="card-text">{{ submission.file.size | filesizeformat }}, {{ submission.extension }}</p>
                       <a href="{{ submission.file.url }}" role="button" class="btn btn-dark" target="_blank">Download</a>
                       <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Update</a>
                     </div>
@@ -133,7 +135,7 @@ Modules
                   <div class="card m-2">
                     <div class="card-body">
                       <p class="card-text">You haven't uploaded anything yet.</p>
-                      <a href="#" class="btn btn-primary">Submit a file</a>
+                      <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addResponseModal{{ module.pk }}">Submit a file</a>
                     </div>
                   </div>
                 </div>
@@ -153,6 +155,7 @@ Modules
                         <form method="post" enctype="multipart/form-data">
                           {% csrf_token %}
                           <input type="number" name="module-id" value="{{ module.pk }}" hidden>
+                          <input type="number" name="submission-id" value="{{ submission.pk }}" hidden>
                           <div class="input-group mb-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text">Upload</span>
@@ -169,11 +172,14 @@ Modules
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <input type="hidden" name="submission-id" value="{{ submission.pk }}">
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
-                          <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Save changes</button>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="moduleResponseBack{{ module.pk }}">Close</button>
+                            {% if submission %}
+                            <button type="submit" name= "edit-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Save changes</button>
+                            {% else %}
+                            <button type="submit" name= "add-response" class="btn btn-primary" id="moduleResponseSave{{ module.pk }}">Save changes</button>
+                            {% endif %}
+                          </div>
                         </form>
                       </div>
                     </div>
