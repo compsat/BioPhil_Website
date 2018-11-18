@@ -6,7 +6,9 @@ BioPhil
 
 {% block body %}
 	{% if messages %}
-		{{ messages }}
+      <div class="alert alert-success" role="alert">
+        {{ messages }}
+      </div>
 	{% endif %}
 
 	{% ifequal teacher.access_object.user_type "Teacher" %}

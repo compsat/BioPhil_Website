@@ -23,11 +23,14 @@ from django.http import HttpResponse
 
 def index(request):
 	message = None
+	message_type = None
 	if 'message' in request.session:
 		message = request.session['message']
+		message_type = request.session['message_type']
 		del request.session['message']
+		del request.session['message_type']
 	modules_list = Module.objects.all().order_by('id')[:3]
-	return render(request, 'webapp/index.html', {'message' : message, 'modules_list' : modules_list})
+	return render(request, 'webapp/index.html', {'message' : message, 'message_type' : message_type, 'modules_list' : modules_list})
 
 def gallery(request):
 	return render(request, 'webapp/gallery.html')
@@ -40,6 +43,7 @@ def profile(request):
 	user = request.user
 	submissions_list = Submission.objects.filter(user=user)
 	messages = None
+	message_type = None
 	if request.method == 'POST':
 		if 'new_password1' in request.POST:
 			change_password = ChangePasswordForm(user, request.POST)
@@ -49,8 +53,10 @@ def profile(request):
 				user = change_password.save()
 				update_session_auth_hash(request, user)
 				messages = 'Your password was successfully updated!'
-				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages, 'submissions_list' : submissions_list})
-			messages = "There was an error while updating your password."
+				message_type = "success"
+			else:
+				messages = "There was an error while updating your password."
+				message_type = "danger"
 		elif 'new_email' in request.POST:
 			change_password = ChangePasswordForm(user)
 			change_email = ChangeEmailForm(request.POST, request=request)
@@ -79,8 +85,10 @@ def profile(request):
 				email_body = EmailMessage(mail_subject, message, to=[old_email, new_email])
 				email_body.send()
 				messages = 'An email was sent to your old email and your desired new email. Please check either of them to confirm your update.'
-				return render(request, 'webapp/profile_page.html', {'change_password' : change_password, 'user' : user, 'messages' : messages, 'submissions_list' : submissions_list})
-			messages = "There was an error while updating your email."
+				message_type = 'primary'
+			else:
+				messages = "There was an error while updating your email."
+				message_type = 'danger'
 		elif 'edit-response' in request.POST:
 			change_password = ChangePasswordForm(user)
 			change_email = ChangeEmailForm(request=request)
@@ -93,8 +101,10 @@ def profile(request):
 				submission.file = submission_form.file
 				submission.save()
 				messages = "Your submission has been edited!"
+				message_type = "success"
 			else:
 				messages = "There was an error in submitting an answer."
+				message_type = "danger"
 	else:
 		change_password = ChangePasswordForm(user)
 		change_email = ChangeEmailForm(request=request)
@@ -104,6 +114,7 @@ def profile(request):
 		'change_email' : change_email,  
 		'user' : user, 
 		'messages' : messages,
+		'message_type' : message_type,
 		'submissions_list' : submissions_list,
 		'submit_form' : submit_form
 		})
@@ -117,6 +128,7 @@ def resend_verification(request):
 			send_verification_email(user, email, False)
 			request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
 				verify by {} GMT+8, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+			request.session['message_type'] = 'primary'
 			return redirect('index')
 	else:
 		form = ResendForm()
@@ -135,9 +147,11 @@ def update_email(request, uidb64, token, email_code):
 		email_object = NewEmail.objects.get(email_code=email_code)
 		user.email = email_object.new_email
 		user.save()
-		request.session['message'] = 'You have successfully changed your email. You may not login using your new email.'
+		request.session['message'] = 'You have successfully changed your email. You may now login using your new email.'
+		request.session['message_type'] = 'success'
 	else:
 		request.session['message'] = 'Email update link is invalid!'
+		request.session['message_type'] = 'danger'
 	return redirect('index')
 
 def confirm(request):
@@ -162,6 +176,7 @@ def confirm(request):
 				send_verification_email(user, email, False)
 				request.session['message'] = 'Please check your email to verify your account and complete the registration. If you do not \
 					verify by {} GMT+8, your account will be deleted.'.format(user.expiration_date.strftime("%B %d, %Y %I:%M %p"))
+				request.session['message_type'] = 'primary'
 				return redirect('index')
 			elif 'go_back' in request.POST:
 				request.session['initial_data'] = {
@@ -215,14 +230,17 @@ def activate(request, uidb64, token):
 		user.is_active = True
 		user.save()
 		request.session['message'] = 'Thank you for your email confirmation. You can now login your account.'
+		request.session['message_type'] = 'success'
 	else:
 		request.session['message'] = 'Activation link is invalid!'
+		request.session['message_type'] = 'danger'
 	return redirect('index')
 
 """View for teachers to view all the submissions of the students"""
 def submissions(request):
 	if request.user.access_object.user_type == 'Student':
 		request.session['message'] = 'Only teachers can view this page.'
+		request.session['message_type'] = 'warning'
 		return redirect('index')
 
 	submissions_list = Submission.objects.all()
@@ -262,6 +280,7 @@ def generate_access_codes(request):
 def module(request):
 	modules_list = Module.objects.all()
 	message = None
+	message_type = None
 	if request.method == 'POST':
 		if 'add-response' in request.POST:
 			module_id = request.POST['module-id']
@@ -273,8 +292,11 @@ def module(request):
 				submission.user = request.user
 				submission.save()
 				message = "Successfully submitted an answer!"
+				message_type = 'success'
 			else:
 				message = "There was an error in submitting an answer."
+				message_type = 'danger'
+
 		elif 'edit-response' in request.POST:
 			submit_form = SubmitForm(request.POST, request.FILES)
 			submission_pk = request.POST['submission-id']
@@ -284,12 +306,14 @@ def module(request):
 				submission.file = submission_form.file
 				submission.save()
 				message = "Your submission has been edited!"
+				message_type = 'success'
 			else:
 				message = "There was an error in submitting an answer."
+				message_type = 'danger'
 	else:
 		submit_form = SubmitForm()
 
-	context = {'modules_list': modules_list, 'user' : request.user, 'message' : message, 'submit_form': submit_form}
+	context = {'modules_list': modules_list, 'user' : request.user, 'message' : message, 'message_type' : message_type, 'submit_form': submit_form}
 	return render(request, 'webapp/modules.html', context)
 
 def send_file(request, file_name):

@@ -15,9 +15,21 @@ BioPhil
   <!-- Insert Navbar Here! -->
 
   {% if messages %}
-    <p>{{ messages }}</p>
-    {% if submit_form.errors %}
-      {{ submit_form.errors }}
+    {% if message_type == 'success' %}
+      <div class="alert alert-success" role="alert">
+        {{ messages }}
+      </div>
+    {% elif message_type == 'primary' %}
+      <div class="alert alert-primary" role="alert">
+        {{ messages }}
+      </div>
+    {% elif message_type == 'danger' %}
+      <div class="alert alert-danger" role="alert">
+        {{ messages }}
+        {% if submit_form.errors %}
+          {{ submit_form.errors }}
+        {% endif %}
+      </div>
     {% endif %}
   {% endif %}
 
