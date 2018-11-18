@@ -1,7 +1,7 @@
 from django import forms
 from .models import User, AccessCode, NewEmail, Submission
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.contrib.auth import authenticate
@@ -27,6 +27,18 @@ class ResendForm(forms.Form):
 				return False
 
 		return True
+
+class CustomPasswordChangeForm(SetPasswordForm):
+	def __init__(self, *args, **kwargs):
+		super(CustomPasswordChangeForm, self).__init__(*args, **kwargs)
+		self.fields['new_password1'].widget.attrs={
+			'id' : 'id_new_password1',
+			'class' : 'form-control',
+		}
+		self.fields['new_password2'].widget.attrs={
+			'id' : 'id_new_password2',
+			'class' : 'form-control',
+		}
 
 class CustomPasswordResetForm(PasswordResetForm):
 	def __init__(self, *args, **kwargs):
