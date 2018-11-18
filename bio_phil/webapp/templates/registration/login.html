@@ -3,18 +3,25 @@
 
   {% if form.errors %}
     {% if form.username.errors %}
-      <p>You haven't verified your email. Resend your verification email <a href="{% url 'resend_verification' %}">here</a>.</p>
+      <div class="alert alert-primary" role="alert">
+        You haven't verified your email. Resend your verification email <a href="{% url 'resend_verification' %}">here</a>.
+      </div>
     {% else %}
-      <p>Your email and password didn't match. Please try again.</p>
+      <div class="alert alert-danger" role="alert">
+        Your email and password didn't match. Please try again.
+      </div>
     {% endif %}
   {% endif %}
 
   {% if next %}
     {% if user.is_authenticated %}
-      <p>Your account doesn't have access to this page. To proceed,
-      please login with an account that has access.</p>
+      <div class="alert alert-info" role="alert">
+        Your account doesn't have access to this page. To proceed, please login with an account that has access.
+      </div>
     {% else %}
-      <p>Please login to see this page.</p>
+      <div class="alert alert-info" role="alert">
+        Please login to see this page.
+      </div>
     {% endif %}
   {% endif %}
 
