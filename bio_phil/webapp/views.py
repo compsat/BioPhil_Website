@@ -199,23 +199,26 @@ def confirm(request):
 		return redirect('register')
 
 def register(request):
-	if request.method == 'POST':
-		form = RegisterForm(request.POST)
-		if form.is_valid():
-			request.session['email'] = request.POST['email']
-			request.session['first_name'] = request.POST['first_name']
-			request.session['last_name'] = request.POST['last_name']
-			request.session['password1'] = request.POST['password1']
-			request.session['access_field'] = request.POST['access_field']
-			return redirect('conf_reg')
+	if request.user.is_authenticated:
+		return redirect('index')
 	else:
-		form = RegisterForm()
+		if request.method == 'POST':
+			form = RegisterForm(request.POST)
+			if form.is_valid():
+				request.session['email'] = request.POST['email']
+				request.session['first_name'] = request.POST['first_name']
+				request.session['last_name'] = request.POST['last_name']
+				request.session['password1'] = request.POST['password1']
+				request.session['access_field'] = request.POST['access_field']
+				return redirect('conf_reg')
+		else:
+			form = RegisterForm()
 
-		if 'initial_data' in request.session:
-			form = RegisterForm(initial=request.session['initial_data'])
-			del request.session['initial_data']
+			if 'initial_data' in request.session:
+				form = RegisterForm(initial=request.session['initial_data'])
+				del request.session['initial_data']
 
-	return render(request, 'webapp/signup.html', {'form' : form})
+		return render(request, 'webapp/signup.html', {'form' : form})
 
 def activate(request, uidb64, token):
 	try:
