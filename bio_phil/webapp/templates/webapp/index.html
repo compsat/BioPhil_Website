@@ -7,7 +7,23 @@ BioPhil
 
 {% block body %}
   {% if message %}
-  {{ message }}
+    {% if message_type == 'success' %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+    {% elif message_type == 'primary' %}
+      <div class="alert alert-primary" role="alert">
+        {{ message }}
+      </div>
+    {% elif message_type == 'danger' %}
+      <div class="alert alert-danger" role="alert">
+        {{ message }}
+      </div>
+    {% elif message_type == 'warning' %}
+      <div class="alert alert-warning" role="alert">
+        {{ message }}
+      </div>
+    {% endif %}
   {% endif %}
   <style>
   @media screen and (max-width: 576px) {
