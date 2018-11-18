@@ -18,6 +18,44 @@ BioPhil
     .responsive-partner-img {
       width: 50%;
     }
+
+    #jumbotron-header {
+      font-size: 2.7rem;
+    }
+
+    #jumbotron-subheader {
+      font-size: 1rem;
+    }
+  }
+
+  /* Carousel */
+  .overlay-dark {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: #343a40;
+    opacity: .85;
+  }
+  .carousel-middle {
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: initial;
+  }
+
+  /* Partner animations */
+  /*B&W*/
+  .bw {
+    -webkit-filter: grayscale(80%);
+    -webkit-transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    -ms-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+  }
+
+  .bw:hover {
+    -webkit-filter: grayscale(0%);
   }
 
   /* Sticky footer */
@@ -38,8 +76,7 @@ BioPhil
   }
   </style>
 
-  <div id="carousel-jumbotron" style="margin-bottom: 10px;">
-
+  <div id="carousel-jumbotron">
     <!-- carousel code -->
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
@@ -52,24 +89,21 @@ BioPhil
 
       <div class="carousel-inner" style="max-height: 600px; max-width: 100%;">
         <!-- Caption -->
-        <div class="carousel-caption mb-5">
-          <h1 class="font-weight-bold display-1 text-white">I'M A HEADLINE</h1>
-
-          <div class="justify-content-center mx-auto">
-            <a class="btn btn-outline-light btn-lg mx-auto" href="#" role="button">Learn More</a>
-            
-            <a class="btn btn-outline-light btn-lg mx-auto" href="#" role="button">View Modules</a>
-          </div>
+        <div class="carousel-caption carousel-middle p-0 m-0">
+          <h1 class="font-weight-bold display-3 text-white m-0" id="jumbotron-header">BIO-PHIL</h1>
+          <p class="lead mb-sm-5" id="jumbotron-subheader">Biodiversity Teaching in a Philippine-Cambodian-German Network</p>
+          <a class="btn btn-outline-light btn" href="#modules-section" role="button">View Modules</a>
         </div>
         <!-- -->
-
         {% for i in carousel_list %}
           {% if i.id == 1 %}
             <div class="carousel-item active">
+              <div class="overlay-dark"></div>
               <img class="d-block w-100" id="carousel-img" src="{% static i.img.url %}" alt="{{i.image_name}}">
             </div>
           {% else %}
             <div class="carousel-item">
+              <div class="overlay-dark"></div>
               <img class="d-block w-100" id="carousel-img" src="{% static i.img.url %}" alt="{{i.image_name}}">
             </div>
           {% endif %}
@@ -87,91 +121,106 @@ BioPhil
     </div>
   </div>
 
-  <main role="main" class="container-fluid mb-0">
-    <!-- ABOUT & SPONSORS -->
-    <div class="container">
-      <div class="row">
-        <!-- ABOUT -->
-        <div class="col-sm-7">
-          <h1 class="font-weight-bold">ABOUT</h1>
-          <div class="p-3 bg-light text-dark rounded">
-            <p>Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam. Vix cu case ponderum patrioque. Dicat exerci postea ea mea, putent dolores menandri eos id.</p>
-          </div>
-        </div>
-        <!-- -->
-
-        <!-- SPONSORS -->
-        <div class="col-sm-5">
-          <h1 class="font-weight-bold">SPONSORS</h1>
-          <div class="p-3 bg-light text-dark rounded">
-            <br><br><br>
-          </div>
-        </div>
-        <!-- -->
-
+  <main class="container-fluid row justify-content-center p-0 m-0" role="main">
+    <!-- ABOUT -->
+    <div class="container col-12 col-lg-10 col-xl-7 mt-md-5 mt-4">
+      <h1 class="font-weight-bold my-0 mb-2 text-dark">ABOUT</h1>
+      <div class="p-3 bg-light text-dark rounded">
+        <p>The network aims at strengthening biodiversity research in the Philippines and Cambodia by building an academic qualification scheme. The project covers modern, interdisciplinary approaches in Biodiversity Research and provides a broad basis for internationalized research collaboration.</p>
+        <p>Main focus of the four-year initiative are (1) the further development of research-based biodiversity science curricula for graduates, (2) the training of academic instructors and research staff, and (3) the joint conduct of applied research projects on SE Asian biodiversity. This will be achieved through academic training, research and network building activities. Five jointly developed and taught graduate-level university <a href="#modules">course modules</a> are the core of the project.</p>
+        <p>This project is sponsored by: <img src="{% static 'webapp/img/partners/daad.png' %}" class="pl-0 pl-sm-3 mt-3 mt-sm-0" alt="daad" style="height: 50px"></p>
+        
       </div>
     </div> 
 
     <!-- PARTNERS -->
-    <div class="container mb-5">
+    <div class="container col-12 col-lg-10 col-xl-7 mt-4">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">PARTNERS</h1>
-      <div class="pb-3 pt-5 px-3 bg-light text-dark rounded row justify-content-center">
-        <div class="responsive-partner-img col-xs-1 col-md-3"><img src="{% static 'webapp/img/partners/logo_xavier.png' %}" class="img-fluid rounded-circle mx-auto shadow mb-lg-5 mb-4" alt="xavier"></div>
-        <div class="responsive-partner-img col-xs-1 col-md-3"><img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow mb-lg-5 mb-4" alt="fsuu"></div>
-        <div class="responsive-partner-img col-xs-1 col-md-3"><img src="{% static 'webapp/img/partners/logo_daad.png' %}" class="img-fluid rounded-circle shadow mb-lg-5 mb-4" alt="daad"></div>
-        <div class="responsive-partner-img col-xs-1 col-md-3"><img src="{% static 'webapp/img/partners/logo_mfnb.png' %}" class="img-fluid rounded-circle shadow mb-lg-5 mb-4" alt="mfnb"></div>
-        <div class="responsive-partner-img col-xs-1 col-md-3"><img src="{% static 'webapp/img/partners/logo_nmpm.png' %}" class="img-fluid rounded-circle shadow mb-lg-5 mb-4" alt="nmpm"></div>
-        <div class="responsive-partner-img col-xs-1 col-md-3"><img src="{% static 'webapp/img/partners/logo_ateneo.png' %}" class="img-fluid rounded-circle shadow mb-lg-5 mb-4" alt="ateneo"></div>
-        <div class="responsive-partner-img col-xs-1 col-md-3"><img src="{% static 'webapp/img/partners/logo_rupp.png' %}" class="img-fluid rounded-circle shadow mb-lg-5 mb-4" alt="daad"></div>
+      <div class="p-3 bg-light text-dark rounded">
+        <div class="container-fluid row justify-content-around p-0 m-0">
+          <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_xavier.png' %}" class="img-fluid rounded-circle mx-auto shadow bw" alt="Xavier University"></div>
+          <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow bw" alt="Father Saturnino Urios University"></div>
+          <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_mfnb.png' %}" class="img-fluid rounded-circle shadow bw" alt="Museum Fur Naturkunde Berlin"></div>
+          <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_nmpm.png' %}" class="img-fluid rounded-circle shadow bw" alt="Pambansang Museo"></div>
+          <div class="responsive-partner-img col-6 col-md-4 mb-4"><a href="#" data-toggle="modal" data-target="#videoModal"><img src="{% static 'webapp/img/partners/logo_ateneo.png' %}" class="img-fluid rounded-circle shadow bw" alt="Ateneo de Manila University"></a></div>
+          <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_rupp.png' %}" class="img-fluid rounded-circle shadow bw" alt="Royal University of Phnom Penh"></div>
+        </div>
+      </div>
+    </div>
+    <!-- YouTube video modal -->
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0">
+          <div class="modal-body p-0 border-0">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe width="100%" height="350" src="https://www.youtube.com/embed/Jv95aptVSUk" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- MEET THE TEAM -->
-    <div class="container mb-5">
+    <div class="container col-12 col-lg-10 col-xl-7 mt-4">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">MEET THE TEAM</h1>
       <div class="p-3 mb-2 bg-light text-dark rounded">
-        <div class="row justify-content-center">
+        <div class="justify-content-between card-deck mb-sm-3">
           <!-- Researcher Card -->
-          <div class="col-md-4 col-sm-12">
-            <div class="card">
-              <img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
-              <div class="card-body">
-                <h5 class="card-title text-center font-weight-bold">Name of Researcher</h5>
-                <p class="card-text text-justify">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
-              </div>
+          <div class="card rounded mr-0 shadow-sm">
+            <img class="card-img-top" src="https://dummyimage.com/400x400/000/ffffff" alt="Thomas von Rintelen">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">Thomas von Rintelen</h5>
+              <h6 class="card-title text-muted">Project Coordinator Germany</h6>
+              <p class="card-text">Dr. Thomas von Rintelen is the Programme Leader Southeast Asia at the <a href="https://www.museumfuernaturkunde.berlin/en/taxonomy/term/234/thomas.rintelen">Museum für Naturkunde Berlin (MfN)</a> and Curator of the DNA library collection at MfN. His research focusses on systematics, evolution and biogeography of freshwater invertebrates, particularly gastropods and shrimps.</p>
             </div>
           </div>
           <!-- -->
           <!-- Researcher Card -->
-          <div class="col-md-4 col-sm-12">
-            <div class="card">
-              <img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
-              <div class="card-body">
-                <h5 class="card-title text-center font-weight-bold">Name of Researcher</h5>
-                <p class="card-text text-justify">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
-              </div>
+          <div class="card rounded shadow-sm">
+            <img class="card-img-top" src="https://dummyimage.com/400x400/000/ffffff" alt="Thomas von Rintelen">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">Hendrik Freitag</h5>
+              <h6 class="card-title text-muted">Project Coordinator Philippines</h6>
+              <p class="card-text">Dr. Hendrik Freitag is Professor and Research Coordinator of the Department of Biology at the <a href="http://ateneo.edu/ls/sose/biology/faculty/freitag-hendrik">Ateneo de Manila University (AdMU)</a>, where he leads the Biodiversity Laboratory. His mayor research focus are systematics, biogeography and ecology of aquatic insects, particularly SE Asian beetles and decapods.</p>
             </div>
           </div>
           <!-- -->
           <!-- Researcher Card -->
-          <div class="col-md-4 col-sm-12">
-            <div class="card">
-              <img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
-              <div class="card-body">
-                <h5 class="card-title text-center font-weight-bold">Name of Researcher</h5>
-                <p class="card-text text-justify">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
-              </div>
+          <div class="card rounded ml-0 shadow-sm">
+            <img class="card-img-top" src="https://dummyimage.com/400x400/000/ffffff" alt="Thomas von Rintelen">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">Sophany Phauk</h5>
+              <p class="card-text">Mr. Sophany Phauk leads the <a href="http://www.cambodianentomology.org/">Cambodian Entomology Initiatives</a> at the Department of Biology of the <a href="http://www.rupp.edu.kh/master/">Royal University of Phnom Penh</a> (RUPP), Cambodia. His main research interest focusses on taxonomy and ecology of true bugs (Hemiptera) of continental SE Asia.</p>
+            </div>
+          </div>
+          <!-- -->
+        </div>
+        <div class="justify-content-around card-deck">
+          <!-- Researcher Card -->
+          <div class="card rounded mr-0 shadow-sm">
+            <img class="card-img-top" src="https://dummyimage.com/400x400/000/ffffff" alt="Thomas von Rintelen">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">Astrid Sinco</h5>
+              <p class="card-text">Dr. Astrid Lara Sinco is the Research Deputy Director, Kinaadman: University Research Office and a faculty member at the <a href="http://www.xu.edu.ph/graduate-school">Xavier University (XU)</a> in Cagayan de Oro, Philippines. Her current research focus is mainly on taxonomy and ecology of freshwater diatoms and riverine biota as indicator taxa.</p>
             </div>
           </div>
           <!-- -->
           <!-- Researcher Card -->
-          <div class="col-md-4 col-sm-12">
-            <div class="card">
-              <img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
-              <div class="card-body">
-                <h5 class="card-title text-center font-weight-bold">Name of Researcher</h5>
-                <p class="card-text text-justify">Lorem ipsum dolor sit amet, id sed falli gubergren. Ea modus iudico platonem ius. Etiam tamquam pri no, vix in discere torquatos similique. Illum omnes definiebas cu per. Solum porro repudiare ius at, id pri labores menandri necessitatibus, est et mollis tincidunt. Omnes dolorem forensibus ei nam. Id possit aeterno eam, maiestatis theophrastus ne eam. Cum ex oratio tractatos, vim et iudico homero comprehensam.</p>
-              </div>
+          <div class="card rounded shadow-sm">
+            <img class="card-img-top" src="https://dummyimage.com/400x400/000/ffffff" alt="Thomas von Rintelen">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">Marites Bonachita-Sanguila</h5>
+              <p class="card-text">Dr. Marites B. Bonachita-Sanguila is Professor at the <a href="http://www.urios.edu.ph/index.php/home-academics">Father Saturnino Urios University (FSUU)</a> in Butuan, Philippines and the Coordinator of its Biodiversity Informatics and Research Center. Her research interests are in evolutionary biology and systematics, especially in amphibians and reptiles.</p>
+            </div>
+          </div>
+          <!-- -->
+          <!-- Researcher Card -->
+          <div class="card rounded ml-0 shadow-sm">
+            <img class="card-img-top" src="https://dummyimage.com/400x400/000/ffffff" alt="Thomas von Rintelen">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">Marivene Manuel-Santos</h5>
+              <p class="card-text">Ms. Marivene R. Manuel-Santos leads the Division of Zoology of the <a href="http://www.nationalmuseum.gov.ph/">National Museum of the Philippines</a> (NMP) and headed the taskforce that realized the newly opened <a href="https://www.rappler.com/life-and-style/arts-and-culture/201689-national-museum-natural-history-manila-opening-date">Natural History Museum of the NMP</a>. As the resident carcinologist of the museum she primerily conducts taxonomic research on the countries crustacean biodiversity.</p>
             </div>
           </div>
           <!-- -->
@@ -180,7 +229,7 @@ BioPhil
     </div>
 
     <!-- MODULES -->
-    <div class="container mb-5">
+    <div class="container col-12 col-lg-10 col-xl-7 mt-4" id="modules-section">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">MODULES</h1>
       <div class="p-3 mb-2 bg-light text-dark rounded">
         <!-- Card Row -->
@@ -242,6 +291,5 @@ BioPhil
   <footer class="footer container-fluid bg-dark text-light">
       <span class="float-sm-right">Made by the Computer Society of the Ateneo ¤</span>
   </footer>
-
 
 {% endblock %}
