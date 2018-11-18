@@ -28,29 +28,23 @@ Sign-up
             <div class="form-group">
               <label for="exampleInputEmail1">Email address</label>
               {% if form.email.errors %}
-                <div class="invalid-feedback">
                 {{ form.email.errors }}
-                </div>
               {% endif %}
               {{ form.email }}
             </div>
 
             <div class="form-group">
-              <label for="exampleInputEmail1">First Name</label>
+              <label for="exampleInputName">First Name</label>
               {% if form.first_name.errors %}
-              <div class="invalid-feedback">
                 {{ form.first_name.errors }}
-              </div>
               {% endif %}
               {{ form.first_name }}
             </div>
 
             <div class="form-group">
-              <label for="exampleInputEmail1">Last Name</label>
+              <label for="exampleInputName">Last Name</label>
               {% if form.last_name.errors %}
-              <div class="invalid-feedback">
                 {{ form.last_name.errors }}
-              </div>
               {% endif %}
               {{ form.last_name }}
             </div>            
@@ -58,29 +52,23 @@ Sign-up
             <div class="form-group">
               <label for="exampleInputPassword1">Password</label>
               {% if form.password1.errors %}
-              <div class="invalid-feedback">
                 {{ form.password1.errors }}
-              </div>
               {% endif %}
               {{ form.password1 }}
             </div>
 
             <div class="form-group">
-              <label for="exampleInputPassword1">Confirm Password</label>
+              <label for="exampleInputPassword2">Confirm Password</label>
               {% if form.password2.errors %}
-              <div class="invalid-feedback">
                 {{ form.password2.errors }}
-              </div>
               {% endif %}
               {{ form.password2 }}
             </div>
 
             <div class="form-group">
-              <label for="exampleInputPassword1">Access Code</label>
+              <label for="exampleInputAccess">Access Code</label>
               {% if form.access_field.errors %}
-              <div class="invalid-feedback">
                 {{ form.access_field.errors }}
-              </div>
               {% endif %}
               {{ form.access_field }}
             </div>
