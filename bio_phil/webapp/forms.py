@@ -99,11 +99,11 @@ class RegisterForm(UserCreationForm):
 			'class' : 'form-control',
 		}
 		self.fields['password2'].widget.attrs={
-			'id' : 'exampleInputPassword1',
+			'id' : 'exampleInputPassword2',
 			'class' : 'form-control',
 		}
 		self.fields['access_field'].widget.attrs={
-			'id' : 'exampleInputPassword1',
+			'id' : 'exampleInputAccess',
 			'class' : 'form-control',
 		}
 
