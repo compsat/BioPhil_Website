@@ -10,6 +10,7 @@ python3 bio_phil/manage.py migrate
 
 echo "Run Fixtures"
 python3 bio_phil/manage.py loaddata modules.yaml
+python3 bio_phil/manage.py loaddata module_images.yaml
 
 echo "Create superuser"
 python bio_phil/manage.py shell << END

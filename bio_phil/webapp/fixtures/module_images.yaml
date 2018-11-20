@@ -1,0 +1,119 @@
+- model: webapp.moduleimage
+  pk: 1
+  fields:
+    image: "/media/Module1/Module1-2018.png"
+    img_description: "Module 1"
+    pub_date: 2018-11-13 11:06
+    module: 1
+- model: webapp.moduleimage
+  pk: 2
+  fields:
+    image: "/media/Module1/Module1-2018-4.png"
+    img_description: "Module 1"
+    pub_date: 2018-11-13 11:06
+    module: 1
+- model: webapp.moduleimage
+  pk: 3
+  fields:
+    image: "/media/Module1/Module1DSCF1275.png"
+    img_description: "Module 1"
+    pub_date: 2018-11-13 11:06
+    module: 1
+- model: webapp.moduleimage
+  pk: 4
+  fields:
+    image: "/media/Module1/Module1DSCF1377.png"
+    img_description: "Module 1"
+    pub_date: 2018-11-13 11:06
+    module: 1
+- model: webapp.moduleimage
+  pk: 5
+  fields:
+    image: "/media/Module1/Module1DSCF1367.png"
+    img_description: "Module 1"
+    pub_date: 2018-11-13 11:06
+    module: 1
+- model: webapp.moduleimage
+  pk: 6
+  fields:
+    image: "/media/Module1/Module1DSCF1272.png"
+    img_description: "Module 1"
+    pub_date: 2018-11-13 11:06
+    module: 1
+- model: webapp.moduleimage
+  pk: 7
+  fields:
+    image: "/media/Module2/Module2\ AdMU-1.jpg"
+    img_description: "Module 2 in ADMU"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 8
+  fields:
+    image: "/media/Module2/Module2\ AdMU-field.jpg"
+    img_description: "Module 2 in ADMU"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 9
+  fields:
+    image: "/media/Module2/Module2\ AdMU-field-2.jpg"
+    img_description: "Module 2 in ADMU"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 10
+  fields:
+    image: "/media/Module2/Module2\ AdMU-10.jpg"
+    img_description: "Module 2 in ADMU"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 11 
+  fields:
+    image: "/media/Module2/Module2\ AdMU-NMNH-2.jpg"
+    img_description: "Module 2 in ADMU"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 11 
+  fields:
+    image: "/media/Module2/Module2\ AdMU-NMNH-2.jpg"
+    img_description: "Module 2 in ADMU"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 12
+  fields:
+    image: "/media/Module2/Module2\ RUPP field.jpg"
+    img_description: "Module 2 in RUPP"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 13
+  fields:
+    image: "/media/Module2/Module2\ RUPP field-2.jpg"
+    img_description: "Module 2 in RUPP"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 14
+  fields:
+    image: "/media/Module2/Module2\ RUPP lab.jpg"
+    img_description: "Module 2 in RUPP"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 15
+  fields:
+    image: "/media/Module2/Module2\ RUPP-1.jpg"
+    img_description: "Module 2 in RUPP"
+    pub_date: 2018-08-04 9:24
+    module: 2
+- model: webapp.moduleimage
+  pk: 16
+  fields:
+    image: "/media/Module2/Module2\ RUPP-6.jpg"
+    img_description: "Module 2 in RUPP"
+    pub_date: 2018-08-04 9:24
+    module: 2
