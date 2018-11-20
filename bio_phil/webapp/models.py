@@ -156,12 +156,12 @@ class Module(models.Model):
 
 class ModuleImage(models.Model):
     image = models.ImageField(upload_to = 'module/images')
-    img_name = models.CharField(max_length = 30)
+    img_description = models.CharField(max_length = 30)
     pub_date = models.DateTimeField(auto_now_add = True)
     module = models.ForeignKey(Module, on_delete=models.DO_NOTHING, related_name='images', blank=True, null=True)
 
     def __str__(self):
-        return self.img_name
+        return self.img_description
 
 class Download(models.Model):
     title = models.CharField(max_length=120, unique=True)

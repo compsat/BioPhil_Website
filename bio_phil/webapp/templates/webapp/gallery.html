@@ -11,23 +11,32 @@ Gallery
 <script type='text/javascript' src="{% static 'webapp/unitegallery/js/unitegallery.min.js' %}"></script>  
 
 <link rel='stylesheet' href="{% static 'webapp/unitegallery/css/unite-gallery.css' %}" type='text/css' />
+<link rel='stylesheet' href="{% static 'css/gallery.css' %}" type='text/css'/>
 
 <script type='text/javascript' src="{% static 'webapp/unitegallery/themes/tiles/ug-theme-tiles.js' %}"></script>
 {% endblock %}
 
 {% block body %}
   <!-- Add your site or application content here -->  
-  <div id="gallery" style="display:none;">
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img1.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img2.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img3.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img4.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img5.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img6.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img7.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img8.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-    <a href="http://unitegallery.net"><img src="{% static 'webapp/img/gallery/img9.jpg' %}" alt="A Very Cute Image" style="display:none"></a>
-  </div>
+
+  {% for module in modules %} 
+    <div class = 'gallery' type = 'display:none;'>
+      <h3>{{ module.title }}</h3>
+      {% for img in images|get_item:module.id %}
+      <a data-toggle='modal' data-target='#myModal-{{ img.id }}'><img class='thumbnail' id="image-{{ img.id }}" src="../media/{{ img.image }}" alt="{{ img.img_description }}"></a>
+      
+      <div class='modal' id="myModal-{{ img.id }}">
+        <span class="close" data-dismiss='modal'>×</span>
+        <img class="modal-content" src='../media/{{ img.image }}'>
+        <h3 id='caption'>{{ img.img_description }}</h3>
+      </div>
+      
+      {% endfor %}
+
+    </div>
+    </div>
+  {% endfor %}  
+
 
   <!-- Content End -->
   <script type="text/javascript">
