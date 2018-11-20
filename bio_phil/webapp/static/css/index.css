@@ -1,10 +1,4 @@
-@media screen and (max-width: 1920px) {
-	#team-row {
-		width: 200%;
-	}
-}
-
-@media screen and (max-width: 576px) {
+@media screen and (min-width: 320px) {
 	#team-row {
 		width: 150em;
 		height: 38em;
