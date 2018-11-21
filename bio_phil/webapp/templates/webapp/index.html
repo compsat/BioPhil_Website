@@ -100,7 +100,8 @@ BioPhil
             <!-- VIDEO -->
             <div>
               <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="...Aquatic Biodiversity Lab ADMU.mp4"></iframe>
+                <!-- <iframe class="embed-responsive-item" src="{% static 'webapp/img/Aquatic Biodiversity Lab ADMU.mp4' %}"></iframe> -->
+                <iframe class="embed-responsive-item" id="admu-video" src=""></iframe>
               </div>
             </div>
 
@@ -110,6 +111,16 @@ BioPhil
       </div>
     </div>
     <!-- -->
+    <script>
+      $( "#myModal" ).on('shown.bs.modal', function(){
+          var frame = document.getElementById("admu-video");
+          frame.src = "{% static 'webapp/img/Aquatic Biodiversity Lab ADMU.mp4' %}";
+      });
+      $( "#myModal" ).on('hide.bs.modal', function(){
+          var frame = document.getElementById("admu-video");
+          frame.src = "";
+      });
+    </script>
 
     <!-- MEET THE TEAM -->
     <div class="container mb-5">
