@@ -99,7 +99,7 @@ class ModuleAdmin(admin.ModelAdmin):
     ]
 
 class ModuleImageAdmin(admin.ModelAdmin):
-    list_display = ('img_name', 'module', 'pub_date')
+    list_display = ('img_description', 'module', 'pub_date')
     list_filter = ('module', 'pub_date')
     readonly_fields = ('pub_date',)
 

@@ -7,7 +7,7 @@ DEFAULT_DOMAIN = 'localhost:8000'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MEDIA_ROOT = os.path.join(BASE_DIR+"/webapp/static/", 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR+"/webapp/static/", '')
 MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
@@ -130,6 +130,7 @@ BACKGROUND_TASK_RUN_ASYNC = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'webapp/static')
 STATIC_URL = '/static/'
 
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)

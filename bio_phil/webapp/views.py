@@ -32,9 +32,6 @@ def index(request):
 	modules_list = Module.objects.all().order_by('id')[:3]
 	return render(request, 'webapp/index.html', {'message' : message, 'message_type' : message_type, 'modules_list' : modules_list})
 
-def gallery(request):
-	return render(request, 'webapp/gallery.html')
-
 """
 View for a user's profile where they can change their password.
 """
@@ -347,3 +344,13 @@ def send_zip(request, module_id):
 	response['Content-Disposition'] = 'attachment; filename={}.zip'.format(module.title)
 
 	return response
+
+def render_gallery(request):
+	modules = Module.objects.all()
+	context = {'modules': modules}
+	temp = {}
+	for module in modules:
+		temp[module.id] = ModuleImage.objects.filter(module_id=module.id)
+		context['images'] = temp
+	
+	return render(request, "webapp/gallery.html", context)
