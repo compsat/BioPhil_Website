@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 from decouple import config
 
 # ---------- REMOVE/CHANGE IN PRODUCTION ----------
@@ -24,6 +25,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'webapp.apps.WebappConfig',
     'background_task',
     'django.contrib.admin',
@@ -46,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'bio_phil.urls'
@@ -73,22 +76,9 @@ WSGI_APPLICATION = 'bio_phil.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'OPTIONS': {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            'charset': config('CHARSET'),
-        },
-        'TEST': {
-            'CHARSET': config('CHARSET'),
-            'COLLATION': config('COLLATION'),
-        },
-        'HOST': config('DB_HOST'),   # Or an IP Address that your DB is hosted on
-        'PORT': config('PORT'),
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
 
 
@@ -132,6 +122,8 @@ BACKGROUND_TASK_RUN_ASYNC = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'webapp/static')
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 EMAIL_HOST = config('EMAIL_HOST')
