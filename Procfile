@@ -1,1 +1,1 @@
-web: gunicorn bio_phil.wsgi --log-file -
+web: cd mysite; gunicorn bio_phil.wsgi --settings=bio_phil.settings.production
