@@ -84,45 +84,11 @@ BioPhil
           <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_fsuu.png' %}" class="img-fluid rounded-circle shadow bw" alt="Father Saturnino Urios University"></div>
           <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_mfnb.png' %}" class="img-fluid rounded-circle shadow bw" alt="Museum Fur Naturkunde Berlin"></div>
           <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_nmpm.png' %}" class="img-fluid rounded-circle shadow bw" alt="Pambansang Museo"></div>
-          <div class="responsive-partner-img col-6 col-md-4 mb-4"><a href="#" data-toggle="modal" data-target="#videoModal"><img src="{% static 'webapp/img/partners/logo_ateneo.png' %}" class="img-fluid rounded-circle shadow bw" alt="Ateneo de Manila University"></a></div>
+          <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_ateneo.png' %}" class="img-fluid rounded-circle shadow bw" alt="Ateneo de Manila University"></a></div>
           <div class="responsive-partner-img col-6 col-md-4 mb-4"><img src="{% static 'webapp/img/partners/logo_rupp.png' %}" class="img-fluid rounded-circle shadow bw" alt="Royal University of Phnom Penh"></div>
         </div>
       </div>
     </div>
-
-    <!-- ADMU VIDEO MODAL -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="myModal">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-
-            <!-- VIDEO -->
-            <div>
-              <div class="embed-responsive embed-responsive-16by9">
-                <!-- <iframe class="embed-responsive-item" src="{% static 'webapp/img/Aquatic Biodiversity Lab ADMU.mp4' %}"></iframe> -->
-                <iframe class="embed-responsive-item" id="admu-video" src=""></iframe>
-              </div>
-            </div>
-
-          </div>
-          
-        </div>
-      </div>
-    </div>
-    <!-- -->
-    <script>
-      $( "#myModal" ).on('shown.bs.modal', function(){
-          var frame = document.getElementById("admu-video");
-          frame.src = "{% static 'webapp/img/Aquatic Biodiversity Lab ADMU.mp4' %}";
-      });
-      $( "#myModal" ).on('hide.bs.modal', function(){
-          var frame = document.getElementById("admu-video");
-          frame.src = "";
-      });
-    </script>
 
     <!-- MEET THE TEAM -->
     <div class="container mb-5">
