@@ -6,4 +6,5 @@ Pillow==5.2.0
 django-background-tasks==1.2.0
 python-decouple==3.1
 PyYAML===3.13
+gunicorn===19.9.0
 whitenoise===4.1.2
