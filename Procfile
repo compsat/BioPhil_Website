@@ -1,1 +1,1 @@
-web: cd mysite; gunicorn bio_phil.wsgi --settings=bio_phil.settings.production
+web: gunicorn --pythonpath="$PWD/bio_phil" bio_phil.wsgi
