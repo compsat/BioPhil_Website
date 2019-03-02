@@ -73,23 +73,30 @@ WSGI_APPLICATION = 'bio_phil.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'OPTIONS': {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            'charset': config('CHARSET'),
-        },
-        'TEST': {
-            'CHARSET': config('CHARSET'),
-            'COLLATION': config('COLLATION'),
-        },
-        'HOST': config('DB_HOST'),   # Or an IP Address that your DB is hosted on
-        'PORT': config('PORT'),
+    'postgresql': {
+    # 'default': {
+        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'NAME' : config('POSTGRES_NAME'),
+        'USER' : config('POSTGRES_USER'),
+        'PASSWORD' : config('POSTGRES_PASSWORD')
+        # 'ENGINE': 'django.db.backends.mysql', 
+        # 'NAME': config('DB_NAME'),
+        # 'USER': config('DB_USER'),
+        # 'PASSWORD': config('DB_PASSWORD'),
+        # 'OPTIONS': {
+        #     # Tell MySQLdb to connect with 'utf8mb4' character set
+        #     'charset': config('CHARSET'),
+        # },
+        # 'TEST': {
+        #     'CHARSET': config('CHARSET'),
+        #     'COLLATION': config('COLLATION'),
+        # },
+        # 'HOST': config('DB_HOST'),   # Or an IP Address that your DB is hosted on
+        # 'PORT': config('PORT'),
     }
 }
+
+DATABASES['default'] = DATABASES['postgresql']
 
 
 # Password validation
@@ -138,3 +145,7 @@ EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
+
+# Configure Django App for Heroku.
+import django_heroku
+django_heroku.settings(locals())
