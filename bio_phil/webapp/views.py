@@ -347,7 +347,7 @@ def send_zip(request, module_id):
 	return response
 
 def render_gallery(request):
-	modules = Module.objects.all()
+	modules = Module.objects.all().order_by("pk")
 	context = {'modules': modules}
 	temp = {}
 	for module in modules:
