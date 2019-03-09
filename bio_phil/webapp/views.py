@@ -162,7 +162,8 @@ def confirm(request):
 
 		if request.method == 'POST':
 			if 'confirm_reg' in request.POST:
-				user = User.objects.create(email=email, first_name=first_name, last_name=last_name, password=password1, access_object=access_object)
+				user = User.objects.create(email=email, first_name=first_name, last_name=last_name, access_object=access_object)
+				user.set_password(password1)
 				user.is_active = False
 				user.save()
 				del request.session['email']
