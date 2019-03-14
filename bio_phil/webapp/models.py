@@ -154,11 +154,8 @@ class Module(models.Model):
     def full_title(self):
         return self.title + " - " + self.module_summary
 
-    class Meta:
-        ordering = ['id']
-
 class ModuleImage(models.Model):
-    image = models.ImageField(upload_to = 'module/images/')
+    image = models.ImageField(upload_to = 'module/images')
     img_description = models.CharField(max_length = 30)
     pub_date = models.DateTimeField(auto_now_add = True)
     module = models.ForeignKey(Module, on_delete=models.DO_NOTHING, related_name='images', blank=True, null=True)
