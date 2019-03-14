@@ -15,8 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.contrib.staticfiles.urls import static
 # from django.contrib.auth import login, logout, password_reset, password_reset_done, password_reset_confirm, password_reset_complete, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 from django.contrib.auth import views as auth_views
 # from webapp.views import CustomLoginView
@@ -31,4 +29,4 @@ urlpatterns = [
     path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html', form_class=CustomPasswordChangeForm), name='password_reset_confirm'),
     path('accounts/reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
     path('', include('webapp.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
