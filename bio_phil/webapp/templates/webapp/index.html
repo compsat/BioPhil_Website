@@ -88,6 +88,40 @@ BioPhil
       </div>
     </div>
 
+    <!-- ADMU VIDEO MODAL -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="myModal">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+
+            <!-- VIDEO -->
+            <div>
+              <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="{% static 'webapp/img/ADMU_Video.mp4' %}"></iframe>
+                <iframe class="embed-responsive-item" id="admu-video" src=""></iframe>
+              </div>
+            </div>
+
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $( "#myModal" ).on('shown.bs.modal', function(){
+          var frame = document.getElementById("admu-video");
+          frame.src = "{% static 'webapp/img/ADMU_Video.mp4' %}";
+      });
+      $( "#myModal" ).on('hide.bs.modal', function(){
+          var frame = document.getElementById("admu-video");
+          frame.src = "";
+      });
+    </script>
+
     <!-- MEET THE TEAM -->
     <div class="container mb-5">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">MEET THE TEAM</h1>
@@ -144,7 +178,7 @@ BioPhil
           <!-- Researcher Card -->
           <div class="col-md-4 col-sm-12">
             <div class="card">
-              <img src="{% static 'webapp/img/researchers/MS.jpg' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
+              <img src="{% static 'webapp/img/researchers/MS.JPG' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
               <div class="card-body">
                 <h5 class="card-title text-center font-weight-bold">Marites Bonachita-Sanguila</h5>
                 <p class="card-text text-justify">Dr. Marites B. Bonachita-Sanguila is Professor at the <a href="http://www.urios.edu.ph/index.php/home-academics">Father Saturnino Urios University (FSUU)</a> in Butuan, Philippines and the Coordinator of its Biodiversity Informatics and Research Center. Her research interests are in evolutionary biology and systematics, especially in amphibians and reptiles.</p>
