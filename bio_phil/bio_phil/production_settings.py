@@ -27,7 +27,6 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
     'webapp.apps.WebappConfig',
     'background_task',
     'django.contrib.admin',
@@ -41,9 +40,6 @@ INSTALLED_APPS = [
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_STORAGE = 'bio_phil.storage.WhiteNoiseStaticFilesStorage'
 
 # Configure Django App for Heroku.
 import django_heroku
