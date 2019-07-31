@@ -6,8 +6,8 @@ except ImportError:
 import os
 from decouple import config
 
-basepath = '/BIOPHIL'
-STATIC_ROOT = basepath + '/bio_phil/webapp/static'
+basepath = '/kunden/homepages/41/d77006110/htdocs'
+STATIC_ROOT = basepath + 'BIOPHIL/BioPhil_Website/bio_phil/webapp/static'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
