@@ -6,9 +6,12 @@ except ImportError:
 import os
 from decouple import config
 
+basepath = '/BIOPHIL'
+STATIC_ROOT = basepath + '/bio_phil/webapp/static'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-ALLOWED_HOSTS = ['bio-phil.herokuapp.com']
+ALLOWED_HOSTS = ['bio-phil.herokuapp.com, bio-phil.net']
 DEFAULT_DOMAIN = 'https://{}'.format(ALLOWED_HOSTS[0])
 
 CSRF_COOKIE_SECURE = True
@@ -58,5 +61,5 @@ COLLECTFAST_CACHE = 'collectfast'
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 # Configure Django App for Heroku.
-import django_heroku
-django_heroku.settings(locals())
+# import django_heroku
+# django_heroku.settings(locals())
