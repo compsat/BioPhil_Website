@@ -93,12 +93,16 @@ WSGI_APPLICATION = 'bio_phil.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'postgresql': {
+    'default' : {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+    # 'postgresql': {
+    #     'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+    #     'NAME' : config('POSTGRES_NAME'),
+    #     'USER' : config('POSTGRES_USER'),
+    #     'PASSWORD' : config('POSTGRES_PASSWORD')
     # 'default': {
-        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
-        'NAME' : config('POSTGRES_NAME'),
-        'USER' : config('POSTGRES_USER'),
-        'PASSWORD' : config('POSTGRES_PASSWORD')
         # 'ENGINE': 'django.db.backends.mysql', 
         # 'NAME': config('DB_NAME'),
         # 'USER': config('DB_USER'),
@@ -113,10 +117,10 @@ DATABASES = {
         # },
         # 'HOST': config('DB_HOST'),   # Or an IP Address that your DB is hosted on
         # 'PORT': config('PORT'),
-    }
+    # }
 }
 
-DATABASES['default'] = DATABASES['postgresql']
+# DATABASES['default'] = DATABASES['postgresql']
 
 LOGGING = {
     'version': 1,
