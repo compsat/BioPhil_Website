@@ -1,5 +1,4 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %}
 
 {% block title %}
 BioPhil
@@ -230,7 +229,9 @@ BioPhil
                 {% else %}
                   <h6 class="card-subtitle text-muted">{{ module.start_date.year }} TBA</h6> <br>
                 {% endif %}
-                <p class="card-text">{{ module.content|truncatechars:275 }}</p>
+                <div class="card-text">
+                  {{ module.content|linebreaks|truncatechars:275 }}
+                </div>
                 <button type="button" class="btn btn-dark btn-block" data-toggle="modal" data-target="#modal{{ module.pk }}">View Details
                 </button>
               </div>
@@ -248,7 +249,7 @@ BioPhil
                     </button>
                     <h3 class="font-weight-bold">{{ module.title }}</h3>
                     <h6 class="text-muted">{{ module.created_at }} GMT+8</h6><br>
-                    <p>{{ module.content }}</p>
+                    {{ module.content|linebreaks }}
                     <h3 class="font-weight-bold">Downloads</h3>
                     <table class="table table-striped table-sm">
                       <tbody>
