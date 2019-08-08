@@ -7,10 +7,12 @@ import os
 from decouple import config
 
 DEBUG = config('DEBUG', cast=bool)
+basepath = '/kunden/homepages/41/d77006110/htdocs'
+STATIC_ROOT = basepath + 'BIOPHIL/BioPhil_Website/bio_phil/webapp/static'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-ALLOWED_HOSTS = ['bio-phil.herokuapp.com']
+ALLOWED_HOSTS = ['bio-phil.net', 'bio-phil.herokuapp.com']
 DEFAULT_DOMAIN = 'https://{}'.format(ALLOWED_HOSTS[0])
 
 CSRF_COOKIE_SECURE = True
@@ -58,7 +60,3 @@ COLLECTFAST_CACHE = 'collectfast'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-# Configure Django App for Heroku.
-import django_heroku
-django_heroku.settings(locals())
