@@ -6,6 +6,8 @@ except ImportError:
 import os
 from decouple import config
 
+DEBUG = config('DEBUG', cast=bool)
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 ALLOWED_HOSTS = ['bio-phil.herokuapp.com']
