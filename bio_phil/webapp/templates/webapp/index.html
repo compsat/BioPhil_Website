@@ -52,6 +52,9 @@ BioPhil
     line-height: 40px; /* Vertically center the text there */
     background-color: #f5f5f5;
   }
+  .card{
+    height:100%;
+  }
   </style>
 
   <div class="jumbotron mb-5" style="background-image: url({% static 'webapp/img/bg/photo1.jpeg' %}); background-size: 1000%;">
@@ -123,6 +126,7 @@ BioPhil
     </script>
 
     <!-- MEET THE TEAM -->
+
     <div class="container mb-5">
       <h1 class="font-weight-bold my-0 mb-2 text-dark">MEET THE TEAM</h1>
       <div class="p-3 mb-2 bg-light text-dark rounded">
@@ -154,10 +158,11 @@ BioPhil
           <!-- Researcher Card -->
           <div class="col-md-4 col-sm-12">
             <div class="card">
-              <img src="{% static 'webapp/img/researchers/SP.jpg' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
+              <img src="{% static 'webapp/img/researchers/MMS.jpg' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
               <div class="card-body">
-                <h5 class="card-title text-center font-weight-bold">Sophany Phauk</h5>
-                <p class="card-text text-justify">Mr. Sophany Phauk leads the <a href="http://www.cambodianentomology.org/">Cambodian Entomology Initiatives</a> at the Department of Biology of the <a href="http://www.rupp.edu.kh/master/">Royal University of Phnom Penh</a> (RUPP), Cambodia. His main research interest focusses on taxonomy and ecology of true bugs (Hemiptera) of continental SE Asia.</p>
+                <h5 class="card-title text-center font-weight-bold">Marivene Manuel-Santos</h5>
+                <p></p>
+                <p class="card-text text-justify">Ms. Marivene R. Manuel-Santos leads the Division of Zoology of the <a href="http://www.nationalmuseum.gov.ph/">National Museum of the Philippines</a> (NMP) and headed the taskforce that realized the newly opened <a href="https://www.rappler.com/life-and-style/arts-and-culture/201689-national-museum-natural-history-manila-opening-date">Natural History Museum of the NMP</a>. As the resident carcinologist of the museum she primerily conducts taxonomic research on the countries crustacean biodiversity. </p>
               </div>
             </div>
           </div>
@@ -189,11 +194,10 @@ BioPhil
           <!-- Researcher Card -->
           <div class="col-md-4 col-sm-12">
             <div class="card">
-              <img src="{% static 'webapp/img/researchers/MMS.jpg' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
+              <img src="{% static 'webapp/img/researchers/SP.jpg' %}" class="img-fluid rounded-circle shadow mt-5 mb-3 mx-auto" alt="fsuu" width=65%>
               <div class="card-body">
-                <h5 class="card-title text-center font-weight-bold">Marivene Manuel-Santos</h5>
-                <p></p>
-                <p class="card-text text-justify">Ms. Marivene R. Manuel-Santos leads the Division of Zoology of the <a href="http://www.nationalmuseum.gov.ph/">National Museum of the Philippines</a> (NMP) and headed the taskforce that realized the newly opened <a href="https://www.rappler.com/life-and-style/arts-and-culture/201689-national-museum-natural-history-manila-opening-date">Natural History Museum of the NMP</a>. As the resident carcinologist of the museum she primerily conducts taxonomic research on the countries crustacean biodiversity. </p>
+                <h5 class="card-title text-center font-weight-bold">Sophany Phauk</h5>
+                <p class="card-text text-justify">Mr. Sophany Phauk leads the <a href="http://www.cambodianentomology.org/">Cambodian Entomology Initiatives</a> at the Department of Biology of the <a href="http://www.rupp.edu.kh/master/">Royal University of Phnom Penh</a> (RUPP), Cambodia. His main research interest focusses on taxonomy and ecology of true bugs (Hemiptera) of continental SE Asia.</p>
               </div>
             </div>
           </div>
@@ -225,6 +229,8 @@ BioPhil
               </div>
             </div>
           </div>
+
+
           <div class="modal fade" id="modal{{ module.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg mx-auto" role="document">
               <div class="modal-content">
