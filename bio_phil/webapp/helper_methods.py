@@ -7,6 +7,7 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 import string, secrets, webapp
 from django.core.exceptions import ValidationError
+import os
 
 """Generates a string of five randomly generated characters"""
 def random_code_generator(length, model):
@@ -28,14 +29,14 @@ def send_verification_email(user, email, is_alert):
 		message = render_to_string('webapp/acc_active_alert_email.html', {
 			'user' : user,
 			'default_domain' : settings.DEFAULT_DOMAIN,
-			'uid' : urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+			'uid' : urlsafe_base64_encode(force_bytes(user.pk)),
 			'token' : account_activation_token.make_token(user),
 		})
 	else:
 		message = render_to_string('webapp/acc_active_email.html', {
 			'user' : user,
 			'default_domain' : settings.DEFAULT_DOMAIN,
-			'uid' : urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+			'uid' : urlsafe_base64_encode(force_bytes(user.pk)),
 			'token' : account_activation_token.make_token(user),
 		})
 	email_body = EmailMessage(mail_subject, message, to=[email])
@@ -54,3 +55,7 @@ def file_size(value): # add this to some file where you can import it from
     limit = 25 * 1024 * 1024
     if value.size > limit:
         raise ValidationError('File too large. Size should not exceed 25 MB.')
+
+def get_upload_path(instance, filename):
+    return os.path.join(
+      instance.module.title, filename)
