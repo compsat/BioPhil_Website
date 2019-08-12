@@ -29,6 +29,7 @@ STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '/webapp/static/')
 MEDIA_URL = "https://%s/" % (AWS_S3_CUSTOM_DOMAIN)
+MEDIA_DIR = "https://%s/media/" % (AWS_S3_CUSTOM_DOMAIN)
 DEFAULT_FILE_STORAGE = 'bio_phil.storage_backends.MediaStorage'
 
 # Quick-start development settings - unsuitable for production

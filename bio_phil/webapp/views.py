@@ -20,6 +20,8 @@ from django.conf import settings
 import os, tempfile, zipfile, mimetypes, io
 from wsgiref.util import FileWrapper
 from django.http import HttpResponse
+from django.contrib.auth.models import Permission
+import urllib
 
 def index(request):
 	message = None
@@ -30,7 +32,11 @@ def index(request):
 		del request.session['message']
 		del request.session['message_type']
 	modules_list = Module.objects.all().order_by('id')[:3]
-	return render(request, 'webapp/index.html', {'message' : message, 'message_type' : message_type, 'modules_list' : modules_list})
+	return render(request, 'webapp/index.html', {
+		'message' : message, 
+		'message_type' : message_type, 
+		'modules_list' : modules_list,
+	})
 
 """
 View for a user's profile where they can change their password.
@@ -165,6 +171,18 @@ def confirm(request):
 				user = User.objects.create(email=email, first_name=first_name, last_name=last_name, access_object=access_object)
 				user.set_password(password1)
 				user.is_active = False
+
+				if access_object.user_type == 'Teacher':
+					user.is_staff = True
+					permissions = []
+					permissions.append(Permission.objects.get(name='Can add download'))
+					permissions.append(Permission.objects.get(name='Can change download'))
+					permissions.append(Permission.objects.get(name='Can delete download'))
+					permissions.append(Permission.objects.get(name='Can view download'))
+
+					for permission in permissions:
+						user.user_permissions.add(permission)
+
 				user.save()
 				del request.session['email']
 				del request.session['first_name']
@@ -331,13 +349,14 @@ def send_zip(request, module_id):
 	module = Module.objects.get(pk=module_id)
 	filenames = []
 	for download in module.downloads.all():
-		filenames.append(os.path.join(settings.MEDIA_ROOT, download.file.name))
+		filenames.append(os.path.join(settings.MEDIA_DIR, urllib.parse.quote_plus(download.file.name)))
 
 	byte_data = BytesIO()
 	zip_file = zipfile.ZipFile(byte_data, "w")
 
 	for file in filenames:
 		filename = os.path.basename(os.path.normpath(file))
+		print(file)
 		zip_file.write(file, filename)
 	zip_file.close()
 
