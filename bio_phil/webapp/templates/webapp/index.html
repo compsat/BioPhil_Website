@@ -218,7 +218,7 @@ BioPhil
           {% for module in modules_list %}
           <div class="col-md-4 col-sm-12">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body" style="overflow-y: scroll;">
                 <h5 class="card-title">{{ module.title }}</h5>
                 <!-- <h5 class="card-title">{{ module.title }} - {{ module.module_summary }}</h5> -->
                 {% if module.end_date %}
@@ -227,7 +227,7 @@ BioPhil
                   <h6 class="card-subtitle text-muted">{{ module.start_date.year }} TBA</h6> <br>
                 {% endif %}
                 <div class="card-text">
-                  {{ module.content|linebreaks|truncatechars:275 }}
+                  {{ module.content|linebreaks }}
                 </div>
                 {% if request.user.is_authenticated %}
                   <button type="button" class="btn btn-dark btn-block" style="margin-top: 1.5vw" data-toggle="modal" data-target="#modal{{ module.pk }}">
