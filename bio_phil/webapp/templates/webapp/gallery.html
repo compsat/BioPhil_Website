@@ -23,11 +23,11 @@ Gallery
     <div class = 'gallery' type = 'display:none;'>
         <h3>{{ module.title }}</h3>
         {% for img in images|get_item:module.id %}
-          <a data-toggle='modal' data-target='#myModal-{{ img.id }}'><img class='thumbnail' id="image-{{ img.id }}" src="{% get_media_prefix %}{{ img.image }}" alt="{{ img.img_description }}"></a>
+          <a data-toggle='modal' data-target='#myModal-{{ img.id }}'><img class='thumbnail' id="image-{{ img.id }}" src="{% get_media_prefix %}media/{{ img.image }}" alt="{{ img.img_description }}"></a>
           
           <div class='modal' id="myModal-{{ img.id }}">
             <span class="close" data-dismiss='modal'>×</span>
-            <img class="modal-content" src='{% get_media_prefix %}{{ img.image }}'>
+            <img class="modal-content" src='{% get_media_prefix %}media/{{ img.image }}'>
             <h3 id='caption'>{{ img.img_description }}</h3>
           </div>
         

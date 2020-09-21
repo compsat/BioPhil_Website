@@ -9,5 +9,5 @@ to
 Please click on the link to confirm your update,
 
 
-http://{{ default_domain }}{% url 'update_email' uidb64=uid token=token email_code=email_code %}
+{{ default_domain }}{% url 'update_email' uidb64=uid token=token email_code=email_code %}
 {% endautoescape %}
