@@ -24,5 +24,5 @@ urlpatterns = [
     path('update_email/<uidb64>/<token>/<email_code>', views.update_email, name='update_email'),
 ]
 
-urlpatterns += staticfiles_urlpatterns()
-urlpatterns += static(settings.MEDIA_DIR, document_root=settings.MEDIA_ROOT)
+#urlpatterns += staticfiles_urlpatterns()
+#urlpatterns += static(settings.MEDIA_DIR, document_root=settings.MEDIA_ROOT)
