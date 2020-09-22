@@ -7,7 +7,7 @@ import os
 from decouple import config
 
 DEBUG = config('DEBUG', cast=bool)
-basepath = '/kunden/homepages/41/d77006110/htdocs'
+basepath = '/kunden/homepages/41/d77006110/htdocs/'
 # STATIC_ROOT = basepath + 'BIOPHIL/BioPhil_Website/bio_phil/webapp/static'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
