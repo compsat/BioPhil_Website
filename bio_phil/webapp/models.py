@@ -6,6 +6,7 @@ from django.utils import timezone
 from webapp.tasks import *
 import os
 from webapp.helper_methods import file_size, get_upload_path
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 USER_TYPE = (
 	('Teacher', 'Teacher'),
@@ -169,7 +170,7 @@ class ModuleImage(models.Model):
 class Download(models.Model):
     title = models.CharField(max_length=120, unique=True)
     module = models.ForeignKey('Module', on_delete=models.CASCADE, related_name='downloads', blank=True, null=True)
-    file = models.FileField(upload_to=get_upload_path)
+    file = models.FileField(upload_to=get_upload_path, storage=RawMediaCloudinaryStorage())
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
